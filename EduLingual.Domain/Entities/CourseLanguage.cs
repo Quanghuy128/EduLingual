@@ -1,0 +1,24 @@
+﻿using EduLingual.Domain.Enum;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace EduLingual.Domain.Entities
+{
+    public class CourseLanguage
+    {
+        [Key]
+        [Column("id")]
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        [Column("name")]
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Column("status")]
+        [EnumDataType(typeof(CourseLanguageStatus))]
+        public CourseLanguageStatus Status { get; set; } = CourseLanguageStatus.Available;
+
+        [InverseProperty(nameof(CourseLanguage))]
+        public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+    }
+}

@@ -1,0 +1,6 @@
+@EduLingual.Api_HostAddress = http://localhost:5196
+
+GET {{EduLingual.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

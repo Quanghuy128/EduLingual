@@ -1,0 +1,43 @@
+﻿using EduLingual.Domain.Common;
+using EduLingual.Infrastructure;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EduLingual.Domain.Entities
+{
+    public class Course : BaseEntity
+    {
+        [Column("title")]
+        [Required]
+        public string Title { get; set; } = string.Empty;
+
+        [Column("description")]
+        [StringLength(1000)]
+        public string Description { get; set; } = string.Empty;
+
+        [Column("duration")]
+        public string Duration {  get; set; } = string.Empty;
+
+        [Column("area_id")]
+        [ForeignKey(nameof(CourseArea))]
+        public Guid CourseAreaId { get; set; }
+        public virtual CourseArea CourseArea { get; set; } = null!;
+
+        [Column("language_id")]
+        [ForeignKey(nameof(CourseLanguage))]
+        public Guid CourseLanguageId { get; set; }
+        public virtual CourseLanguage CourseLanguage { get; set; } = null!;
+
+        [Column("category_id")]
+        [ForeignKey(nameof(CourseCategory))]
+        public Guid CourseCategoryId { get; set; }
+        public virtual CourseCategory CourseCategory { get; set; } = null!;
+
+        public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public virtual ICollection<CourseFeedback> CourseFeedbacks { get; set; } = new List<CourseFeedback>();
+
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
+        public virtual ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
+
+    }
+}
