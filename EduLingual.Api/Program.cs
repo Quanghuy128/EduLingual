@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 
+builder.Services.AddHttpContextAccessor();
 // Config builder
 builder.ConfigureAutofacContainer();
 

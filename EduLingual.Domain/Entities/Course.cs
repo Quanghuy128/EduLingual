@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("course")]
     public class Course : BaseEntity
     {
         [Column("title")]

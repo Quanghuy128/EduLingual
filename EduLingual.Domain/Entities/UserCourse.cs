@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduLingual.Infrastructure
 {
+    [Table("user_course")]
     public class UserCourse
     {
         [Column("user_id")]

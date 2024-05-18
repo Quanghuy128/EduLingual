@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("course_language")]
     public class CourseLanguage
     {
         [Key]

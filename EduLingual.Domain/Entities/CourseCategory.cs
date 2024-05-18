@@ -4,6 +4,7 @@ using EduLingual.Domain.Enum;
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("course_category")]
     public class CourseCategory
     {
         [Key]

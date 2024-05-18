@@ -2,6 +2,7 @@
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("course_feedback")]
     public class CourseFeedback
     {
         [Column("course_id")]
