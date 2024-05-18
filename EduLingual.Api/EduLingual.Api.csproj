@@ -16,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -23,6 +24,10 @@
     <ProjectReference Include="..\EduLingual.Application\EduLingual.Application.csproj" />
     <ProjectReference Include="..\EduLingual.Domain\EduLingual.Domain.csproj" />
     <ProjectReference Include="..\EduLingual.Infrastructure\EduLingual.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MockData\" />
   </ItemGroup>
 
 </Project>

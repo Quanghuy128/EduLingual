@@ -1,0 +1,29 @@
+[
+  {
+    "Username": "admin",
+    "Password": "admin1",
+    "FullName": "Admin",
+    "Description": "This is Admin",
+    "RoleId": "453cb74c-95c8-43c7-bcc5-82b5a79603e0",
+    "Status": "1",
+    "CreatedBy": "admin@gmail.com"
+  },
+  {
+    "Username": "user-01",
+    "Password": "1",
+    "FullName": "User 01",
+    "Description": "This is User",
+    "RoleId": "77f2299e-3743-4afe-8e87-978f6afd831a",
+    "Status": "1",
+    "CreatedBy": "admin@gmail.com"
+  },
+  {
+    "Username": "teacher-01",
+    "Password": "1",
+    "FullName": "Teacher 01",
+    "Description": "This is Teacher",
+    "RoleId": "f475a5e7-f15f-4100-b7b4-90f9dbc581c1",
+    "Status": "1",
+    "CreatedBy": "admin@gmail.com"
+  }
+]

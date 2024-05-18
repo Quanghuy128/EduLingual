@@ -28,6 +28,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await app.Services.ApplyMigration();
+    await app.Services.DbInitializer();
 }
 
 app.UseHttpsRedirection();
