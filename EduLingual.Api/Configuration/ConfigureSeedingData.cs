@@ -26,8 +26,13 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task InitializeAsync(ApplicationDbContext dbContext)
         {
+            await dbContext.SeedAreas();
             await dbContext.SeedRoles();
             await dbContext.SeedUsers();
+           // await dbContext.SeedCourses();
+            
+            await dbContext.SeedCategories();
+            await dbContext.SeedLanguages();
         }
         public static async Task SeedRoles(this ApplicationDbContext context)
         {
@@ -55,6 +60,79 @@ namespace EduLingual.Api.Configuration
                 }
             );
         }
+
+        public static async Task SeedAreas(this ApplicationDbContext context)
+        {
+            if (context.CourseAreas.Any())
+            {
+                return;
+            }
+            await context.CourseAreas.AddRangeAsync(
+                new List<CourseArea>{
+                    new CourseArea
+                    {
+                        Name = "Hồ Chí Minh",
+                    },
+                    new CourseArea
+                    {
+                        Name = "Đà Nẵng",
+                    },
+                    new CourseArea
+                   {
+                        Name = "Hà Nội",
+                    }
+                }
+            );
+        }
+
+        public static async Task SeedCategories(this ApplicationDbContext context)
+        {
+            if (context.CoursesCategories.Any())
+            {
+                return;
+            }
+            await context.CoursesCategories.AddRangeAsync(
+                new List<CourseCategory>{
+                    new CourseCategory
+                    {
+                        Name = "Giao tiếp",
+                    },
+                    new CourseCategory
+                    {
+                        Name = "TOEIC",
+                    },
+                    new CourseCategory
+                   {
+                        Name = "IELTS",
+                    }
+                }
+            );
+        }
+
+        public static async Task SeedLanguages(this ApplicationDbContext context)
+        {
+            if (context.CoursesLanguages.Any())
+            {
+                return;
+            }
+            await context.CoursesLanguages.AddRangeAsync(
+                new List<CourseLanguage>{
+                    new CourseLanguage
+                    {
+                        Name = "Tiếng Anh",
+                    },
+                    new CourseLanguage
+                    {
+                        Name = "Tiếng Trung",
+                    },
+                    new CourseLanguage
+                   {
+                        Name = "Tiếng Nhật",
+                    }
+                }
+            );
+        }
+
         public static async Task SeedUsers(this ApplicationDbContext context)
         {
             if (context.Users.Any())
@@ -65,5 +143,16 @@ namespace EduLingual.Api.Configuration
             await context.Users.AddRangeAsync(users);
             await context.SaveChangesAsync();
         }
+
+        /*public static async Task SeedCourses(this ApplicationDbContext context)
+        {
+            if (context.Courses.Any())
+            {
+                return;
+            }
+            List<Course> courses = FileHelper.LoadJson<List<Course>>("./MockData/", "course.json");
+            await context.Courses.AddRangeAsync(courses);
+            await context.SaveChangesAsync();
+        }*/
     }
 }
