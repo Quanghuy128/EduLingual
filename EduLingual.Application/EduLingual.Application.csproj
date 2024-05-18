@@ -19,8 +19,4 @@
     <ProjectReference Include="..\EduLingual.Domain\EduLingual.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
-
 </Project>

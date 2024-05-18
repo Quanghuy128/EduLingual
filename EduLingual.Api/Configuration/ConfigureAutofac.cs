@@ -1,5 +1,7 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using Autofac;
+using EduLingual.Application;
+using EduLingual.Infrastructure;
 
 namespace EduLingual.Api.Configuration
 {
@@ -19,9 +21,9 @@ namespace EduLingual.Api.Configuration
         protected override void Load(ContainerBuilder builder)
         {
             builder.AddDbContext();
-            //builder.RegisterRepository();
-            //builder.RegisterServices();
-            //builder.RegisterMapster();
+            builder.RegisterRepository();
+            builder.RegisterServices();
+            builder.RegisterMapster();
             base.Load(builder);
         }
     }
