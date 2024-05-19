@@ -34,6 +34,11 @@ namespace EduLingual.Domain.Entities
         public Guid CourseCategoryId { get; set; }
         public virtual CourseCategory CourseCategory { get; set; } = null!;
 
+        [Column("center_id")]
+        [ForeignKey("Center")]
+        public Guid CenterId { get; set; }
+        public virtual User Center { get; set; } = null!;
+
         public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
         public virtual ICollection<CourseFeedback> CourseFeedbacks { get; set; } = new List<CourseFeedback>();
 

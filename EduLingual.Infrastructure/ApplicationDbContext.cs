@@ -77,6 +77,11 @@ namespace EduLingual.Infrastructure
                .HasOne(p => p.CourseLanguage)
                .WithMany(d => d.Courses)
                .HasForeignKey(p => p.CourseLanguageId);
+
+            modelBuilder.Entity<Course>()
+               .HasOne(p => p.Center)
+               .WithMany(d => d.OwnCourses)
+               .HasForeignKey(p => p.CenterId);
             #endregion
         }
     }
