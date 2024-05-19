@@ -1,4 +1,5 @@
 ﻿using EduLingual.Application.Service;
+using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
@@ -18,36 +19,36 @@ namespace EduLingual.Api.Controllers
         [HttpGet(ApiEndPointConstant.Course.CoursesEndpoint)]
         public async Task<IActionResult> GetCoursesByArea([FromQuery] CourseFilter courseFilter)
         {
-            List<CourseViewModel> courses = await _courseService.GetCourses(courseFilter);
+            Result<List<CourseViewModel>> courses = await _courseService.GetCourses(courseFilter);
             return Ok(courses);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CoursesByAreaEndpoint)]
         public async Task<IActionResult> GetCoursesByArea([FromQuery] string areaName)
         {
-            List<CourseViewModel> courses = await _courseService.GetCoursesByArea(areaName);
+            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByArea(areaName);
             return Ok(courses);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CoursesByLanguageEndpoint)]
         public async Task<IActionResult> GetCoursesByLanguage([FromQuery] string languageName)
         {
-            List<CourseViewModel> courses = await _courseService.GetCoursesByLanguage(languageName);
+            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByLanguage(languageName);
             return Ok(courses);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CoursesByCategoryEndpoint)]
         public async Task<IActionResult> GetCoursesByCategory([FromQuery] string categoryName)
         {
-            List<CourseViewModel> courses = await _courseService.GetCoursesByCategory(categoryName);
+            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByCategory(categoryName);
             return Ok(courses);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CourseEndpoint)]
         public async Task<IActionResult> GetCourseById(Guid id)
         {
-            CourseViewModel courses = await _courseService.GetCourseById(id);
-            return Ok(courses);
+            Result<CourseViewModel> course = await _courseService.GetCourseById(id);
+            return Ok(course);
         }
     }
 }
