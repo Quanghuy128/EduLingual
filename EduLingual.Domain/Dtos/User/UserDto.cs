@@ -1,14 +1,14 @@
-﻿using EduLingual.Domain.Enum;
+﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Enum;
 
 namespace EduLingual.Domain.Dtos.User
 {
-    public record UserDto 
-    (
-        string UserName,
-        string Password,
-        string FullName,
-        string Description,
-        UserStatus UserStatus,
-        BaseDto BaseDto
-    );
+    public class UserDto : BaseEntity
+    {
+        public string? UserName { get; set; }
+        public string? Password { get; set; }
+        public string? FullName { get; set; }
+        public string? Description { get; set; }
+        public UserStatus UserStatus { get; set; }
+    }
 }

@@ -2,8 +2,7 @@
 
 namespace EduLingual.Domain.Dtos.User
 {
-    public record UserViewModel
-    (
-        UserDto UserDto
-    );
+    public class UserViewModel: UserDto
+    {
+    }
 }
