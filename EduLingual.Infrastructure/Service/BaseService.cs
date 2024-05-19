@@ -47,12 +47,33 @@ namespace EduLingual.Infrastructure.Service
             };
         }
 
+        protected PagingResult<TEntity> SuccessWithPaging<TEntity>(IPaginate<TEntity> data, int page, int size, int total)
+        {
+            return new PagingResult<TEntity>
+            {
+                Data = data,
+                StatusCode = HttpStatusCode.OK,
+                PageNumber = page,  
+                PageSize = size,        
+                TotalCount = total
+            };
+        }
+
         protected PagingResult<TEntity> Success<TEntity>(IPaginate<TEntity> data)
         {
             return new PagingResult<TEntity>(data)
             {
                 Data = data,
                 StatusCode = HttpStatusCode.OK,
+            };
+        }
+
+        protected Result<TEntity> Fail<TEntity>(string message)
+        {
+            return new Result<TEntity>
+            {
+                Message = message,
+                StatusCode = HttpStatusCode.InternalServerError,
             };
         }
 
