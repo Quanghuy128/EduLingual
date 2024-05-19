@@ -1,7 +1,10 @@
 ﻿using EduLingual.Application.Repository;
+using EduLingual.Domain.Common;
+using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Security.Claims;
 using static EduLingual.Application.Repository.IUnitOfWork;
 
@@ -35,7 +38,59 @@ namespace EduLingual.Infrastructure.Service
             return role;
         }
 
-        //Use for employee
-        
+        protected Result<TEntity> Success<TEntity>(TEntity data)
+        {
+            return new Result<TEntity>
+            {
+                Data = data,
+                StatusCode = HttpStatusCode.OK,
+            };
+        }
+
+        protected PagingResult<TEntity> Success<TEntity>(IPaginate<TEntity> data)
+        {
+            return new PagingResult<TEntity>(data)
+            {
+                Data = data,
+                StatusCode = HttpStatusCode.OK,
+            };
+        }
+
+        protected Result<TEntity> BadRequest<TEntity>(string message)
+        {
+            return new Result<TEntity>
+            {
+                Message = message,
+                StatusCode = HttpStatusCode.BadRequest,
+            };
+        }
+
+        protected Result<TEntity> BadRequests<TEntity>(string message)
+        {
+            return new Result<TEntity>
+            {
+                Message = message,
+                StatusCode = HttpStatusCode.BadRequest,
+            };
+        }
+
+        protected Result<TEntity> NotFound<TEntity>(string message)
+        {
+            return new Result<TEntity>
+            {
+                Message = message,
+                StatusCode = HttpStatusCode.NotFound,
+            };
+        }
+
+        protected PagingResult<TEntity> NotFounds<TEntity>(string message)
+        {
+            return new PagingResult<TEntity>
+            {
+                Message = message,
+                StatusCode = HttpStatusCode.NotFound,
+            };
+        }
+
     }
 }
