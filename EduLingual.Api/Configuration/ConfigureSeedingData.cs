@@ -26,14 +26,14 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task InitializeAsync(ApplicationDbContext dbContext)
         {
-            await dbContext.SeedAreas();
             await dbContext.SeedRoles();
             await dbContext.SeedUsers();
-           // await dbContext.SeedCourses();
-            
+            await dbContext.SeedAreas();
             await dbContext.SeedCategories();
             await dbContext.SeedLanguages();
+            await dbContext.SeedCourses();
         }
+        
         public static async Task SeedRoles(this ApplicationDbContext context)
         {
             if (context.Roles.Any())
@@ -83,6 +83,8 @@ namespace EduLingual.Api.Configuration
                     }
                 }
             );
+
+            await context.SaveChangesAsync();
         }
 
         public static async Task SeedCategories(this ApplicationDbContext context)
@@ -107,6 +109,8 @@ namespace EduLingual.Api.Configuration
                     }
                 }
             );
+
+            await context.SaveChangesAsync();
         }
 
         public static async Task SeedLanguages(this ApplicationDbContext context)
@@ -131,6 +135,8 @@ namespace EduLingual.Api.Configuration
                     }
                 }
             );
+
+            await context.SaveChangesAsync();
         }
 
         public static async Task SeedUsers(this ApplicationDbContext context)
@@ -144,7 +150,7 @@ namespace EduLingual.Api.Configuration
             await context.SaveChangesAsync();
         }
 
-        /*public static async Task SeedCourses(this ApplicationDbContext context)
+        public static async Task SeedCourses(this ApplicationDbContext context)
         {
             if (context.Courses.Any())
             {
@@ -153,6 +159,6 @@ namespace EduLingual.Api.Configuration
             List<Course> courses = FileHelper.LoadJson<List<Course>>("./MockData/", "course.json");
             await context.Courses.AddRangeAsync(courses);
             await context.SaveChangesAsync();
-        }*/
+        }
     }
 }
