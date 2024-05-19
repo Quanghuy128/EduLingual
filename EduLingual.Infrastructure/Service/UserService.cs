@@ -1,8 +1,8 @@
 ﻿using EduLingual.Application.Repository;
 using EduLingual.Application.Service;
+using EduLingual.Domain.Common;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
-using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -16,43 +16,49 @@ namespace EduLingual.Infrastructure.Service
         {
         }
 
-        public Task<UserViewModel> Create(CreateUserRequest request)
+        public Task<Result<UserViewModel>> Create(CreateUserRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Delete(Guid id)
+        public Task<Result<bool>> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UserViewModel> Get(Guid id)
+        public Task<Result<UserViewModel>> Get(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<UserViewModel>> GetAll(Expression<Func<UserDto, bool>>? predicate)
+        public async Task<Result<List<UserViewModel>>> GetAll(Expression<Func<UserDto, bool>>? predicate)
         {
-            ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync();
-            return _mapper.Map<List<UserViewModel>>(users);
+            try
+            {
+                ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync();
+                return Success(_mapper.Map<List<UserViewModel>>(users));
+            }catch (Exception ex) {
+                return BadRequest<List<UserViewModel>>(ex.Message);
+            }
+            return null!;
         }
 
-        public Task<UserViewModel> GetByCondition(Expression<Func<UserDto, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IPaginate<UserViewModel>> GetPagination(Expression<Func<UserDto, bool>>? predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserViewModel> Login(string username, string password)
+        public Task<Result<UserViewModel>> GetByCondition(Expression<Func<UserDto, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(UpdateUserRequest request)
+        public Task<PagingResult<UserViewModel>> GetPagination(Expression<Func<UserDto, bool>>? predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<UserViewModel>> Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<bool>> Update(UpdateUserRequest request)
         {
             throw new NotImplementedException();
         }

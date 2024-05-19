@@ -1,4 +1,5 @@
 ﻿using EduLingual.Application.Service;
+using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.User;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace EduLingual.Api.Controllers
         [HttpGet(ApiEndPointConstant.User.UsersEndpoint)]
         public async Task<IActionResult> GetAll()
         {
-            List<UserViewModel> users = await _userService.GetAll(x => false);
+            Result<List<UserViewModel>> users = await _userService.GetAll(x => false);
             return Ok(users);
         }
     }
