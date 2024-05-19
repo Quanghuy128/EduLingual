@@ -18,8 +18,11 @@
         }
         public static class Course
         {
-            public const string CoursesEndpoint = ApiEndpoint + "/courses";
+            public const string CoursesEndpoint = ApiEndpoint + "/khoa-hoc";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
+            public const string CoursesByLanguageEndpoint = CoursesEndpoint + "-theo-ngon-ngu";
+            public const string CoursesByAreaEndpoint = CoursesEndpoint + "-theo-khu-vuc";
+            public const string CoursesByCategoryEndpoint = CoursesEndpoint + "-theo-danh-muc";
         }
     }
 }

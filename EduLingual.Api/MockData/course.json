@@ -1,0 +1,29 @@
+﻿[
+  {
+    "Title": "TOEIC Căn Bản",
+    "Description": "Trong khóa Căn Bản kéo dài 6 tuần này các bạn sẽ được hướng dẫn 1 cách chi tiết, cụ thể các chủ điểm ngữ pháp trọng điểm trong bài thi, học các chiến thuật, mẹo làm bài mặc dù không dịch được nhưng vẫn chọn được đáp án đúng, học chiến thuật nghe một cách tốt nhất, cung cấp các tự vựng sát nhất với bài thi. Khóa này được tổ chức với mục đích lấy lại căn bản cho các bạn và tạo bước đệm để các bạn bước vào lớp giải đề",
+    "Duration": "6 tuần",
+    "CourseAreaId": "138fc830-eebf-4200-94c6-352f4f4d325f",
+    "CourseLanguageId": "5bd7e2bf-f0bc-4da9-89ea-978df8cc801f",
+    "CourseCategoryId": "d19f6a75-4024-4ec9-b892-1bd4eba8e45f",
+    "CreatedBy": "admin@gmail.com"
+  },
+  {
+    "Title": "Tiếng Anh cho người mất căn bản",
+    "Description": "Chương trình Tiếng Anh Người Lớn EFL trang bị cho học viên những kiến thức và kỹ năng tiếng Anh cốt yếu, hữu ích cho quá trình học tập và làm việc trong bối cảnh toàn cầu hóa hiện nay. Đồng thời, học viên còn được nâng cao khả năng giao tiếp và tư duy phản biện cũng như làm quen với chiến thuật thi IELTS.",
+    "Duration": "52 giờ",
+    "CourseAreaId": "138fc830-eebf-4200-94c6-352f4f4d325f",
+    "CourseLanguageId": "5bd7e2bf-f0bc-4da9-89ea-978df8cc801f",
+    "CourseCategoryId": "1b3ffca1-a19d-490b-b3fb-9434f58e66e3",
+    "CreatedBy": "admin@gmail.com"
+  },
+  {
+    "Title": "GLOBAL ENGLISH",
+    "Description": "Học viên được học tập tích cực, giao tiếp 100% tiếng Anh với nhiều bài học chuyên đề chất lượng cao, phù hợp ở mỗi cấp độ. Phương pháp “Học qua dự án” (Project-based learning) giúp học viên tăng thêm sự tự tin khi sử dụng tiếng Anh ở đa dạng các lĩnh vực và giúp hoàn thiện 6 kỹ năng vàng của kỷ nguyên số, nắm bắt xu hướng nghề nghiệp.",
+    "Duration": "3 tháng",
+    "CourseAreaId": "30f34ca4-0b09-4e46-b294-d900e3d6e3f4",
+    "CourseLanguageId": "5bd7e2bf-f0bc-4da9-89ea-978df8cc801f",
+    "CourseCategoryId": "1b3ffca1-a19d-490b-b3fb-9434f58e66e3",
+    "CreatedBy": "admin@gmail.com"
+  }
+]
