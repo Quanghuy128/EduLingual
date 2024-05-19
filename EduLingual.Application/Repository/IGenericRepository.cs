@@ -51,7 +51,7 @@ namespace EduLingual.Application.Repository
 
             #region Insert
 
-            Task InsertAsync(T entity);
+            Task<T> InsertAsync(T entity);
 
             Task InsertRangeAsync(IEnumerable<T> entities);
 

@@ -1,4 +1,5 @@
 ﻿using EduLingual.Domain.Constants;
+using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,5 +17,8 @@ namespace EduLingual.Domain.Dtos.User
         public string FullName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public UserStatus UserStatus { get; set; } = UserStatus.Active;
+
+        [Required(ErrorMessage = MessageConstant.Vi.User.Require.RoleRequired)]
+        public Guid RoleId { get; set; }
     }
 }

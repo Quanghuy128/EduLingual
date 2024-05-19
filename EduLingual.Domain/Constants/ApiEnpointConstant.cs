@@ -13,7 +13,9 @@
         public const string ByIdRoute = "/{id}";
         public static class User
         {
+            /// <summary>"api/v1/users"</summary>
             public const string UsersEndpoint = ApiEndpoint + "/users";
+            /// <summary>"api/v1/users/{id}"</summary>
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
         }
         public static class Course

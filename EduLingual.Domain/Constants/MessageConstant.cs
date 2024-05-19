@@ -24,6 +24,7 @@
                 private const string FullName = "Tên người dùng";
                 private const string Description = "Mô tả";
                 private const string UserStatus = "Trạng thái";
+                private const string Role = "Chức vụ";
                 #endregion
                 public static class Require
                 {
@@ -32,6 +33,7 @@
                     public const string FullNameRequired = FullName + RequiredSuffix;
                     public const string DescriptionRequired = Description + RequiredSuffix;
                     public const string StatusRequired = UserStatus + RequiredSuffix;
+                    public const string RoleRequired = Role + RequiredSuffix;
                 }
                 public static class Success
                 {
