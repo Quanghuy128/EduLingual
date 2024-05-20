@@ -98,14 +98,17 @@ namespace EduLingual.Api.Configuration
                     new CourseCategory
                     {
                         Name = "Giao tiếp",
+                        LanguageId = Guid.Parse("c951f636-74e7-437e-aaf8-9ba0d3d44991")
                     },
                     new CourseCategory
                     {
                         Name = "TOEIC",
+                        LanguageId = Guid.Parse("c951f636-74e7-437e-aaf8-9ba0d3d44991")
                     },
                     new CourseCategory
                    {
                         Name = "IELTS",
+                        LanguageId = Guid.Parse("c951f636-74e7-437e-aaf8-9ba0d3d44991")
                     }
                 }
             );
