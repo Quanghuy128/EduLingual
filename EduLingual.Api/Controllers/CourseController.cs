@@ -17,30 +17,16 @@ namespace EduLingual.Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Course.CoursesEndpoint)]
-        public async Task<IActionResult> GetCoursesByArea([FromQuery] CourseFilter courseFilter)
+        public async Task<IActionResult> GetCourses([FromQuery] CourseFilter courseFilter)
         {
             Result<List<CourseViewModel>> courses = await _courseService.GetCourses(courseFilter);
             return Ok(courses);
         }
 
-        [HttpGet(ApiEndPointConstant.Course.CoursesByAreaEndpoint)]
-        public async Task<IActionResult> GetCoursesByArea([FromQuery] string areaName)
+        [HttpGet(ApiEndPointConstant.Course.CoursesByCenterIdEndpoint)]
+        public async Task<IActionResult> GetCoursesByCenterId(Guid id)
         {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByArea(areaName);
-            return Ok(courses);
-        }
-
-        [HttpGet(ApiEndPointConstant.Course.CoursesByLanguageEndpoint)]
-        public async Task<IActionResult> GetCoursesByLanguage([FromQuery] string languageName)
-        {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByLanguage(languageName);
-            return Ok(courses);
-        }
-
-        [HttpGet(ApiEndPointConstant.Course.CoursesByCategoryEndpoint)]
-        public async Task<IActionResult> GetCoursesByCategory([FromQuery] string categoryName)
-        {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByCategory(categoryName);
+            Result<CoursesByCenterViewModel> courses = await _courseService.GetCoursesByCenterId(id);
             return Ok(courses);
         }
 

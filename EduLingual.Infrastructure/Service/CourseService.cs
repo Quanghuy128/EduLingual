@@ -65,39 +65,28 @@ namespace EduLingual.Infrastructure.Service
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
 
-        public async Task<Result<List<CourseViewModel>>> GetCoursesByArea(string areaName)
-        {
-            CourseArea courseArea = await _unitOfWork.GetRepository<CourseArea>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(areaName));
-            if (courseArea == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseArea.Fail.NotFoundCourseArea);
-
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CourseArea.Name.Equals(areaName));
-
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
-        }
-
-        public async Task<Result<List<CourseViewModel>>> GetCoursesByLanguage(string languageName)
-        {
-            CourseLanguage courseLanguage = await _unitOfWork.GetRepository<CourseLanguage>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(languageName));
-            if (courseLanguage == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseLanguage.Fail.NotFoundCourseLanguage);
-
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CourseLanguage.Name.Equals(languageName));
-
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
-        }
-
-        public async Task<Result<List<CourseViewModel>>> GetCoursesByCategory(string categoryName)
-        {
-            CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(categoryName));
-            if (courseCategory == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);
-
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CourseCategory.Name.Equals(categoryName));
-
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
-        }
-
         public Task<Result<bool>> Update(UpdateCourseRequest request)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Result<CoursesByCenterViewModel>> GetCoursesByCenterId(Guid id)
+
+        {
+            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+
+            if (center == null) return BadRequest<CoursesByCenterViewModel>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
+
+            CoursesByCenterViewModel coursesByCenterViewModel = new CoursesByCenterViewModel()
+            {
+                FullName = center.FullName,
+                Description = center.Description,
+                Courses = _mapper.Map<List<CourseViewModel>>(courses)
+            };
+
+            return Success(coursesByCenterViewModel);
         }
     }
 }
