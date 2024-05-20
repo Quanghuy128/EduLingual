@@ -19,6 +19,11 @@ namespace EduLingual.Domain.Entities
         [EnumDataType(typeof(CourseCategoryStatus))]
         public CourseCategoryStatus Status { get; set; } = CourseCategoryStatus.Available;
 
+        [Column("language_id")]
+        [ForeignKey(nameof(CourseLanguage))]
+        public Guid LanguageId { get; set; }
+        public CourseLanguage CourseLanguage { get; set; } = null!;
+
         [InverseProperty(nameof(CourseCategory))]
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
     }

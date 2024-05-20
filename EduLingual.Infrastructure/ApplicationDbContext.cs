@@ -25,7 +25,7 @@ namespace EduLingual.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=123456;TrustServerCertificate=True;");
+                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=root;TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -82,6 +82,11 @@ namespace EduLingual.Infrastructure
                .HasOne(p => p.Center)
                .WithMany(d => d.OwnCourses)
                .HasForeignKey(p => p.CenterId);
+
+            modelBuilder.Entity<CourseCategory>()
+               .HasOne(p => p.CourseLanguage)
+               .WithMany(d => d.CourseCategories)
+               .HasForeignKey(p => p.LanguageId);
             #endregion
         }
     }
