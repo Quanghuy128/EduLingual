@@ -1,4 +1,5 @@
 ﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Enum;
 using EduLingual.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,12 @@ namespace EduLingual.Domain.Entities
 
         [Column("duration")]
         public string Duration {  get; set; } = string.Empty;
+
+        [Column("tuition_fee")]
+        public double Tuitionfee { get; set; } = 0;
+
+        [Column("status")]
+        public CourseStatus Status { get; set; } = CourseStatus.Active;
 
         [Column("area_id")]
         [ForeignKey(nameof(CourseArea))]

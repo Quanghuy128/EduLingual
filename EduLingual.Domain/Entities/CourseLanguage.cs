@@ -21,5 +21,8 @@ namespace EduLingual.Domain.Entities
 
         [InverseProperty(nameof(CourseLanguage))]
         public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+        [InverseProperty(nameof(CourseLanguage))]
+        public virtual ICollection<CourseCategory> CourseCategories { get; set; } = new List<CourseCategory>();
     }
 }
