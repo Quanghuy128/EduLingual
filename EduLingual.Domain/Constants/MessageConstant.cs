@@ -19,6 +19,7 @@
             {
                 #region User Field
                 private const string UserMessage = "người dùng";
+                private const string CenterMessage = "Trung tâm";
                 private const string UserName = "Tên đăng nhập";
                 private const string Password = "Mật khẩu";
                 private const string FullName = "Tên người dùng";
@@ -46,6 +47,7 @@
                     public static string CreateUser = String.Format(CreateFailTemplate, UserMessage);
                     public static string UpdateUser = String.Format(UpdateFailTemplate, UserMessage);
                     public static string DeleteUser = String.Format(DeleteFailTemplate, UserMessage);
+                    public static string NotFoundCenter = String.Format(NotFoundTemplate, CenterMessage);
                 }
             }
             public static class Course
@@ -68,55 +70,81 @@
             }
             public static class CourseArea
             {
-                #region Course Field
-                private const string CourseAreaMessage = "CourseArea";
+                #region CourseArea Field
+                private const string CourseAreaMessage = "Khu vực";
+                private const string Name = "Tên khu vực";
+                private const string CourseAreaStatus = "Trạng thái";
                 #endregion
                 public static class Require
                 {
-
+                    public const string NameRequired = Name + RequiredSuffix;
+                    public const string StatusRequired = CourseAreaStatus + RequiredSuffix;
                 }
                 public static class Success
                 {
-
+                    public static string CreateCourseArea = String.Format(CreateSuccessTemplate, CourseAreaMessage);
+                    public static string UpdateCourseArea = String.Format(UpdateSuccessTemplate, CourseAreaMessage);
+                    public static string DeleteCourseArea = String.Format(DeleteSuccessTemplate, CourseAreaMessage);
                 }
                 public static class Fail
                 {
+                    public static string CreateCourseArea = String.Format(CreateFailTemplate, CourseAreaMessage);
+                    public static string UpdateCourseArea = String.Format(UpdateFailTemplate, CourseAreaMessage);
+                    public static string DeleteCourseArea = String.Format(DeleteFailTemplate, CourseAreaMessage);
                     public static string NotFoundCourseArea = String.Format(NotFoundTemplate, CourseAreaMessage);
                 }
             }
             public static class CourseLanguage
             {
-                #region Course Field
-                private const string CourseLanguageMessage = "CourseLanguage";
+                #region CourseLanguage Field
+                private const string CourseLanguageMessage = "Ngôn ngữ";
+                private const string Name = "Tên ngôn ngữ";
+                private const string CourseLanguageStatus = "Trạng thái";
                 #endregion
                 public static class Require
                 {
-
+                    public const string NameRequired = Name + RequiredSuffix;
+                    public const string StatusRequired = CourseLanguageStatus + RequiredSuffix;
                 }
                 public static class Success
                 {
-
+                    public static string CreateCourseLanguage = String.Format(CreateSuccessTemplate, CourseLanguageMessage);
+                    public static string UpdateCourseLanguage = String.Format(UpdateSuccessTemplate, CourseLanguageMessage);
+                    public static string DeleteCourseLanguage = String.Format(DeleteSuccessTemplate, CourseLanguageMessage);
                 }
                 public static class Fail
                 {
+                    public static string CreateCourseLanguage = String.Format(CreateFailTemplate, CourseLanguageMessage);
+                    public static string UpdateCourseLanguage = String.Format(UpdateFailTemplate, CourseLanguageMessage);
+                    public static string DeleteCourseLanguage = String.Format(DeleteFailTemplate, CourseLanguageMessage);
                     public static string NotFoundCourseLanguage = String.Format(NotFoundTemplate, CourseLanguageMessage);
                 }
             }
             public static class CourseCategory
             {
-                #region Course Field
-                private const string CourseCategoryMessage = "CourseCategory";
+                #region CourseCategory Field
+                private const string CourseCategoryMessage = "Loại khóa học";
+                private const string Name = "Tên loại khóa học";
+                private const string Language = "Ngôn ngữ";
+                private const string CourseCategoryStatus = "Trạng thái";
                 #endregion
                 public static class Require
                 {
-
+                    public const string NameRequired = Name + RequiredSuffix;
+                    public const string LanguageRequired = Language + RequiredSuffix;
+                    public const string StatusRequired = CourseCategoryStatus + RequiredSuffix;
                 }
                 public static class Success
                 {
-
+                    public static string CreateCourseCategory = String.Format(CreateSuccessTemplate, CourseCategoryMessage);
+                    public static string UpdateCourseCategory = String.Format(UpdateSuccessTemplate, CourseCategoryMessage);
+                    public static string DeleteCourseCategory = String.Format(DeleteSuccessTemplate, CourseCategoryMessage);
                 }
                 public static class Fail
                 {
+                    public static string CreateCourseCategory = String.Format(CreateFailTemplate, CourseCategoryMessage);
+                    public static string UpdateCourseCategory = String.Format(UpdateFailTemplate, CourseCategoryMessage);
+                    public static string DeleteCourseCategory = String.Format(DeleteFailTemplate, CourseCategoryMessage);
                     public static string NotFoundCourseCategory = String.Format(NotFoundTemplate, CourseCategoryMessage);
                 }
             }

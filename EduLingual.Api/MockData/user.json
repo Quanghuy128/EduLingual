@@ -26,4 +26,13 @@
     "Status": "1",
     "CreatedBy": "admin@gmail.com"
   }
+  {
+    "Username": "teacher-02",
+    "Password": "1",
+    "FullName": "Trung tâm tiếng Anh Vicky English",
+    "Description": "VICKY English là Trung tâm Anh ngữ đào tạo chuyên sâu các khóa học Phát âm chuẩn & Giao tiếp phản xạ dành cho Cá nhân và Doanh nghiệp tại TP.HCM.",
+    "RoleId": "f475a5e7-f15f-4100-b7b4-90f9dbc581c1",
+    "Status": "1",
+    "CreatedBy": "admin@gmail.com"
+  }
 ]
