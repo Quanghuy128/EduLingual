@@ -22,9 +22,22 @@
         {
             public const string CoursesEndpoint = ApiEndpoint + "/khoa-hoc";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
-            public const string CoursesByLanguageEndpoint = CoursesEndpoint + "-theo-ngon-ngu";
-            public const string CoursesByAreaEndpoint = CoursesEndpoint + "-theo-khu-vuc";
-            public const string CoursesByCategoryEndpoint = CoursesEndpoint + "-theo-danh-muc";
+            public const string CoursesByCenterIdEndpoint = ApiEndpoint + "/trung-tam";
+        }
+        public static class CourseArea
+        {
+            public const string CourseAreasEndpoint = ApiEndpoint + "/khu-vuc";
+            public const string CourseAreaEndpoint = CourseAreasEndpoint + ByIdRoute;
+        }
+        public static class CourseLanguage
+        {
+            public const string CourseLanguagesEndpoint = ApiEndpoint + "/ngon-ngu";
+            public const string CourseLanguageEndpoint = CourseLanguagesEndpoint + ByIdRoute;
+        }
+        public static class CourseCategory
+        {
+            public const string CourseCategoriesEndpoint = ApiEndpoint + "/loai-khoa-hoc";
+            public const string CourseCategoryEndpoint = CourseCategoriesEndpoint + ByIdRoute;
         }
     }
 }
