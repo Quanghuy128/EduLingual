@@ -8,6 +8,7 @@ namespace EduLingual.Api.Configuration
         {
 
             AppConfig.ConnectionString = new ConnectionString();
+            AppConfig.JwtSetting = new JwtSetting();
 
             configuration.Bind("ConnectionStrings", AppConfig.ConnectionString);
 

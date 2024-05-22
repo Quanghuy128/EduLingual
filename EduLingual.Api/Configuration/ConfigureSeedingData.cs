@@ -9,10 +9,17 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task DbInitializer(this IServiceProvider serviceProvider)
         {
-            using var scope = serviceProvider.CreateScope();
-            await using ApplicationDbContext dbContext =
-                scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await Seeding.InitializeAsync(dbContext);
+            try
+            {
+                using var scope = serviceProvider.CreateScope();
+                await using ApplicationDbContext dbContext =
+                    scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await Seeding.InitializeAsync(dbContext);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         public static async Task ApplyMigration(this IServiceProvider services)
         {
@@ -45,7 +52,7 @@ namespace EduLingual.Api.Configuration
                     new Role
                     {
                         Id = new Guid("77f2299e-3743-4afe-8e87-978f6afd831a"),
-                        RoleName = "User"
+                        RoleName = "Candidate"
                     },
                     new Role
                     {

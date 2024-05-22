@@ -11,6 +11,11 @@
         public const string ApiEndpoint = RootEndPoint + ApiVersion;
 
         public const string ByIdRoute = "/{id}";
+        public static class Authentication
+        {
+            /// <summary>"api/v1/login"</summary>
+            public const string LoginEndPoint = ApiEndpoint + "/login";
+        }
         public static class User
         {
             /// <summary>"api/v1/users"</summary>
