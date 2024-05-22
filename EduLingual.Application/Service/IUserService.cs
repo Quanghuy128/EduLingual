@@ -2,9 +2,7 @@
 using EduLingual.Domain.Dtos.Authentication;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
-using EduLingual.Domain.Pagination;
 using System.Linq.Expressions;
-using System.Security.Principal;
 
 namespace EduLingual.Application.Service
 {

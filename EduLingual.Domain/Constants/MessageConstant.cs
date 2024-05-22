@@ -1,4 +1,7 @@
-﻿namespace EduLingual.Domain.Constants
+﻿using EduLingual.Domain.Entities;
+using EduLingual.Domain.Enum;
+
+namespace EduLingual.Domain.Constants
 {
     public static class MessageConstant
     {
@@ -53,18 +56,42 @@
             public static class Course
             {
                 #region Course Field
-                private const string CourseMessage = "Course";
+                private const string CenterMessage = "Trung tâm";
+                private const string CourseMessage = "Khóa học";
+                private const string Title = "Tiêu đề";
+                private const string Description = "Mô tả";
+                private const string Duration = "Thời lượng";
+                private const string TutionFee = "Học phí";
+                private const string Center = "Trung tâm";
+                private const string Area = "Khu vực";
+                private const string Language = "Ngôn ngữ";
+                private const string Category = "Loại khóa học";
+                private const string CourseStatus = "Trạng thái";
                 #endregion
                 public static class Require
                 {
-
+                    public const string TitleRequired = Title + RequiredSuffix;
+                    public const string DescriptionRequired = Description + RequiredSuffix;
+                    public const string DurationRequired = Duration + RequiredSuffix;
+                    public const string TutionFeeRequired = TutionFee + RequiredSuffix;
+                    public const string CenterRequired = Center + RequiredSuffix;
+                    public const string AreaRequired = Area + RequiredSuffix;
+                    public const string LanguageRequired = Language + RequiredSuffix;
+                    public const string CategoryRequired = Category + RequiredSuffix;
+                    public const string StatusRequired = CourseStatus + RequiredSuffix;
                 }
                 public static class Success
                 {
-
+                    public static string CreateCourse = String.Format(CreateSuccessTemplate, CourseMessage);
+                    public static string UpdateCourse = String.Format(UpdateSuccessTemplate, CourseMessage);
+                    public static string DeleteCourse = String.Format(DeleteSuccessTemplate, CourseMessage);
                 }
                 public static class Fail
                 {
+                    public static string CreateCourse = String.Format(CreateFailTemplate, CourseMessage);
+                    public static string UpdateCourse = String.Format(UpdateFailTemplate, CourseMessage);
+                    public static string DeleteCourse = String.Format(DeleteFailTemplate, CourseMessage);
+                    public static string NotFoundCenter = String.Format(NotFoundTemplate, CenterMessage);
                     public static string NotFoundCourse = String.Format(NotFoundTemplate, CourseMessage);
                 }
             }

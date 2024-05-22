@@ -22,12 +22,13 @@
             public const string UsersEndpoint = ApiEndpoint + "/users";
             /// <summary>"api/v1/users/{id}"</summary>
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
+            public const string CoursesByCenterEndpoint = UsersEndpoint + "/{id}/khoa-hoc";
         }
         public static class Course
         {
             public const string CoursesEndpoint = ApiEndpoint + "/khoa-hoc";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
-            public const string CoursesByCenterIdEndpoint = ApiEndpoint + "/trung-tam";
+            public const string CoursesPaginationEndpoint = ApiEndpoint + "/khoa-hoc-1";
         }
         public static class CourseArea
         {
