@@ -29,7 +29,7 @@ namespace EduLingual.Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.CourseLanguage.CourseLanguageEndpoint)]
-        [ProducesResponseType(typeof(Result<List<CourseLanguageViewModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<CourseLanguageViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             Result<CourseLanguageViewModel> result = await _courseLanguageService.Get(id);
