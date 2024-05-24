@@ -15,6 +15,8 @@
         {
             /// <summary>"api/v1/login"</summary>
             public const string LoginEndPoint = ApiEndpoint + "/login";
+            /// <summary>"api/v1/google/login"</summary>
+            public const string GoogleLoginEndPoint = ApiEndpoint + "/google/login";
         }
         public static class User
         {

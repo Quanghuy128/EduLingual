@@ -10,6 +10,7 @@ namespace EduLingual.Domain.Common
     {
         public static ConnectionString ConnectionString { get; set; } = null!;
         public static JwtSetting JwtSetting { get; set; } = null!;
+        public static GoogleSetting GoogleSetting { get; set; } = null!;
     }
     public class ConnectionString
     {
@@ -26,5 +27,10 @@ namespace EduLingual.Domain.Common
         public string? ValidAudience { get; set; }
         public bool RequireExpirationTime { get; set; }
         public bool ValidateLifetime { get; set; } = true;
+    }
+    public class GoogleSetting
+    {
+        public string ClientId { get; set; } = string.Empty;
+        public string ClientSecret { get; set; } = string.Empty;
     }
 }

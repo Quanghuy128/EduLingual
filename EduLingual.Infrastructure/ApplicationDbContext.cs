@@ -25,7 +25,7 @@ namespace EduLingual.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=123456;TrustServerCertificate=True;");
+                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=root;TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
 

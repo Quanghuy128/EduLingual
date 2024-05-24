@@ -22,6 +22,13 @@ namespace EduLingual.Domain.Entities
         [Required]
         public string FullName { get; set; } = null!;
 
+        [Column("email")]
+        [Required]
+        public string Email { get; set; } = null!;
+
+        [Column("image_url")]
+        public string ImageUrl { get; set; } = null!;
+
         [Column("description")]
         [StringLength(1000)]
         public string Description { get; set; } = null!;

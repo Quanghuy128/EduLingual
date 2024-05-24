@@ -9,17 +9,10 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task DbInitializer(this IServiceProvider serviceProvider)
         {
-            try
-            {
-                using var scope = serviceProvider.CreateScope();
-                await using ApplicationDbContext dbContext =
-                    scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await Seeding.InitializeAsync(dbContext);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            using var scope = serviceProvider.CreateScope();
+            await using ApplicationDbContext dbContext =
+                scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await Seeding.InitializeAsync(dbContext);
         }
         public static async Task ApplyMigration(this IServiceProvider services)
         {
@@ -33,12 +26,18 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task InitializeAsync(ApplicationDbContext dbContext)
         {
-            await dbContext.SeedRoles();
-            await dbContext.SeedUsers();
-            await dbContext.SeedAreas();
-            await dbContext.SeedCategories();
-            await dbContext.SeedLanguages();
-            await dbContext.SeedCourses();
+            try
+            {
+                await dbContext.SeedRoles();
+                await dbContext.SeedUsers();
+                await dbContext.SeedAreas();
+                await dbContext.SeedCategories();
+                await dbContext.SeedLanguages();
+                await dbContext.SeedCourses();
+            }catch(Exception ex)
+            {
+
+            }
         }
         
         public static async Task SeedRoles(this ApplicationDbContext context)
