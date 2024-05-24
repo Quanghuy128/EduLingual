@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduLingual.Domain.Dtos.CourseLanguage
 {
-    public class CourseLanguageViewModel
+    public class CourseLanguageViewModel : CourseLanguageDto
     {
-        public string? Name { get; set; }
-        public CourseLanguageStatus CourseLanguageStatus { get; set; }
     }
 }

@@ -9,7 +9,6 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using static EduLingual.Application.Repository.IUnitOfWork;
 
