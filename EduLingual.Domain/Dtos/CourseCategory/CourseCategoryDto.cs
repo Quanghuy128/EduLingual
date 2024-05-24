@@ -1,4 +1,4 @@
-﻿using EduLingual.Domain.Dtos.CourseLanguage;
+﻿using EduLingual.Domain.Common;
 using EduLingual.Domain.Enum;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace EduLingual.Domain.Dtos.CourseCategory
 {
-    public class CourseCategoryViewModel : CourseCategoryDto
+    public class CourseCategoryDto : BaseEntity
     {
-        public CourseLanguageDto? Language { get; set; }
+        public string? Name { get; set; }
+        public CourseCategoryStatus CourseCategoryStatus { get; set; }
     }
 }
