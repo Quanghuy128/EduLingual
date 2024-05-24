@@ -40,5 +40,11 @@
             public const string CourseCategoriesEndpoint = ApiEndpoint + "/loai-khoa-hoc";
             public const string CourseCategoryEndpoint = CourseCategoriesEndpoint + ByIdRoute;
         }
+        public static class Feedback
+        {
+            public const string FeedbacksEndpont = ApiEndpoint + "/binh-luan";
+            public const string FeedbackEndpint = FeedbacksEndpont + ByIdRoute;
+            public const string FeedbacksPaginationEndpoint = ApiEndpoint + "/binh-luan-paing";
+        }
     }
 }

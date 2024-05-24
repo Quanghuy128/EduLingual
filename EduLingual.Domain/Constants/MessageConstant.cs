@@ -51,6 +51,7 @@ namespace EduLingual.Domain.Constants
                     public static string UpdateUser = String.Format(UpdateFailTemplate, UserMessage);
                     public static string DeleteUser = String.Format(DeleteFailTemplate, UserMessage);
                     public static string NotFoundCenter = String.Format(NotFoundTemplate, CenterMessage);
+                    public static string NotFoundUser = String.Format(NotFoundTemplate, UserMessage);
                 }
             }
             public static class Course
@@ -177,17 +178,30 @@ namespace EduLingual.Domain.Constants
             }
             public static class Feedback
             {
+                #region Feedback field
+                private const string FeedbackMessage = "bình luận";
+                private const string DescriptionMessage = "Mô tả";
+                private const string FeedbackStatus = "Trạng thái";
+                private const string UserMessage = "người dùng";
+                #endregion
                 public static class Require
                 {
-
+                    public const string DescriptionRequired = DescriptionMessage + RequiredSuffix;
+                    public const string StatusRequired = FeedbackStatus + RequiredSuffix;
+                    public const string UserRequired = UserMessage + RequiredSuffix;
                 }
                 public static class Success
                 {
-
+                    public static string CreateFeedback = String.Format(CreateSuccessTemplate, FeedbackMessage);
+                    public static string UpdateFeedback = String.Format(UpdateSuccessTemplate, FeedbackMessage);
+                    public static string DeleteFeedback = String.Format(DeleteSuccessTemplate, FeedbackMessage);
                 }
                 public static class Fail
                 {
-
+                    public static string CreateFeedback = String.Format(CreateFailTemplate, FeedbackMessage);
+                    public static string UpdateFeedback = String.Format(UpdateFailTemplate, FeedbackMessage);
+                    public static string DeleteFeedback = String.Format(DeleteFailTemplate, FeedbackMessage);
+                    public static string NotFoundFeedback = String.Format(NotFoundTemplate, FeedbackMessage);
                 }
             }
 
