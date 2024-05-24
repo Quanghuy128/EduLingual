@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace EduLingual.Domain.Dtos.CourseArea
 {
-    public class CourseAreaViewModel
+    public class CourseAreaViewModel : CourseAreaDto
     {
-        public string? Name { get; set; }
-        public CourseAreaStatus CourseAreaStatus { get; set; }
     }
 }

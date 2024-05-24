@@ -1,26 +1,15 @@
-﻿using EduLingual.Domain.Entities;
-using EduLingual.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EduLingual.Domain.Enum;
+﻿using EduLingual.Domain.Dtos.CourseArea;
+using EduLingual.Domain.Dtos.CourseLanguage;
+using EduLingual.Domain.Dtos.CourseCategory;
+using EduLingual.Domain.Dtos.User;
 
 namespace EduLingual.Domain.Dtos.Course
 {
-    public class CourseViewModel
+    public class CourseViewModel : CourseDto
     {
-        public Guid Id { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Duration { get; set; }
-        public double Tuitionfee { get; set; }
-        public Entities.CourseArea? CourseArea { get; set; }
-        public Entities.CourseLanguage? CourseLanguage { get; set; } 
-        public Entities.CourseCategory? CourseCategory { get; set; }
-        public Entities.User? Center { get; set; }
+        public CourseAreaDto? CourseArea { get; set; }
+        public CourseLanguageDto? CourseLanguage { get; set; }
+        public CourseCategoryDto? CourseCategory { get; set; }
+        public UserDto? Center { get; set; }
     }
 }
