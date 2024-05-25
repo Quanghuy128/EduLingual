@@ -55,6 +55,7 @@ namespace EduLingual.Domain.Constants
                     public static string UpdateUser = String.Format(UpdateFailTemplate, UserMessage);
                     public static string DeleteUser = String.Format(DeleteFailTemplate, UserMessage);
                     public static string NotFoundCenter = String.Format(NotFoundTemplate, CenterMessage);
+                    public static string NotFoundUser = String.Format(NotFoundTemplate, UserMessage);
                 }
             }
             public static class Course

@@ -1,4 +1,5 @@
-﻿using EduLingual.Domain.Entities;
+﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EduLingual.Infrastructure
@@ -25,7 +26,7 @@ namespace EduLingual.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=root;TrustServerCertificate=True;");
+                .UseNpgsql(AppConfig.ConnectionString.DefaultConnection);
             base.OnConfiguring(optionsBuilder);
         }
 
