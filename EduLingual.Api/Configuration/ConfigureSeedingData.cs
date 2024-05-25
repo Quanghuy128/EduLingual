@@ -26,12 +26,18 @@ namespace EduLingual.Api.Configuration
     {
         public static async Task InitializeAsync(ApplicationDbContext dbContext)
         {
-            await dbContext.SeedRoles();
-            await dbContext.SeedUsers();
-            await dbContext.SeedAreas();
-            await dbContext.SeedCategories();
-            await dbContext.SeedLanguages();
-            await dbContext.SeedCourses();
+            try
+            {
+                await dbContext.SeedRoles();
+                await dbContext.SeedUsers();
+                await dbContext.SeedAreas();
+                await dbContext.SeedCategories();
+                await dbContext.SeedLanguages();
+                await dbContext.SeedCourses();
+            }catch(Exception ex)
+            {
+
+            }
         }
         
         public static async Task SeedRoles(this ApplicationDbContext context)
@@ -45,7 +51,7 @@ namespace EduLingual.Api.Configuration
                     new Role
                     {
                         Id = new Guid("77f2299e-3743-4afe-8e87-978f6afd831a"),
-                        RoleName = "User"
+                        RoleName = "Candidate"
                     },
                     new Role
                     {

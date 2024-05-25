@@ -8,10 +8,14 @@ namespace EduLingual.Api.Configuration
         {
 
             AppConfig.ConnectionString = new ConnectionString();
+            AppConfig.JwtSetting = new JwtSetting();
+            AppConfig.GoogleSetting = new GoogleSetting();
 
             configuration.Bind("ConnectionStrings", AppConfig.ConnectionString);
 
             configuration.Bind("JwtSettings", AppConfig.JwtSetting);
+
+            configuration.Bind("GoogleSetting", AppConfig.GoogleSetting);
         }
     }
 }

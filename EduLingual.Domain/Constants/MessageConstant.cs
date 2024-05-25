@@ -18,6 +18,10 @@ namespace EduLingual.Domain.Constants
 
             private const string RequiredSuffix = " không được bỏ trống !!!";
             #endregion
+            public static class Auth
+            {
+                public const string GoogleLoginFail = "Đăng nhập bằng google thất bại!!! Thử lại sau";
+            }
             public static class User
             {
                 #region User Field

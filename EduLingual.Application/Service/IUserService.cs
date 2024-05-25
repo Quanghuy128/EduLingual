@@ -1,4 +1,5 @@
 ﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Dtos.Authentication;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ namespace EduLingual.Application.Service
 {
     public interface IUserService
     {
-        Task<Result<UserViewModel>> Login(string username, string password);
+        Task<(Tuple<string, Guid>, Result<LoginResponse>, User user)> Login(LoginRequest request);
         Task<Result<List<UserViewModel>>> GetAll(Expression<Func<User, bool>>? predicate);
         Task<PagingResult<UserViewModel>> GetPagination(Expression<Func<User, bool>>? predicate, int page, int size);
         Task<Result<UserViewModel>> Get(Guid id);

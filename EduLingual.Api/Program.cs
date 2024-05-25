@@ -34,11 +34,13 @@ try
         app.UseSwaggerUI(option => option.EnablePersistAuthorization());
 
         await app.Services.ApplyMigration();
-        //await app.Services.DbInitializer();
+        await app.Services.DbInitializer();
     }
     app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
     app.UseHttpsRedirection();
+
+    app.UseAuthentication();
 
     app.UseAuthorization();
 

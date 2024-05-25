@@ -3,14 +3,18 @@ using EduLingual.Application.Repository;
 using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
+using EduLingual.Domain.Dtos.Authentication;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using System.Security.Principal;
 
 namespace EduLingual.Infrastructure.Service
 {
@@ -111,9 +115,22 @@ namespace EduLingual.Infrastructure.Service
             return null!;
         }
 
-        public Task<Result<UserViewModel>> Login(string username, string password)
+        public async Task<(Tuple<string, Guid> , Result<LoginResponse>, User user)> Login(LoginRequest request)
         {
-            throw new NotImplementedException();
+            Expression<Func<User, bool>> searchFilter = p =>
+                                                p.UserName.Equals(request.Username) &&
+                                                p.Password.Equals(request.Password);
+            User user = await _unitOfWork.GetRepository<User>()
+                .SingleOrDefaultAsync(predicate: searchFilter, include: p => p.Include(x => x.Role));
+
+            if (user == null) return (null, null, null)!;
+            RoleEnum role = EnumHelper.ParseEnum<RoleEnum>(user.Role.RoleName);
+            Tuple<string, Guid> guidClaim = null!;
+            LoginResponse loginResponse = null!;
+
+            loginResponse = new LoginResponse(user.Id, user.UserName, user.FullName, user.Role.RoleName, user.Status.GetDescriptionFromEnum());
+
+            return (guidClaim, Success(loginResponse), user);
         }
 
         public async Task<Result<bool>> Update(Guid id, UpdateUserRequest request)
