@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using System.Net;
 using System.Security.Principal;
 
 namespace EduLingual.Infrastructure.Service
@@ -123,7 +124,11 @@ namespace EduLingual.Infrastructure.Service
             User user = await _unitOfWork.GetRepository<User>()
                 .SingleOrDefaultAsync(predicate: searchFilter, include: p => p.Include(x => x.Role));
 
-            if (user == null) return (null, null, null)!;
+            if (user == null) return (null, new Result<LoginResponse>
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = MessageConstant.Vi.User.Fail.NotFoundUser
+            }, null)!;
             RoleEnum role = EnumHelper.ParseEnum<RoleEnum>(user.Role.RoleName);
             Tuple<string, Guid> guidClaim = null!;
             LoginResponse loginResponse = null!;

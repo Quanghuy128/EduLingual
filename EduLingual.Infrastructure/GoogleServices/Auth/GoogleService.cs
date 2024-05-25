@@ -1,11 +1,11 @@
 ﻿using EduLingual.Api.Helpers;
+using EduLingual.Application.GoogleServices.Auth;
 using EduLingual.Application.Repository;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Authentication;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
-using EduLingual.Infrastructure;
 using EduLingual.Infrastructure.Service;
 using Google.Apis.Oauth2.v2.Data;
 using MapsterMapper;
@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace EduLingual.Application.GoogleServices.Auth
+namespace EduLingual.Infrastructure.GoogleServices.Auth
 {
     public class GoogleService : BaseService<GoogleService>, IGoogleService
     {
@@ -44,7 +44,7 @@ namespace EduLingual.Application.GoogleServices.Auth
                             GivenName = userInfoJSON["given_name"]?.ToString(),
                             FamilyName = userInfoJSON["family_name"]?.ToString(),
                             Picture = userInfoJSON["picture"]?.ToString(),
-                            VerifiedEmail = Boolean.Parse(userInfoJSON["verified_email"]!.ToString()!),
+                            VerifiedEmail = bool.Parse(userInfoJSON["verified_email"]!.ToString()!),
                         };
 
                         //Add User To DB
@@ -62,7 +62,7 @@ namespace EduLingual.Application.GoogleServices.Auth
                             };
                             user = await _unitOfWork.GetRepository<User>()
                                                     .InsertAsync(newUser);
-                            
+
                             if (user == null)
                             {
                                 throw new ArgumentException(MessageConstant.Vi.User.Fail.CreateUser);
