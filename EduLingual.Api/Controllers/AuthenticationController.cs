@@ -46,5 +46,17 @@ namespace EduLingual.Api.Controllers
             result.Item2.Data!.AccessToken = token;
             return StatusCode((int)result.Item2.StatusCode, result.Item2);
         }
+
+        //[HttpPut(ApiEndPointConstant.Authentication.GoogleLoginEndPoint)]
+        //[ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        //{
+        //    (Tuple<string, Guid>, Result<LoginResponse>, User) result = (await _googleService.GoogleLogin(request.AccessToken)).Data;
+
+        //    var token = JwtUtil.GenerateJwtToken(result.Item3, result.Item1);
+        //    result.Item2.Data!.AccessToken = token;
+        //    return StatusCode((int)result.Item2.StatusCode, result.Item2);
+        //}
     }
 }
