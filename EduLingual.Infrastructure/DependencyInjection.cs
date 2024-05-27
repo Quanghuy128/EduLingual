@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using EduLingual.Application.Service;
+using EduLingual.Infrastructure.GoogleServices.Auth;
 using EduLingual.Infrastructure.Repository;
 using System.Reflection;
 using static EduLingual.Application.Repository.IGenericRepository;
