@@ -51,5 +51,8 @@ namespace EduLingual.Domain.Entities
 
         [InverseProperty("Center")]
         public virtual ICollection<Course> OwnCourses { get; set; } = new List<Course>();
+
+        [InverseProperty(nameof(User))]
+        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }
 }

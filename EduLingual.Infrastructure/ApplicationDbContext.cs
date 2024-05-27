@@ -1,4 +1,5 @@
-﻿using EduLingual.Domain.Entities;
+﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EduLingual.Infrastructure
@@ -20,12 +21,13 @@ namespace EduLingual.Infrastructure
         public DbSet<CourseCategory> CoursesCategories { get; set;}
         public DbSet<CourseArea> CourseAreas { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql("server=127.0.0.1;port=5432;database=edulingual;uid=postgres;password=root;TrustServerCertificate=True;");
+                .UseNpgsql(AppConfig.ConnectionString.DefaultConnection);
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -87,6 +89,16 @@ namespace EduLingual.Infrastructure
                .HasOne(p => p.CourseLanguage)
                .WithMany(d => d.CourseCategories)
                .HasForeignKey(p => p.LanguageId);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Course)
+                .WithMany(d => d.Payments)
+                .HasForeignKey(p => p.CourseId);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.User)
+                .WithMany(d => d.Payments)
+                .HasForeignKey(p => p.UserId);
             #endregion
         }
     }
