@@ -1,5 +1,10 @@
 using EduLingual.Api.Configuration;
 using EduLingual.Api.Middlewares;
+using EduLingual.Domain.Common;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 try
 {
@@ -24,6 +29,26 @@ try
 
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
+                
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
+    }).AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = AppConfig.JwtSetting.ValidIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AppConfig.JwtSetting.SecretKey))
+        };
+    });
 
     var app = builder.Build();
 
