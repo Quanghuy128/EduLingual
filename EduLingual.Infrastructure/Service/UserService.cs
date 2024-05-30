@@ -4,6 +4,7 @@ using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Authentication;
+using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
@@ -165,6 +166,16 @@ namespace EduLingual.Infrastructure.Service
             {
                 return Fail<bool>(ex.Message);
             }
+        }
+
+        public async Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id)
+        {
+            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            if (center == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
+
+            return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
     }
 }

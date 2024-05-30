@@ -2,8 +2,10 @@
 using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
+using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Enum;
+using EduLingual.Infrastructure.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduLingual.Api.Controllers
@@ -58,6 +60,14 @@ namespace EduLingual.Api.Controllers
         {
             Result<bool> result = await _userService.Delete(id);
             return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
+        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCoursesByCenter(Guid id)
+        {
+            Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(id);
+            return Ok(courses);
         }
     }
 }
