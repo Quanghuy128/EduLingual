@@ -9,6 +9,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using static EduLingual.Application.Repository.IUnitOfWork;
 
@@ -196,16 +197,18 @@ namespace EduLingual.Infrastructure.Service
             return null!;
         }
 
-        public async Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id)
+        public async Task<Result<List<UserCourseDto>>> GetStudentsByCourse(Guid id)
         {
-            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (center == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+            Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            if (course == null) return BadRequest<List<UserCourseDto>>(MessageConstant.Vi.Course.Fail.NotFoundCourse);
 
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
+            ICollection<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
+                predicate: x => x.CourseId.Equals(id),
+                include: x => x.Include(x => x.User)
+                ); 
 
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
+            return Success(_mapper.Map<List<UserCourseDto>>(students));
         }
-
-
     }
 }

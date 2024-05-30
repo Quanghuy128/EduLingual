@@ -9,8 +9,8 @@ namespace EduLingual.Application.Service
     public interface ICourseService
     {
         Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter);
-        Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id);
-       // Task<Result<List<CourseViewModel>>> GetTopCourses(Guid id);
+        Task<Result<List<UserCourseDto>>> GetStudentsByCourse(Guid id);
+        // Task<Result<List<CourseViewModel>>> GetTopCourses(Guid id);
         Task<PagingResult<CourseViewModel>> GetPagination(Expression<Func<Course, bool>>? predicate, int page, int size);
         Task<Result<CourseViewModel>> GetCourseById(Guid id);
         Task<Result<CourseViewModel>> GetCourseByCondition(Expression<Func<UserDto, bool>> predicate);

@@ -22,15 +22,18 @@
         {
             /// <summary>"api/v1/users"</summary>
             public const string UsersEndpoint = ApiEndpoint + "/users";
+            public const string CentersEndpoint = ApiEndpoint + "/trung-tam";
             /// <summary>"api/v1/users/{id}"</summary>
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
-            public const string CoursesByCenterEndpoint = UsersEndpoint + "/{id}/khoa-hoc";
+            public const string CoursesByCenterEndpoint = CentersEndpoint + "/{id}/khoa-hoc";
         }
         public static class Course
         {
             public const string CoursesEndpoint = ApiEndpoint + "/khoa-hoc";
+            public const string CoursesPaginationEndpoint = ApiEndpoint + "/khoa-hoc-paging";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
-            public const string CoursesPaginationEndpoint = ApiEndpoint + "/khoa-hoc-1";
+            public const string UsersByCourseEnpoint = CoursesEndpoint + "/{id}/nguoi-hoc";
+
         }
         public static class CourseArea
         {
@@ -41,6 +44,7 @@
         {
             public const string CourseLanguagesEndpoint = ApiEndpoint + "/ngon-ngu";
             public const string CourseLanguageEndpoint = CourseLanguagesEndpoint + ByIdRoute;
+            public const string CategoriesByLanguageEndpoint = CourseLanguagesEndpoint + "/{id}/loai-khoa-hoc";
         }
         public static class CourseCategory
         {
@@ -49,9 +53,9 @@
         }
         public static class Feedback
         {
-            public const string FeedbacksEndpont = ApiEndpoint + "/binh-luan";
-            public const string FeedbackEndpint = FeedbacksEndpont + ByIdRoute;
-            public const string FeedbacksPaginationEndpoint = ApiEndpoint + "/binh-luan-paing";
+            public const string FeedbacksEndpoint = ApiEndpoint + "/binh-luan";
+            public const string FeedbackEndpoint = FeedbacksEndpoint + ByIdRoute;
+            public const string FeedbacksPaginationEndpoint = ApiEndpoint + "/binh-luan-paging";
         }
     }
 }
