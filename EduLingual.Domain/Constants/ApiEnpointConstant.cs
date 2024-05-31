@@ -57,5 +57,10 @@
             public const string FeedbackEndpoint = FeedbacksEndpoint + ByIdRoute;
             public const string FeedbacksPaginationEndpoint = ApiEndpoint + "/binh-luan-paging";
         }
+        public static class UserCourse
+        {
+            public const string CourseUsersEndpoint = ApiEndpoint + "/UserCourse";
+            public const string CourseUserEndpointJoin = CourseUsersEndpoint + "/join";
+        }
     }
 }
