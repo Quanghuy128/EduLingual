@@ -14,7 +14,7 @@ namespace EduLingual.Api.Controllers
     [ApiController]
     public class FeedbackController : BaseController<FeedbackController>
     {
-        IFeedbackService _feedbackSerivce;
+        private readonly IFeedbackService _feedbackSerivce;
         public FeedbackController(ILogger<FeedbackController> logger, IFeedbackService feedbackService) : base(logger)
         {
             _feedbackSerivce = feedbackService;
