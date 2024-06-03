@@ -19,6 +19,6 @@ namespace EduLingual.Domain.Dtos.Course
         public Guid? CourseAreaId { get; set; }
         public Guid? CourseLanguageId { get; set; }
         public Guid? CourseCategoryId { get; set; }
-        public CourseStatus? CourseStatus { get; set; }
+        public CourseStatus? Status { get; set; }
     }
 }

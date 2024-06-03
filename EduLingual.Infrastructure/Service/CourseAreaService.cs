@@ -76,7 +76,7 @@ namespace EduLingual.Infrastructure.Service
                 CourseArea courseArea = new CourseArea()
                 {
                     Name = request.Name,
-                    Status = request.CourseAreaStatus,
+                    Status = request.Status,
                 };
 
                 CourseArea result = await _unitOfWork.GetRepository<CourseArea>().InsertAsync(courseArea);
@@ -127,7 +127,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     Id = id,
                     Name = request.Name ?? courseArea.Name,
-                    Status = request.CourseAreaStatus ?? courseArea.Status
+                    Status = request.Status ?? courseArea.Status
                 };
 
                 _unitOfWork.GetRepository<CourseArea>().UpdateAsync(newCourseArea);

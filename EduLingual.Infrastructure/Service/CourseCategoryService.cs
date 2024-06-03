@@ -79,7 +79,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     Name = request.Name,
                     LanguageId = request.LanguageId,
-                    Status = request.CourseCategoryStatus,
+                    Status = request.Status,
                 };
 
                 CourseCategory result = await _unitOfWork.GetRepository<CourseCategory>().InsertAsync(courseCategory);
@@ -134,7 +134,7 @@ namespace EduLingual.Infrastructure.Service
                     Id = id,
                     Name = request.Name ?? courseCategory.Name,
                     LanguageId = request.LanguageId ?? courseCategory.LanguageId,
-                    Status = request.CourseCategoryStatus ?? courseCategory.Status
+                    Status = request.Status ?? courseCategory.Status
                 };
 
                 _unitOfWork.GetRepository<CourseCategory>().UpdateAsync(newCourseCategory);

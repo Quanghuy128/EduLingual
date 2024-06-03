@@ -8,6 +8,6 @@ namespace EduLingual.Domain.Dtos.CourseLanguage
     {
         [Required(ErrorMessage = MessageConstant.Vi.CourseLanguage.Require.NameRequired)]
         public string Name { get; set; } = string.Empty;
-        public CourseLanguageStatus CourseLanguageStatus { get; set; } = CourseLanguageStatus.Available;
+        public CourseLanguageStatus Status { get; set; } = CourseLanguageStatus.Available;
     }
 }
