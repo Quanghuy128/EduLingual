@@ -19,7 +19,6 @@ namespace EduLingual.Api.Controllers
             _userService = userService;
         }
 
-        [ConfigureAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.User.UsersEndpoint)]
         [ProducesResponseType(typeof(Result<List<UserViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size)
