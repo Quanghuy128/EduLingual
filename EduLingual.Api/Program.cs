@@ -24,6 +24,7 @@ try
 
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
+    //builder.Services.AddResponseCompression();
 
     var app = builder.Build();
 
@@ -43,6 +44,8 @@ try
     app.UseAuthentication();
 
     app.UseAuthorization();
+
+    //app.UseRequestDecompression();
 
     app.MapControllers();
 
