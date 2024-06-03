@@ -22,6 +22,6 @@ namespace EduLingual.Domain.Dtos.Course
         public Guid CourseLanguageId { get; set; }
         [Required(ErrorMessage = MessageConstant.Vi.Course.Require.CategoryRequired)]
         public Guid CourseCategoryId { get; set; }
-        public CourseStatus CourseStatus { get; set; } = CourseStatus.Active;
+        public CourseStatus Status { get; set; } = CourseStatus.Active;
     }
 }

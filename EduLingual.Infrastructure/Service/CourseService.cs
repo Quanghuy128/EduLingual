@@ -118,7 +118,7 @@ namespace EduLingual.Infrastructure.Service
                     CourseArea = courseArea ?? course.CourseArea,
                     CourseLanguage = courseLanguage ?? course.CourseLanguage,
                     CourseCategory = courseCategory ?? course.CourseCategory,
-                    Status = request.CourseStatus ?? course.Status
+                    Status = request.Status ?? course.Status
                 };
 
                 _unitOfWork.GetRepository<Course>().UpdateAsync(newCourse);

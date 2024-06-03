@@ -77,7 +77,7 @@ namespace EduLingual.Infrastructure.Service
                 CourseLanguage courseLanguage = new CourseLanguage()
                 {
                     Name = request.Name,
-                    Status = request.CourseLanguageStatus,
+                    Status = request.Status,
                 };
 
                 CourseLanguage result = await _unitOfWork.GetRepository<CourseLanguage>().InsertAsync(courseLanguage);
@@ -128,7 +128,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     Id = id,
                     Name = request.Name ?? courseLanguage.Name,
-                    Status = request.CourseLanguageStatus ?? courseLanguage.Status
+                    Status = request.Status ?? courseLanguage.Status
                 };
 
                 _unitOfWork.GetRepository<CourseLanguage>().UpdateAsync(newCourseLanguage);

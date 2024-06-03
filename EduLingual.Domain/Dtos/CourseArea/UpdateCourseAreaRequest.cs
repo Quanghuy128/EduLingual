@@ -12,6 +12,6 @@ namespace EduLingual.Domain.Dtos.CourseArea
     public class UpdateCourseAreaRequest
     {
         public string? Name { get; set; }
-        public CourseAreaStatus? CourseAreaStatus { get; set; }
+        public CourseAreaStatus? Status { get; set; }
     }
 }

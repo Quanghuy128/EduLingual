@@ -13,7 +13,7 @@ namespace EduLingual.Domain.Dtos.CourseArea
     public class CourseAreaDto : BaseEntity
     {
         public string? Name { get; set; }
-        public CourseAreaStatus CourseAreaStatus { get; set; }
+        public CourseAreaStatus Status { get; set; }
 
     }
 }
