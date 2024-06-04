@@ -227,6 +227,36 @@ namespace EduLingual.Domain.Constants
                     public static string JoinCourseFail = $"{UserMessage} tham gia {CourseMessage} thất bại";
                 }
             }
+            public static class Payment
+            {
+                #region Payment Field
+                private const string PaymentMessage = "Thanh toán";
+                private const string PaymentMethod = "Phương thức thanh toán";
+                private const string Fee = "Học phí";
+                private const string Course = "Khóa học";
+                private const string User = "Người học";
+                #endregion
+                public static class Require
+                {
+                    public const string PaymentMethodRequired = PaymentMethod + RequiredSuffix;
+                    public const string FeeRequired = Fee + RequiredSuffix;
+                    public const string CourseRequired = Course + RequiredSuffix;
+                    public const string UserRequired = User + RequiredSuffix;
+                }
+                public static class Success
+                {
+                    public static string CreatePayment = String.Format(CreateSuccessTemplate, PaymentMessage);
+                    public static string UpdatePayment = String.Format(UpdateSuccessTemplate, PaymentMessage);
+                    public static string DeleteCPayment = String.Format(DeleteSuccessTemplate, PaymentMessage);
+                }
+                public static class Fail
+                {
+                    public static string CreatePayment = String.Format(CreateFailTemplate, PaymentMessage);
+                    public static string UpdatePayment = String.Format(UpdateFailTemplate, PaymentMessage);
+                    public static string DeletePayment = String.Format(DeleteFailTemplate, PaymentMessage);
+                    public static string NotFoundPayment = String.Format(NotFoundTemplate, PaymentMessage);
+                }
+            }
 
         }
     }
