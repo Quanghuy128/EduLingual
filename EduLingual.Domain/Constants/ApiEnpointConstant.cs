@@ -33,7 +33,6 @@
             public const string CoursesPaginationEndpoint = ApiEndpoint + "/khoa-hoc-paging";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
             public const string UsersByCourseEnpoint = CoursesEndpoint + "/{id}/nguoi-hoc";
-
         }
         public static class CourseArea
         {
@@ -61,6 +60,15 @@
         {
             public const string CourseUsersEndpoint = ApiEndpoint + "/UserCourse";
             public const string CourseUserEndpointJoin = CourseUsersEndpoint + "/join";
+        }
+        public static class PayOs
+        {
+            public const string PayOsEndpoint = ApiEndpoint + "/PayOs";
+        }
+        public static class Payment
+        {
+            public const string PaymentsEndpoint = ApiEndpoint + "/thanh-toan";
+            public const string PaymentEndpoint = PaymentsEndpoint + ByIdRoute;
         }
     }
 }
