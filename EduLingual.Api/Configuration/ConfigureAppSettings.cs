@@ -16,6 +16,8 @@ namespace EduLingual.Api.Configuration
             configuration.Bind("JwtSettings", AppConfig.JwtSetting);
 
             configuration.Bind("GoogleSetting", AppConfig.GoogleSetting);
+
+            configuration.Bind("PayOSSetting", AppConfig.PayOSSetting);
         }
     }
 }
