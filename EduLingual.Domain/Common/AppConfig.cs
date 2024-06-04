@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace EduLingual.Domain.Common
 {
@@ -11,6 +7,7 @@ namespace EduLingual.Domain.Common
         public static ConnectionString ConnectionString { get; set; } = null!;
         public static JwtSetting JwtSetting { get; set; } = null!;
         public static GoogleSetting GoogleSetting { get; set; } = null!;
+        public static PayOSSetting PayOSSetting { get; set; } = null!;
     }
     public class ConnectionString
     {
@@ -32,5 +29,11 @@ namespace EduLingual.Domain.Common
     {
         public string ClientId { get; set; } = string.Empty;
         public string ClientSecret { get; set; } = string.Empty;
+    }
+    public class PayOSSetting
+    {
+        public string PAYOS_CHECKSUM_KEY { get; set; } = string.Empty;
+        public string PAYOS_API_KEY { get; set; } = string.Empty;
+        public string PAYOS_CLIENT_ID { get; set; } = string.Empty;
     }
 }
