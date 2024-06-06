@@ -177,5 +177,29 @@ namespace EduLingual.Infrastructure.Service
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
+
+        public async Task<Result<List<UserCourseDto>>> GetStudentsByCenterId(Guid centerId, Guid? courseId)
+        {
+            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(centerId));
+            if (center == null) return BadRequest<List<UserCourseDto>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+            ICollection<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
+                predicate: x => x.Course.CenterId.Equals(centerId),
+                include: x => x.Include(x => x.User)
+                );
+
+            if (courseId != null)
+            {
+                students = (ICollection<UserCourseDto>)await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+
+                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
+                        predicate: x => x.Course.Id.Equals(courseId),
+                        include: x => x.Include(x => x.Course)
+                    );
+            }
+
+            return Success(_mapper.Map<List<UserCourseDto>>(students));
+        }
     }
 }

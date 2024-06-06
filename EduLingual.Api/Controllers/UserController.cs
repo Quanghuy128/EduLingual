@@ -68,5 +68,13 @@ namespace EduLingual.Api.Controllers
             Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(id);
             return Ok(courses);
         }
+
+        [HttpGet(ApiEndPointConstant.User.StudentsEnpoint)]
+        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetStudents(Guid centerId, Guid? courseId)
+        {
+            Result<List<UserCourseDto>> courses = await _userService.GetStudentsByCenterId(centerId, courseId);
+            return Ok(courses);
+        }
     }
 }
