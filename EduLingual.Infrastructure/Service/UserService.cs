@@ -191,7 +191,7 @@ namespace EduLingual.Infrastructure.Service
 
             if (courseId != null)
             {
-                students = (ICollection<UserCourseDto>)await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
 
                 selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
                         predicate: x => x.Course.Id.Equals(courseId),
@@ -200,6 +200,20 @@ namespace EduLingual.Infrastructure.Service
             }
 
             return Success(_mapper.Map<List<UserCourseDto>>(students));
+        }
+
+        public async Task<Result<List<CourseDto>>> GetCoursesByUserId(Guid userId)
+        {
+            User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(userId));
+            if (user == null) return BadRequest<List<CourseDto>>(MessageConstant.Vi.User.Fail.NotFoundUser);
+
+            ICollection<CourseDto> courses = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                selector: x => new CourseDto(x.Course.Title, x.Course.Description, x.Course.Duration, x.Course.Tuitionfee),
+                predicate: x => x.UserId.Equals(userId),
+                include: x => x.Include(x => x.Course)
+                );
+
+            return Success(courses.ToList());
         }
     }
 }

@@ -27,6 +27,7 @@
             /// <summary>"api/v1/users/{id}"</summary>
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
             public const string CoursesByCenterEndpoint = CentersEndpoint + "/{id}/khoa-hoc";
+            public const string CoursesByUserEndpoint = StudentsEnpoint + "/{id}/khoa-hoc";
         }
         public static class Course
         {
