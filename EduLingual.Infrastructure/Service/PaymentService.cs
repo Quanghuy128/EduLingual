@@ -26,13 +26,13 @@ namespace EduLingual.Infrastructure.Service
         {
         }
 
-        public async Task<Result<PaymentViewModel>> Create(CreatePaymentRequest request)
+        public async Task<Result<bool>> Create(CreatePaymentRequest request)
         {
             try
             {
                 Payment payment = new Payment()
                 {
-                    PaymentMethod = request.PaymentMethod,
+                    PaymentMethod = request.PaymentMethod ?? "PayOS",
                     Fee = request.Fee,
                     CourseId = request.CourseId,
                     UserId = request.UserId,
@@ -46,11 +46,11 @@ namespace EduLingual.Infrastructure.Service
                     throw new Exception(MessageConstant.Vi.Payment.Fail.CreatePayment);
                 }
 
-                return Success(_mapper.Map<PaymentViewModel>(result));
+                return Success(isSuccessful);
             }
             catch (Exception ex)
             {
-                return Fail<PaymentViewModel>(ex.Message);
+                return Fail<bool>(ex.Message);
             }
         }
 
