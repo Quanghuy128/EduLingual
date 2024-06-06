@@ -16,7 +16,7 @@ namespace EduLingual.Application.Service
     {
         Task<PagingResult<PaymentViewModel>> GetPagination(Expression<Func<Payment, bool>>? predicate, int page, int size);
         Task<Result<PaymentViewModel>> GetPaymentById(Guid id);
-        Task<Result<PaymentViewModel>> Create(CreatePaymentRequest request);
+        Task<Result<bool>> Create(CreatePaymentRequest request);
         Task<Result<bool>> Update(Guid id, UpdatePaymentRequest request);
         Task<Result<bool>> Delete(Guid id);
     }
