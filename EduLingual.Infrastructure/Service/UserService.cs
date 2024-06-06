@@ -106,7 +106,7 @@ namespace EduLingual.Infrastructure.Service
 
                 IPaginate<User> users = 
                     await _unitOfWork.GetRepository<User>()
-                    .GetPagingListAsync();
+                    .GetPagingListAsync(include: x => x.Include(x => x.Role));
                 return SuccessWithPaging<UserViewModel>(
                         _mapper.Map<IPaginate<UserViewModel>>(users), 
                         page, 
