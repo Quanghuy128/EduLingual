@@ -22,6 +22,7 @@
         {
             /// <summary>"api/v1/users"</summary>
             public const string UsersEndpoint = ApiEndpoint + "/users";
+            public const string StudentsEnpoint = ApiEndpoint + "/nguoi-hoc";
             public const string CentersEndpoint = ApiEndpoint + "/trung-tam";
             /// <summary>"api/v1/users/{id}"</summary>
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
