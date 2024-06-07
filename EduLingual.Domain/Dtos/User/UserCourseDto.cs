@@ -18,5 +18,9 @@ namespace EduLingual.Domain.Dtos.User
             FullName = fullName;
             Description = description;
         }
+
+        public UserCourseDto()
+        {
+        }
     }
 }
