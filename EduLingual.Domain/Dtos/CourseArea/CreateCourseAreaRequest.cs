@@ -13,6 +13,6 @@ namespace EduLingual.Domain.Dtos.CourseArea
     {
         [Required(ErrorMessage = MessageConstant.Vi.CourseArea.Require.NameRequired)]
         public string Name { get; set; } = string.Empty;
-        public CourseAreaStatus CourseAreaStatus { get; set; } = CourseAreaStatus.Available;
+        public CourseAreaStatus Status { get; set; } = CourseAreaStatus.Available;
     }
 }

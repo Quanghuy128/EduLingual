@@ -13,6 +13,6 @@ namespace EduLingual.Domain.Dtos.CourseCategory
     {
         public string? Name { get; set; }
         public Guid? LanguageId { get; set; }
-        public CourseCategoryStatus? CourseCategoryStatus { get; set; }
+        public CourseCategoryStatus? Status { get; set; }
     }
 }

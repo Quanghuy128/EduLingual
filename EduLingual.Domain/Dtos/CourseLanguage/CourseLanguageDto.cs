@@ -11,6 +11,6 @@ namespace EduLingual.Domain.Dtos.CourseLanguage
     public class CourseLanguageDto : BaseEntity
     {
         public string? Name { get; set; }
-        public CourseLanguageStatus CourseLanguageStatus { get; set; }
+        public CourseLanguageStatus Status { get; set; }
     }
 }

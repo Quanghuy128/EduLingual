@@ -8,8 +8,8 @@ namespace EduLingual.Domain.Dtos.Course
 {
     public class CourseFilter
     {
-        public string AreaName { get; set; }
-        public string LanguageName { get; set; } 
-        public string CategoryName { get; set; }
+        public Guid? AreaId { get; set; }
+        public Guid? LanguageId { get; set; } 
+        public Guid? CategoryId { get; set; }
     }
 }

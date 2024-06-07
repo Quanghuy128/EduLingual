@@ -106,7 +106,7 @@ namespace EduLingual.Infrastructure.Service
 
                 IPaginate<User> users = 
                     await _unitOfWork.GetRepository<User>()
-                    .GetPagingListAsync();
+                    .GetPagingListAsync(include: x => x.Include(x => x.Role));
                 return SuccessWithPaging<UserViewModel>(
                         _mapper.Map<IPaginate<UserViewModel>>(users), 
                         page, 
@@ -260,6 +260,44 @@ namespace EduLingual.Infrastructure.Service
             catch (Exception ex) {
                 return Fail<bool>(ex.Message);
             }
+        }
+
+        public async Task<Result<List<UserCourseDto>>> GetStudentsByCenterId(Guid centerId, Guid? courseId)
+        {
+            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(centerId));
+            if (center == null) return BadRequest<List<UserCourseDto>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+            ICollection<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
+                predicate: x => x.Course.CenterId.Equals(centerId),
+                include: x => x.Include(x => x.User)
+                );
+
+            if (courseId != null)
+            {
+                students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+
+                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
+                        predicate: x => x.Course.Id.Equals(courseId),
+                        include: x => x.Include(x => x.Course)
+                    );
+            }
+
+            return Success(_mapper.Map<List<UserCourseDto>>(students));
+        }
+
+        public async Task<Result<List<CourseDto>>> GetCoursesByUserId(Guid userId)
+        {
+            User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(userId));
+            if (user == null) return BadRequest<List<CourseDto>>(MessageConstant.Vi.User.Fail.NotFoundUser);
+
+            ICollection<CourseDto> courses = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
+                selector: x => new CourseDto(x.Course.Title, x.Course.Description, x.Course.Duration, x.Course.Tuitionfee),
+                predicate: x => x.UserId.Equals(userId),
+                include: x => x.Include(x => x.Course)
+                );
+
+            return Success(courses.ToList());
         }
     }
 }

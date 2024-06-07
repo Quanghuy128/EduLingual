@@ -118,7 +118,7 @@ namespace EduLingual.Infrastructure.Service
                     CourseArea = courseArea ?? course.CourseArea,
                     CourseLanguage = courseLanguage ?? course.CourseLanguage,
                     CourseCategory = courseCategory ?? course.CourseCategory,
-                    Status = request.CourseStatus ?? course.Status
+                    Status = request.Status ?? course.Status
                 };
 
                 _unitOfWork.GetRepository<Course>().UpdateAsync(newCourse);
@@ -150,26 +150,57 @@ namespace EduLingual.Infrastructure.Service
             throw new NotImplementedException();
         }
 
-        public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
+/*        public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
         {
-            CourseArea courseArea = await _unitOfWork.GetRepository<CourseArea>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(courseFilter.AreaName));
+            CourseArea courseArea = await _unitOfWork.GetRepository<CourseArea>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.AreaId));
             if (courseArea == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseArea.Fail.NotFoundCourseArea);
 
-            CourseLanguage courseLanguage = await _unitOfWork.GetRepository<CourseLanguage>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(courseFilter.LanguageName));
+            CourseLanguage courseLanguage = await _unitOfWork.GetRepository<CourseLanguage>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.LanguageId));
             if (courseLanguage == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseLanguage.Fail.NotFoundCourseLanguage);
 
-            CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Name.Equals(courseFilter.CategoryName));
+            CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.CategoryId));
             if (courseCategory == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);
 
             ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                predicate: x => x.CourseArea.Name.Equals(courseFilter.AreaName) &&
-                                x.CourseLanguage.Name.Equals(courseFilter.LanguageName) &&
-                                x.CourseCategory.Name.Equals(courseFilter.CategoryName),
+                predicate: x => x.CourseArea.Id.Equals(courseFilter.AreaId) &&
+                                x.CourseLanguage.Id.Equals(courseFilter.LanguageId) &&
+                                x.CourseCategory.Id.Equals(courseFilter.CategoryId),
                 include: x => x.Include(x => x.CourseArea)
                                .Include(x => x.CourseLanguage)
                                .Include(x => x.CourseCategory)
                                .Include(x => x.Center)
                 );
+
+            return Success(_mapper.Map<List<CourseViewModel>>(courses));
+        }*/
+
+        public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
+        {
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync();
+
+            if (courseFilter.AreaId != null)
+            {
+                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
+                        predicate: x => x.CourseArea.Id.Equals(courseFilter.AreaId),
+                        include: x => x.Include(x => x.CourseArea)
+                );
+            }
+
+            if (courseFilter.CategoryId != null)
+            {
+                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
+                        predicate: x => x.CourseCategory.Id.Equals(courseFilter.CategoryId),
+                        include: x => x.Include(x => x.CourseCategory)
+                );
+            }
+
+            if (courseFilter.LanguageId != null)
+            {
+                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
+                        predicate: x => x.CourseLanguage.Id.Equals(courseFilter.LanguageId),
+                        include: x => x.Include(x => x.CourseLanguage)
+                );
+            }
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }

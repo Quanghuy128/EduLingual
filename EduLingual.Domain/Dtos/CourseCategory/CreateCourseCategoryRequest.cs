@@ -10,6 +10,6 @@ namespace EduLingual.Domain.Dtos.CourseCategory
         public string Name { get; set; } = string.Empty;
         [Required(ErrorMessage = MessageConstant.Vi.CourseCategory.Require.LanguageRequired)]
         public Guid LanguageId {  get; set; }
-        public CourseCategoryStatus CourseCategoryStatus { get; set; } = CourseCategoryStatus.Available;
+        public CourseCategoryStatus Status { get; set; } = CourseCategoryStatus.Available;
     }
 }
