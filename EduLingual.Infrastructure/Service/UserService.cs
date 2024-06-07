@@ -38,6 +38,8 @@ namespace EduLingual.Infrastructure.Service
                     Description = request.Description ?? string.Empty,
                     Status = request.UserStatus,
                     RoleId = request.RoleId,    
+                    Email = request.Email,
+                    ImageUrl = request.ImageUrl,
                 };
                 User result = await _unitOfWork.GetRepository<User>().InsertAsync(user);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
