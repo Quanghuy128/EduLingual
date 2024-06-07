@@ -47,16 +47,27 @@ namespace EduLingual.Api.Controllers
             return StatusCode((int)result.Item2.StatusCode, result.Item2);
         }
 
-        //[HttpPut(ApiEndPointConstant.Authentication.GoogleLoginEndPoint)]
-        //[ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
-        //{
-        //    (Tuple<string, Guid>, Result<LoginResponse>, User) result = (await _googleService.GoogleLogin(request.AccessToken)).Data;
+        [HttpPut(ApiEndPointConstant.Authentication.RegisterEndPoint)]
+        [ProducesResponseType(typeof(Result<RegisterResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            (Tuple<string, Guid>, Result<RegisterResponse>, User) result = await _userService.Register(request);
+            if (result.Item2.Data != null)
+            {
+                var token = JwtUtil.GenerateJwtToken(result.Item3, result.Item1);
+                result.Item2.Data!.AccessToken = token;
+            }
+            return StatusCode((int)result.Item2.StatusCode, result.Item2);
+        }
 
-        //    var token = JwtUtil.GenerateJwtToken(result.Item3, result.Item1);
-        //    result.Item2.Data!.AccessToken = token;
-        //    return StatusCode((int)result.Item2.StatusCode, result.Item2);
-        //}
+        [HttpPut(ApiEndPointConstant.Authentication.ForgetPasswordEndPoint)]
+        [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] ForgetPasswordRequest request)
+        {
+            Result<bool> result = await _userService.ForgetPassword(request);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }

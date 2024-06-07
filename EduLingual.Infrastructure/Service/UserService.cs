@@ -160,7 +160,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     throw new Exception(MessageConstant.Vi.User.Fail.UpdateUser);
                 }
-                    return Success(isSuccessful);
+                return Success(isSuccessful);
             }
             catch (Exception ex)
             {
@@ -176,6 +176,90 @@ namespace EduLingual.Infrastructure.Service
             ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
+        }
+
+        public async Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request)
+        {
+            User newUser = new User()
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                FullName = request.FullName,
+                Email = request.Email,
+                Status = request.UserStatus,
+                Description = request.Description!,
+                ImageUrl = request.ImageUrl,
+                RoleId = request.RoleId,
+            };
+            try
+            {
+                User user = await _unitOfWork.GetRepository<User>().InsertAsync(newUser);
+                if (user == null)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                RoleEnum role = EnumHelper.ParseEnum<RoleEnum>(user.Role.RoleName);
+                Tuple<string, Guid> guidClaim = null!;
+                RegisterResponse registerResponse = null!;
+
+                registerResponse = new RegisterResponse(user.Id, user.UserName, user.FullName, user.Role.RoleName, user.Status.GetDescriptionFromEnum());
+
+                return (guidClaim, Success(registerResponse), user);
+            }
+            catch (Exception ex)
+            {
+                return (null, new Result<RegisterResponse>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = ex.Message,
+                }, null)!;
+            }
+        }
+
+        public async Task<Result<bool>> ForgetPassword(ForgetPasswordRequest request)
+        {
+            try
+            {
+                if(request.NewPassword != request.ConfirmPassword)
+                {
+                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);      
+                }
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
+                if(user == null)
+                {
+                    throw new ArgumentException(MessageConstant.Vi.User.Fail.NotFoundUser);
+                }
+                User newUser = new User()
+                {
+                    UserName = user.UserName,
+                    Password = request.NewPassword,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Status = user.Status,
+                    Description = user.Description!,
+                    ImageUrl = user.ImageUrl,
+                    RoleId = user.RoleId,
+                };
+                User createdUser = await _unitOfWork.GetRepository<User>().InsertAsync(newUser);
+                if (createdUser == null)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                return Success(true);
+            }
+            catch (Exception ex) {
+                return Fail<bool>(ex.Message);
+            }
         }
 
         public async Task<Result<List<UserCourseDto>>> GetStudentsByCenterId(Guid centerId, Guid? courseId)
