@@ -20,6 +20,7 @@ namespace EduLingual.Api.Controllers
             _userCourseService = userCourseService;
             _paymentService = paymentService;
         }
+
         [HttpPost(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -30,17 +31,15 @@ namespace EduLingual.Api.Controllers
                 return Redirect(".app/payment/cancel");
             }
 
-
-            var userCourse = new UserCourseRequest
+            var joinRequest = new UserCourseRequest
             {
                 UserId = request.UserId,
-                CourseId = request.CourseId
+                CourseId = request.CourseId,
             };
 
-            Result<bool> resultJoin = await _userCourseService.UserJoinCourseAsync(userCourse);
-            Result<bool> resultPayment = await _paymentService.Create(request);
+            Result<bool> result = await _userCourseService.UserJoinCourseAsync(joinRequest, request);
 
-            if (!resultJoin.Data && !resultPayment.Data)
+            if (!result.Data)
             {
                 return Redirect(".app/payment/failure");
             }

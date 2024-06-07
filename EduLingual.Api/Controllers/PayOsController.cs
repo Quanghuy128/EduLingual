@@ -21,6 +21,7 @@ namespace EduLingual.Api.Controllers
             _payOs = payOs;
             _service = service;
         }
+
         [HttpPost(ApiEndPointConstant.PayOs.PayOsEndpoint)]
         public async Task<IActionResult> Checkout([FromQuery] CreatePaymentRequest request)
         {
@@ -30,16 +31,15 @@ namespace EduLingual.Api.Controllers
                 List<ItemData> items = new List<ItemData>();
 
                 var course = _service.GetCourseById(request.CourseId);
-                ItemData data = new ItemData(course.Result.Data.Title, 1, (int)course.Result.Data.TuitionFee);
+                ItemData data = new ItemData(course.Result.Data.Title, 1, (int)course.Result.Data.Tuitionfee);
                 items.Add(data);
-                var tutionFee = course.Result.Data.TuitionFee;
+                var tutionFee = course.Result.Data.Tuitionfee;
 
                 var baseUrl = "https://localhost:44315";
                 var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?request={request}";
                 var cancelUrl = "https://.app/payment/cancel";
                 PaymentData paymentData = new PaymentData(orderCode, (int)tutionFee, "Thanh toan hoc phi", items, cancelUrl, successUrl);
                 CreatePaymentResult createPayment = await _payOs.createPaymentLink(paymentData);
-
                 return Ok(new
                 {
                     message = "redirect",
@@ -49,7 +49,7 @@ namespace EduLingual.Api.Controllers
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Redirect("https://mixed-food.vercel.app");
+                return Redirect("https://.app");
             }
         }
     }

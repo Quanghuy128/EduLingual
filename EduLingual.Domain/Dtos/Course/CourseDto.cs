@@ -12,13 +12,13 @@ namespace EduLingual.Domain.Dtos.Course
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Duration { get; set; }
-        public double TuitionFee { get; set; }
+        public double Tuitionfee { get; set; }
         public CourseDto(string? title, string? description, string? duration, double tuitionFee)
         {
             Title = title;
             Description = description;
             Duration = duration;
-            TuitionFee = tuitionFee;
+            Tuitionfee = tuitionFee;
         }
 
         public CourseDto()

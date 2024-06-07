@@ -1,4 +1,5 @@
 ﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Dtos.Payment;
 using EduLingual.Domain.Dtos.UserCourse;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,5 @@ namespace EduLingual.Application.Service;
 
 public interface IUserCourseService
 {
-    Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest request);
+    Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest joinRequest, CreatePaymentRequest paymentRequest);
 }
