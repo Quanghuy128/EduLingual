@@ -22,6 +22,7 @@ namespace EduLingual.Domain.Constants
             public static class Auth
             {
                 public const string GoogleLoginFail = "Đăng nhập bằng google thất bại!!! Thử lại sau";
+                public const string PasswordNotMatched = "Mật khẩu không khớp! Thử lại";
             }
             public static class User
             {

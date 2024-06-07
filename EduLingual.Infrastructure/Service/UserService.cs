@@ -220,5 +220,46 @@ namespace EduLingual.Infrastructure.Service
                 }, null)!;
             }
         }
+
+        public async Task<Result<bool>> ForgetPassword(ForgetPasswordRequest request)
+        {
+            try
+            {
+                if(request.NewPassword != request.ConfirmPassword)
+                {
+                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);      
+                }
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
+                if(user == null)
+                {
+                    throw new ArgumentException(MessageConstant.Vi.User.Fail.NotFoundUser);
+                }
+                User newUser = new User()
+                {
+                    UserName = user.UserName,
+                    Password = request.NewPassword,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Status = user.Status,
+                    Description = user.Description!,
+                    ImageUrl = user.ImageUrl,
+                    RoleId = user.RoleId,
+                };
+                User createdUser = await _unitOfWork.GetRepository<User>().InsertAsync(newUser);
+                if (createdUser == null)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                return Success(true);
+            }
+            catch (Exception ex) {
+                return Fail<bool>(ex.Message);
+            }
+        }
     }
 }

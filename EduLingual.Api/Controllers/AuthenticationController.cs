@@ -48,7 +48,7 @@ namespace EduLingual.Api.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.Authentication.RegisterEndPoint)]
-        [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<RegisterResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
@@ -59,6 +59,15 @@ namespace EduLingual.Api.Controllers
                 result.Item2.Data!.AccessToken = token;
             }
             return StatusCode((int)result.Item2.StatusCode, result.Item2);
+        }
+
+        [HttpPut(ApiEndPointConstant.Authentication.ForgetPasswordEndPoint)]
+        [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] ForgetPasswordRequest request)
+        {
+            Result<bool> result = await _userService.ForgetPassword(request);
+            return StatusCode((int)result.StatusCode, result);
         }
     }
 }
