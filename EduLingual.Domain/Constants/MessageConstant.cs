@@ -31,6 +31,7 @@ namespace EduLingual.Domain.Constants
                 private const string UserName = "Tên đăng nhập";
                 private const string Password = "Mật khẩu";
                 private const string FullName = "Tên người dùng";
+                private const string Email = "email";
                 private const string Description = "Mô tả";
                 private const string UserStatus = "Trạng thái";
                 private const string Role = "Chức vụ";
@@ -40,6 +41,7 @@ namespace EduLingual.Domain.Constants
                     public const string UserNameRequired = UserName + RequiredSuffix;
                     public const string PasswordRequired = Password + RequiredSuffix;
                     public const string FullNameRequired = FullName + RequiredSuffix;
+                    public const string EmailRequired = Email + RequiredSuffix;
                     public const string DescriptionRequired = Description + RequiredSuffix;
                     public const string StatusRequired = UserStatus + RequiredSuffix;
                     public const string RoleRequired = Role + RequiredSuffix;

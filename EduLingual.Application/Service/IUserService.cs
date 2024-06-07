@@ -10,6 +10,7 @@ namespace EduLingual.Application.Service
     public interface IUserService
     {
         Task<(Tuple<string, Guid>, Result<LoginResponse>, User user)> Login(LoginRequest request);
+        Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request);
         Task<Result<List<UserViewModel>>> GetAll(Expression<Func<User, bool>>? predicate);
         Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id);
         Task<PagingResult<UserViewModel>> GetPagination(Expression<Func<User, bool>>? predicate, int page, int size);

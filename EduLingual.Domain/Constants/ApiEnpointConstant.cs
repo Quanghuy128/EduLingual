@@ -17,6 +17,10 @@
             public const string LoginEndPoint = ApiEndpoint + "/login";
             /// <summary>"api/v1/google/login"</summary>
             public const string GoogleLoginEndPoint = ApiEndpoint + "/google/login";
+            // <summary>"api/v1/google/login"</summary>
+            public const string RegisterEndPoint = ApiEndpoint + "/register";
+            // <summary>"api/v1/google/login"</summary>
+            public const string ForgetPasswordEndPoint = ApiEndpoint + "/forget-password";
         }
         public static class User
         {
