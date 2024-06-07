@@ -7,10 +7,6 @@ namespace EduLingual.Domain.Dtos.Course
 {
     public class CourseViewModel : CourseDto
     {
-        public CourseViewModel(string? title, string? description, string? duration, double tuitionfee) : base(title, description, duration, tuitionfee)
-        {
-        }
-
         public CourseAreaDto? CourseArea { get; set; }
         public CourseLanguageDto? CourseLanguage { get; set; }
         public CourseCategoryDto? CourseCategory { get; set; }

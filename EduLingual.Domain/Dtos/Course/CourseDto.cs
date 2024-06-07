@@ -20,5 +20,9 @@ namespace EduLingual.Domain.Dtos.Course
             Duration = duration;
             TuitionFee = tuitionFee;
         }
+
+        public CourseDto()
+        {
+        }
     }
 }
