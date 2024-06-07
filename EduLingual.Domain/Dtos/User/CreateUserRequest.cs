@@ -15,6 +15,10 @@ namespace EduLingual.Domain.Dtos.User
 
         [Required(ErrorMessage = MessageConstant.Vi.User.Require.FullNameRequired)]
         public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = MessageConstant.Vi.User.Require.EmailRequired)]
+        public string Email { get; set; } = string.Empty;
+        public string ImageUrl {  get; set; } = string.Empty;
         public string? Description { get; set; }
         public UserStatus UserStatus { get; set; } = UserStatus.Active;
 

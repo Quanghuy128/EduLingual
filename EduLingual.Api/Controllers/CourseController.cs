@@ -2,6 +2,7 @@
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
+using EduLingual.Domain.Dtos.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduLingual.Api.Controllers
@@ -39,14 +40,6 @@ namespace EduLingual.Api.Controllers
             return Ok(course);
         }
 
-        [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
-        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCoursesByCenter(Guid id)
-        {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCoursesByCenterId(id);
-            return Ok(courses);
-        }
-
         [HttpPost(ApiEndPointConstant.Course.CoursesEndpoint)]
         [ProducesResponseType(typeof(Result<CourseViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -71,6 +64,14 @@ namespace EduLingual.Api.Controllers
         {
             Result<bool> result = await _courseService.Delete(id);
             return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet(ApiEndPointConstant.Course.UsersByCourseEnpoint)]
+        [ProducesResponseType(typeof(Result<List<UserCourseDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUsersByCourse([FromRoute] Guid id)
+        {
+            Result<List<UserCourseDto>> users = await _courseService.GetStudentsByCourse(id);
+            return Ok(users);
         }
     }
 }

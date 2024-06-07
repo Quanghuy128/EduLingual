@@ -2,6 +2,7 @@
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.CourseArea;
+using EduLingual.Domain.Dtos.CourseCategory;
 using EduLingual.Domain.Dtos.CourseLanguage;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Pagination;
@@ -142,6 +143,22 @@ namespace EduLingual.Infrastructure.Service
             catch (Exception ex)
             {
                 return Fail<bool>(ex.Message);
+            }
+        }
+
+        public async Task<Result<List<CourseCategoryViewModel>>> GetCategoriesByLanguageId(Guid id)
+        {
+            try
+            {
+                CourseLanguage courseLanguage = await _unitOfWork.GetRepository<CourseLanguage>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+                if (courseLanguage == null) throw new Exception(MessageConstant.Vi.CourseLanguage.Fail.NotFoundCourseLanguage);
+
+                ICollection<CourseCategory> courseLanguages = await _unitOfWork.GetRepository<CourseCategory>().GetListAsync(predicate: x => x.LanguageId.Equals(id));
+                return Success(_mapper.Map<List<CourseCategoryViewModel>>(courseLanguages));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest<List<CourseCategoryViewModel>>(ex.Message);
             }
         }
     }

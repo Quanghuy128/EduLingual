@@ -29,26 +29,7 @@ try
 
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
-                
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
-    }).AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = AppConfig.JwtSetting.ValidIssuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AppConfig.JwtSetting.SecretKey))
-        };
-    });
+    //builder.Services.AddResponseCompression();
 
     var app = builder.Build();
 
@@ -68,6 +49,8 @@ try
     app.UseAuthentication();
 
     app.UseAuthorization();
+
+    //app.UseRequestDecompression();
 
     app.MapControllers();
 

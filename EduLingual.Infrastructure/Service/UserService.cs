@@ -4,6 +4,7 @@ using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Authentication;
+using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
@@ -159,11 +160,64 @@ namespace EduLingual.Infrastructure.Service
                 {
                     throw new Exception(MessageConstant.Vi.User.Fail.UpdateUser);
                 }
-                    return Success(isSuccessful);
+                return Success(isSuccessful);
             }
             catch (Exception ex)
             {
                 return Fail<bool>(ex.Message);
+            }
+        }
+
+        public async Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id)
+        {
+            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            if (center == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
+
+            return Success(_mapper.Map<List<CourseViewModel>>(courses));
+        }
+
+        public async Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request)
+        {
+            User newUser = new User()
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                FullName = request.FullName,
+                Email = request.Email,
+                Status = request.UserStatus,
+                Description = request.Description!,
+                ImageUrl = request.ImageUrl,
+                RoleId = request.RoleId,
+            };
+            try
+            {
+                User user = await _unitOfWork.GetRepository<User>().InsertAsync(newUser);
+                if (user == null)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
+                }
+                RoleEnum role = EnumHelper.ParseEnum<RoleEnum>(user.Role.RoleName);
+                Tuple<string, Guid> guidClaim = null!;
+                RegisterResponse registerResponse = null!;
+
+                registerResponse = new RegisterResponse(user.Id, user.UserName, user.FullName, user.Role.RoleName, user.Status.GetDescriptionFromEnum());
+
+                return (guidClaim, Success(registerResponse), user);
+            }
+            catch (Exception ex)
+            {
+                return (null, new Result<RegisterResponse>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = ex.Message,
+                }, null)!;
             }
         }
     }

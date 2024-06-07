@@ -14,7 +14,7 @@ namespace EduLingual.Api.Controllers
     [ApiController]
     public class FeedbackController : BaseController<FeedbackController>
     {
-        IFeedbackService _feedbackSerivce;
+        private readonly IFeedbackService _feedbackSerivce;
         public FeedbackController(ILogger<FeedbackController> logger, IFeedbackService feedbackService) : base(logger)
         {
             _feedbackSerivce = feedbackService;
@@ -27,14 +27,14 @@ namespace EduLingual.Api.Controllers
             PagingResult<FeedbackViewModel> result = await _feedbackSerivce.GetPagination(x => false, page, size);
             return Ok(result);
         }
-        [HttpGet(ApiEndPointConstant.Feedback.FeedbacksEndpont)]
+        [HttpGet(ApiEndPointConstant.Feedback.FeedbacksEndpoint)]
         [ProducesResponseType(typeof(Result<CourseViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCourseById(Guid id)
         {
             Result<FeedbackViewModel> result = await _feedbackSerivce.Get(id);
             return Ok(result);
         }
-        [HttpPost(ApiEndPointConstant.Feedback.FeedbacksEndpont)]
+        [HttpPost(ApiEndPointConstant.Feedback.FeedbackEndpoint)]
         [ProducesResponseType(typeof(Result<FeedbackViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateFeedbackRequest request)
@@ -43,7 +43,7 @@ namespace EduLingual.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut(ApiEndPointConstant.Feedback.FeedbackEndpint)]
+        [HttpPut(ApiEndPointConstant.Feedback.FeedbackEndpoint)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateFeedbackRequest request)
@@ -52,7 +52,7 @@ namespace EduLingual.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete(ApiEndPointConstant.Feedback.FeedbackEndpint)]
+        [HttpDelete(ApiEndPointConstant.Feedback.FeedbackEndpoint)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {

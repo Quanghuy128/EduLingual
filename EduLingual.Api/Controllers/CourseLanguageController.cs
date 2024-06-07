@@ -2,6 +2,7 @@
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.CourseArea;
+using EduLingual.Domain.Dtos.CourseCategory;
 using EduLingual.Domain.Dtos.CourseLanguage;
 using EduLingual.Infrastructure.Service;
 using Microsoft.AspNetCore.Http;
@@ -59,6 +60,14 @@ namespace EduLingual.Api.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             Result<bool> result = await _courseLanguageService.Delete(id);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet(ApiEndPointConstant.CourseLanguage.CategoriesByLanguageEndpoint)]
+        [ProducesResponseType(typeof(Result<List<CourseCategoryViewModel>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCategoriesByLanguage([FromRoute] Guid id)
+        {
+            Result<List<CourseCategoryViewModel>> result = await _courseLanguageService.GetCategoriesByLanguageId(id);
             return StatusCode((int)result.StatusCode, result);
         }
     }

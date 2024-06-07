@@ -15,6 +15,7 @@ namespace EduLingual.Domain.Constants
             private const string UpdateFailTemplate = "Cập nhật {0} thất bại @.@";
             private const string DeleteFailTemplate = "Xóa {0} thất bại @.@";
             private const string NotFoundTemplate = "{0} không có trong hệ thống";
+            private const string InvalidRoleTemplate = "{0} không phải là {1} !!!";
 
             private const string RequiredSuffix = " không được bỏ trống !!!";
             #endregion
@@ -30,6 +31,7 @@ namespace EduLingual.Domain.Constants
                 private const string UserName = "Tên đăng nhập";
                 private const string Password = "Mật khẩu";
                 private const string FullName = "Tên người dùng";
+                private const string Email = "email";
                 private const string Description = "Mô tả";
                 private const string UserStatus = "Trạng thái";
                 private const string Role = "Chức vụ";
@@ -39,6 +41,7 @@ namespace EduLingual.Domain.Constants
                     public const string UserNameRequired = UserName + RequiredSuffix;
                     public const string PasswordRequired = Password + RequiredSuffix;
                     public const string FullNameRequired = FullName + RequiredSuffix;
+                    public const string EmailRequired = Email + RequiredSuffix;
                     public const string DescriptionRequired = Description + RequiredSuffix;
                     public const string StatusRequired = UserStatus + RequiredSuffix;
                     public const string RoleRequired = Role + RequiredSuffix;
@@ -206,6 +209,24 @@ namespace EduLingual.Domain.Constants
                     public static string UpdateFeedback = String.Format(UpdateFailTemplate, FeedbackMessage);
                     public static string DeleteFeedback = String.Format(DeleteFailTemplate, FeedbackMessage);
                     public static string NotFoundFeedback = String.Format(NotFoundTemplate, FeedbackMessage);
+                }
+            }
+            public static class UserCourse
+            {
+                #region UserCourse field 
+                private const string CourseMessage = "khóa học";
+                private const string UserMessage = "người dùng";
+                private const string StudentRoleMessage = "học sinh";
+                #endregion
+                public static class Require
+                {
+                    public const string UserIdRequired = UserMessage + RequiredSuffix;
+                    public const string CourseIdRequired = CourseMessage + RequiredSuffix;
+                }
+                public static class Fail
+                {
+                    public static string UserNotStudentRole = String.Format(InvalidRoleTemplate, UserMessage, StudentRoleMessage);
+                    public static string JoinCourseFail = $"{UserMessage} tham gia {CourseMessage} thất bại";
                 }
             }
 
