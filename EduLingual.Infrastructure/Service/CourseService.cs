@@ -176,7 +176,9 @@ namespace EduLingual.Infrastructure.Service
 
         public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
         {
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync();
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
+                    include: x => x.Include(x => x.Center)
+                );
 
             if (courseFilter.AreaId != null)
             {
