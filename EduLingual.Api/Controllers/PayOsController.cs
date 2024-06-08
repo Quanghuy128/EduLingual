@@ -6,10 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
 using Net.payOS.Types;
-using Newtonsoft.Json;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace EduLingual.Api.Controllers
 {
@@ -40,23 +36,9 @@ namespace EduLingual.Api.Controllers
                 var tutionFee = course.Result.Data.Tuitionfee;
 
                 var baseUrl = "https://localhost:44315";
-                string url = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}";
-
-                HttpResponseMessage successUrl;
-
-                MediaTypeHeaderValue typeHeaderValue = new MediaTypeHeaderValue("application/json");
-                string json = JsonConvert.SerializeObject(request);
-                var httpContent = new StringContent(json, typeHeaderValue);
-
-
-                using (HttpClient httpClient = new HttpClient())
-                {
-                     successUrl = await httpClient.PostAsync(url, httpContent);
-                }
-
-                //var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?request={request}";
+                var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?request={request}";
                 var cancelUrl = "https://.app/payment/cancel";
-                PaymentData paymentData = new PaymentData(orderCode, (int)tutionFee, "Thanh toan hoc phi", items, cancelUrl, "");
+                PaymentData paymentData = new PaymentData(orderCode, (int)tutionFee, "Thanh toan hoc phi", items, cancelUrl, successUrl);
                 CreatePaymentResult createPayment = await _payOs.createPaymentLink(paymentData);
                 return Ok(new
                 {
