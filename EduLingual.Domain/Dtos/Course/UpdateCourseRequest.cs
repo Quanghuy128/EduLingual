@@ -14,6 +14,7 @@ namespace EduLingual.Domain.Dtos.Course
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Duration { get; set; }
+        [Range(100000, double.MaxValue, ErrorMessage = MessageConstant.Vi.Course.Require.ValidFee)]
         public double? Tuitionfee { get; set; }
         public Guid? CenterId { get; set; }
         public Guid? CourseAreaId { get; set; }

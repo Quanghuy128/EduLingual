@@ -13,6 +13,7 @@ namespace EduLingual.Domain.Dtos.Course
         [Required(ErrorMessage = MessageConstant.Vi.Course.Require.DurationRequired)]
         public string Duration { get; set; }
         [Required(ErrorMessage = MessageConstant.Vi.Course.Require.TutionFeeRequired)]
+        [Range(100000, double.MaxValue, ErrorMessage = MessageConstant.Vi.Course.Require.ValidFee)]
         public double Tuitionfee { get; set; }
         [Required(ErrorMessage = MessageConstant.Vi.Course.Require.CenterRequired)]
         public Guid CenterId { get; set; }
@@ -22,6 +23,5 @@ namespace EduLingual.Domain.Dtos.Course
         public Guid CourseLanguageId { get; set; }
         [Required(ErrorMessage = MessageConstant.Vi.Course.Require.CategoryRequired)]
         public Guid CourseCategoryId { get; set; }
-        public CourseStatus Status { get; set; } = CourseStatus.Active;
     }
 }

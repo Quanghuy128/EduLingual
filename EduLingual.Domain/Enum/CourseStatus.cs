@@ -2,7 +2,7 @@
 {
     public enum CourseStatus
     {
-        Deleted,
+        Pending,
         Active
     }
 }

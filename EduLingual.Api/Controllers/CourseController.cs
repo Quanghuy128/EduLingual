@@ -3,6 +3,7 @@ using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
+using EduLingual.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduLingual.Api.Controllers
@@ -18,17 +19,18 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Course.CoursesPaginationEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size, [FromQuery] string? title, [FromQuery] CourseStatus? status, [FromQuery] Guid? centerId)
         {
-            PagingResult<CourseViewModel> result = await _courseService.GetPagination(x => false, page, size);
+            PagingResult<CourseViewModel> result = await _courseService.GetPagination(page, size, title, status, centerId);
+
             return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CoursesEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCourses([FromQuery] CourseFilter courseFilter)
+        public async Task<IActionResult> GetCourses([FromQuery] string? title, [FromQuery] CourseFilter? courseFilter, string? sort)
         {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCourses(courseFilter);
+            Result<List<CourseViewModel>> courses = await _courseService.GetCourses(title, courseFilter, sort);
             return Ok(courses);
         }
 
