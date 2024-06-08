@@ -14,9 +14,8 @@ namespace EduLingual.Application.Service
 {
     public interface IPaymentService
     {
-        Task<PagingResult<PaymentViewModel>> GetPagination(Expression<Func<Payment, bool>>? predicate, int page, int size);
+        Task<PagingResult<PaymentViewModel>> GetPagination(DateTime? startDate, DateTime? endDate, int page, int size);
         Task<Result<PaymentViewModel>> GetPaymentById(Guid id);
-        Task<Result<bool>> Create(CreatePaymentRequest request);
         Task<Result<bool>> Update(Guid id, UpdatePaymentRequest request);
         Task<Result<bool>> Delete(Guid id);
     }

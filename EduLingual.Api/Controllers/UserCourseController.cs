@@ -21,23 +21,27 @@ namespace EduLingual.Api.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpPost(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
+        [HttpGet(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UserJoinCourse([FromBody] CreatePaymentRequest request, [FromQuery] string status)
+        public async Task<IActionResult> UserJoinCourse([FromQuery] Guid userId, [FromQuery] Guid courseId, [FromQuery] string paymentMethod, [FromQuery] double fee, [FromQuery] string fullName, [FromQuery] string phoneNumber, [FromQuery] string status)
         {
             if (status == "CANCELLED")
             {
                 return Redirect(".app/payment/cancel");
             }
 
-            var joinRequest = new UserCourseRequest
+            var request = new UserCourseRequest
             {
-                UserId = request.UserId,
-                CourseId = request.CourseId,
+                FullName = fullName,
+                PhoneNumber = phoneNumber,
+                PaymentMethod = paymentMethod,
+                Fee = fee,
+                UserId = userId,
+                CourseId = courseId
             };
 
-            Result<bool> result = await _userCourseService.UserJoinCourseAsync(joinRequest, request);
+            Result<bool> result = await _userCourseService.UserJoinCourseAsync(request);
 
             if (!result.Data)
             {

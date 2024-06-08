@@ -235,6 +235,8 @@ namespace EduLingual.Domain.Constants
             {
                 #region Payment Field
                 private const string PaymentMessage = "Thanh toán";
+                private const string FullName = "Họ và tên";
+                private const string PhoneNumber = "Số điện thoại";
                 private const string PaymentMethod = "Phương thức thanh toán";
                 private const string Fee = "Học phí";
                 private const string Course = "Khóa học";
@@ -242,6 +244,8 @@ namespace EduLingual.Domain.Constants
                 #endregion
                 public static class Require
                 {
+                    public const string FullNameRequired = FullName + RequiredSuffix;
+                    public const string PhoneNumberRequired = PhoneNumber + RequiredSuffix;
                     public const string PaymentMethodRequired = PaymentMethod + RequiredSuffix;
                     public const string FeeRequired = Fee + RequiredSuffix;
                     public const string CourseRequired = Course + RequiredSuffix;

@@ -7,6 +7,12 @@ namespace EduLingual.Domain.Entities
     [Table("payment")]
     public class Payment : BaseEntity
     {
+        [Column("full_name")]
+        [Required]
+        public string FullName { get; set; } = string.Empty;
+        [Column("phone_number")]
+        [Required]
+        public string PhoneNumber { get; set; } = string.Empty;
         [Column("method")]
         [Required]
         public string PaymentMethod { get; set; } = string.Empty;

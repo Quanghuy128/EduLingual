@@ -11,5 +11,5 @@ namespace EduLingual.Application.Service;
 
 public interface IUserCourseService
 {
-    Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest joinRequest, CreatePaymentRequest paymentRequest);
+    Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest request);
 }
