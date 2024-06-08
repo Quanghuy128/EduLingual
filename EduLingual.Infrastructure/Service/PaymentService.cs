@@ -1,4 +1,5 @@
-﻿using EduLingual.Application.Service;
+﻿using EduLingual.Application.Extensions;
+using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
@@ -8,6 +9,7 @@ using EduLingual.Domain.Entities;
 using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,34 +26,6 @@ namespace EduLingual.Infrastructure.Service
         public PaymentService(IUnitOfWork<ApplicationDbContext> unitOfWork, ILogger<PaymentService> logger, IMapper mapper,
             IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-        }
-
-        public async Task<Result<bool>> Create(CreatePaymentRequest request)
-        {
-            try
-            {
-                Payment payment = new Payment()
-                {
-                    PaymentMethod = request.PaymentMethod ?? "PayOS",
-                    Fee = request.Fee,
-                    CourseId = request.CourseId,
-                    UserId = request.UserId,
-                };
-
-                Payment result = await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
-                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-
-                if (!isSuccessful)
-                {
-                    throw new Exception(MessageConstant.Vi.Payment.Fail.CreatePayment);
-                }
-
-                return Success(isSuccessful);
-            }
-            catch (Exception ex)
-            {
-                return Fail<bool>(ex.Message);
-            }
         }
 
         public async Task<Result<bool>> Delete(Guid id)
@@ -76,11 +50,15 @@ namespace EduLingual.Infrastructure.Service
             }
         }
 
-        public async Task<PagingResult<PaymentViewModel>> GetPagination(Expression<Func<Payment, bool>>? predicate, int page, int size)
+        public async Task<PagingResult<PaymentViewModel>> GetPagination(DateTime? startDate, DateTime? endDate, int page, int size)
         {
             try
             {
-                IPaginate<Payment> payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync();
+                IPaginate<Payment> payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
+                        predicate: BuildGetPaymentsQuery(startDate, endDate),
+                        include: x => x.Include(x => x.User)
+                                       .Include(x => x.Course)
+                    );
 
                 return SuccessWithPaging<PaymentViewModel>(
                         _mapper.Map<IPaginate<PaymentViewModel>>(payments),
@@ -92,6 +70,29 @@ namespace EduLingual.Infrastructure.Service
             {
             }
             return null!;
+        }
+
+        private Expression<Func<Payment, bool>> BuildGetPaymentsQuery(DateTime? startDate,
+           DateTime? endDate)
+        {
+            Expression<Func<Payment, bool>> filterQuery = x => x.IsDeleted == false;
+
+            if (startDate != null && endDate == null)
+            {
+                filterQuery = filterQuery.AndAlso(p =>
+                    p.CreatedAt >= startDate && p.CreatedAt <= startDate.Value.AddDays(1));
+            }
+            else if (startDate != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.CreatedAt >= startDate);
+            }
+
+            if (endDate != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.CreatedAt <= endDate);
+            }
+
+            return filterQuery;
         }
 
         public async Task<Result<PaymentViewModel>> GetPaymentById(Guid id)

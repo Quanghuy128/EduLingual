@@ -25,29 +25,31 @@ public class UserCourseService : BaseService<UserCourse>, IUserCourseService
     {
     }
 
-    public async Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest joinRequest, CreatePaymentRequest paymentRequest)
+    public async Task<Result<bool>> UserJoinCourseAsync(UserCourseRequest request)
     {
         try
         {
-            User student = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(joinRequest.UserId), include: x => x.Include(x => x.Role));
+            User student = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.UserId), include: x => x.Include(x => x.Role));
             if (student == null) return BadRequest<bool>(MessageConstant.Vi.User.Fail.NotFoundUser);
 
             if (student.Role.RoleName != RoleName.UserRoleName) return BadRequest<bool>(MessageConstant.Vi.UserCourse.Fail.UserNotStudentRole);
 
-            Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(joinRequest.CourseId) && x.Status == CourseStatus.Active);
+            Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.CourseId) && x.Status == CourseStatus.Active);
             if (course == null) return BadRequest<bool>(MessageConstant.Vi.Course.Fail.NotFoundCourse);
 
             UserCourse newUserCourse = new UserCourse();
-            newUserCourse.CourseId = joinRequest.CourseId;
-            newUserCourse.UserId = joinRequest.UserId;
+            newUserCourse.CourseId = request.CourseId;
+            newUserCourse.UserId = request.UserId;
             await _unitOfWork.GetRepository<UserCourse>().InsertAsync(newUserCourse);
 
             Payment payment = new Payment()
             {
-                PaymentMethod = paymentRequest.PaymentMethod ?? "PayOS",
-                Fee = paymentRequest.Fee,
-                CourseId = paymentRequest.CourseId,
-                UserId = paymentRequest.UserId,
+                FullName = request.FullName,
+                PhoneNumber = request.PhoneNumber,
+                PaymentMethod = request.PaymentMethod ?? "PayOS",
+                Fee = request.Fee,
+                CourseId = request.CourseId,
+                UserId = request.UserId,
             };
 
             Payment result = await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
@@ -58,7 +60,8 @@ public class UserCourseService : BaseService<UserCourse>, IUserCourseService
                 throw new Exception(MessageConstant.Vi.UserCourse.Fail.JoinCourseFail);
             }
             return Success(isSuccessful);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             return Fail<bool>(ex.Message);
         }

@@ -21,9 +21,10 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Payment.PaymentsEndpoint)]
         [ProducesResponseType(typeof(Result<List<PaymentViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size, [FromQuery] DateTime? startDate,
+           [FromQuery] DateTime? endDate)
         {
-            PagingResult<PaymentViewModel> result = await _paymentService.GetPagination(x => false, page, size);
+            PagingResult<PaymentViewModel> result = await _paymentService.GetPagination(startDate, endDate, page, size);
             return StatusCode((int)result.StatusCode, result);
         }
 
@@ -34,15 +35,6 @@ namespace EduLingual.Api.Controllers
             Result<PaymentViewModel> course = await _paymentService.GetPaymentById(id);
             return Ok(course);
         }
-
-/*        [HttpPost(ApiEndPointConstant.Course.CoursesEndpoint)]
-        [ProducesResponseType(typeof(Result<CourseViewModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateCourseRequest request)
-        {
-            Result<CourseViewModel> result = await _courseService.Create(request);
-            return StatusCode((int)result.StatusCode, result);
-        }*/
 
         [HttpPut(ApiEndPointConstant.Payment.PaymentEndpoint)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]

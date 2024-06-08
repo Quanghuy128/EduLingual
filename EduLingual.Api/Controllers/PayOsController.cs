@@ -22,24 +22,58 @@ namespace EduLingual.Api.Controllers
             _service = service;
         }
 
+        /*  [HttpPost(ApiEndPointConstant.PayOs.PayOsEndpoint)]
+          public async Task<IActionResult> Checkout([FromQuery] CreatePaymentRequest request)
+          {
+              try
+              {
+                  int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                  List<ItemData> items = new List<ItemData>();
+
+                  var course = _service.GetCourseById(request.CourseId);
+                  ItemData data = new ItemData(course.Result.Data.Title, 1, (int)course.Result.Data.Tuitionfee);
+                  items.Add(data);
+                  var tutionFee = course.Result.Data.Tuitionfee;
+
+                  var baseUrl = "https://localhost:44315";
+                  var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?request={request}";
+                  var cancelUrl = "https://.app/payment/cancel";
+                  PaymentData paymentData = new PaymentData(orderCode, (int)tutionFee, "Thanh toan hoc phi", items, cancelUrl, successUrl);
+                  CreatePaymentResult createPayment = await _payOs.createPaymentLink(paymentData);
+
+                  return Ok(new
+                  {
+                      message = "redirect",
+                      url = createPayment.checkoutUrl
+                  });
+              }
+              catch (System.Exception exception)
+              {
+                  Console.WriteLine(exception);
+                  return Redirect("https://.app");
+              }
+          }*/
+
         [HttpPost(ApiEndPointConstant.PayOs.PayOsEndpoint)]
-        public async Task<IActionResult> Checkout([FromQuery] CreatePaymentRequest request)
+        public async Task<IActionResult> Checkout([FromQuery] Guid userId, [FromQuery] Guid courseId, [FromQuery] string paymentMethod, [FromQuery] double fee, [FromQuery] string fullName, [FromQuery] string phoneNumber)
         {
             try
             {
                 int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                var totalFee = 0.0;
                 List<ItemData> items = new List<ItemData>();
 
-                var course = _service.GetCourseById(request.CourseId);
+                var course = _service.GetCourseById(courseId);
                 ItemData data = new ItemData(course.Result.Data.Title, 1, (int)course.Result.Data.Tuitionfee);
                 items.Add(data);
-                var tutionFee = course.Result.Data.Tuitionfee;
+                totalFee += course.Result.Data.Tuitionfee;
 
                 var baseUrl = "https://localhost:44315";
-                var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?request={request}";
+                var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?userId={userId}&courseId={courseId}&paymentMethod={paymentMethod}&fee={fee}&fullName={fullName}&phoneNumber={phoneNumber}";
                 var cancelUrl = "https://.app/payment/cancel";
-                PaymentData paymentData = new PaymentData(orderCode, (int)tutionFee, "Thanh toan hoc phi", items, cancelUrl, successUrl);
+                PaymentData paymentData = new PaymentData(orderCode, (int)totalFee, "Thanh toan hoc phi", items, cancelUrl, successUrl, buyerName: fullName, buyerPhone: phoneNumber);
                 CreatePaymentResult createPayment = await _payOs.createPaymentLink(paymentData);
+
                 return Ok(new
                 {
                     message = "redirect",

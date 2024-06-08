@@ -12,6 +12,8 @@ namespace EduLingual.Domain.Dtos.Payment
 {
     public class PaymentDto : BaseEntity
     {
+        public string FullName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public string PaymentMethod { get; set; } = string.Empty;
         public double Fee { get; set; } = 0;
     }
