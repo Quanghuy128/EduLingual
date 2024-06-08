@@ -11,6 +11,10 @@
         public const string ApiEndpoint = RootEndPoint + ApiVersion;
 
         public const string ByIdRoute = "/{id}";
+        public static class Media { 
+            public const string UploadEndpoint = ApiEndpoint+ "/upload";
+            public const string DownloadEndpoint = ApiEndpoint+ "/download";
+        }
         public static class Authentication
         {
             /// <summary>"api/v1/login"</summary>
