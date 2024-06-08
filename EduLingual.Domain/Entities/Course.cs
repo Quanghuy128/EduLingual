@@ -24,7 +24,7 @@ namespace EduLingual.Domain.Entities
         public double Tuitionfee { get; set; } = 0;
 
         [Column("status")]
-        public CourseStatus Status { get; set; } = CourseStatus.Active;
+        public CourseStatus Status { get; set; } = CourseStatus.Pending;
 
         [Column("area_id")]
         [ForeignKey(nameof(CourseArea))]

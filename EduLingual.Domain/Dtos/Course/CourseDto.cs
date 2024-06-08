@@ -1,4 +1,5 @@
 ﻿using EduLingual.Domain.Common;
+using EduLingual.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace EduLingual.Domain.Dtos.Course
         public string? Description { get; set; }
         public string? Duration { get; set; }
         public double Tuitionfee { get; set; }
+        public CourseStatus Status { get; set; }
         public CourseDto(string? title, string? description, string? duration, double tuitionFee)
         {
             Title = title;

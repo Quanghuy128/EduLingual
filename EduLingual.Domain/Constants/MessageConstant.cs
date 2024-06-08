@@ -88,6 +88,7 @@ namespace EduLingual.Domain.Constants
                     public const string LanguageRequired = Language + RequiredSuffix;
                     public const string CategoryRequired = Category + RequiredSuffix;
                     public const string StatusRequired = CourseStatus + RequiredSuffix;
+                    public const string ValidFee = TutionFee + " phải lớn hơn 100.000đ !!!";
                 }
                 public static class Success
                 {

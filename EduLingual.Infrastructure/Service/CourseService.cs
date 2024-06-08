@@ -1,9 +1,11 @@
-﻿using EduLingual.Application.Service;
+﻿using EduLingual.Application.Extensions;
+using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
+using EduLingual.Domain.Enum;
 using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
@@ -49,7 +51,6 @@ namespace EduLingual.Infrastructure.Service
                     CourseAreaId = request.CourseAreaId,
                     CourseLanguageId = request.CourseLanguageId,
                     CourseCategoryId = request.CourseCategoryId,
-
                 };
 
                 Course result = await _unitOfWork.GetRepository<Course>().InsertAsync(newCourse);
@@ -74,7 +75,9 @@ namespace EduLingual.Infrastructure.Service
             {
                 Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
 
-                _unitOfWork.GetRepository<Course>().DeleteAsync(course);
+                course.IsDeleted = true;
+
+                _unitOfWork.GetRepository<Course>().UpdateAsync(course);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
 
                 if (!isSuccessful)
@@ -118,7 +121,8 @@ namespace EduLingual.Infrastructure.Service
                     CourseArea = courseArea ?? course.CourseArea,
                     CourseLanguage = courseLanguage ?? course.CourseLanguage,
                     CourseCategory = courseCategory ?? course.CourseCategory,
-                    Status = request.Status ?? course.Status
+                    Status = request.Status ?? course.Status,
+                    CreatedAt = course.CreatedAt,
                 };
 
                 _unitOfWork.GetRepository<Course>().UpdateAsync(newCourse);
@@ -138,78 +142,63 @@ namespace EduLingual.Infrastructure.Service
 
         public async Task<Result<CourseViewModel>> GetCourseById(Guid id)
         {
-            Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(
+                    predicate: x => x.Id.Equals(id),
+                    include: x => x.Include(x => x.Center)
+                                   .Include(x => x.CourseArea)
+                                   .Include(x => x.CourseLanguage)
+                                   .Include(x => x.CourseCategory)
+                );
 
             if (course == null) return BadRequest<CourseViewModel>(MessageConstant.Vi.Course.Fail.NotFoundCourse);
 
             return Success(_mapper.Map<CourseViewModel>(course));
         }
 
-        public Task<Result<CourseViewModel>> GetCourseByCondition(Expression<Func<UserDto, bool>> predicate)
+        public async Task<Result<List<CourseViewModel>>> GetCourses(string? title, CourseFilter? courseFilter, string? sort)
         {
-            throw new NotImplementedException();
-        }
-
-/*        public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
-        {
-            CourseArea courseArea = await _unitOfWork.GetRepository<CourseArea>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.AreaId));
-            if (courseArea == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseArea.Fail.NotFoundCourseArea);
-
-            CourseLanguage courseLanguage = await _unitOfWork.GetRepository<CourseLanguage>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.LanguageId));
-            if (courseLanguage == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseLanguage.Fail.NotFoundCourseLanguage);
-
-            CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(courseFilter.CategoryId));
-            if (courseCategory == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);
-
             ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                predicate: x => x.CourseArea.Id.Equals(courseFilter.AreaId) &&
-                                x.CourseLanguage.Id.Equals(courseFilter.LanguageId) &&
-                                x.CourseCategory.Id.Equals(courseFilter.CategoryId),
-                include: x => x.Include(x => x.CourseArea)
-                               .Include(x => x.CourseLanguage)
-                               .Include(x => x.CourseCategory)
-                               .Include(x => x.Center)
+                    predicate: BuildGetSearchCoursesQuery(title, courseFilter, sort),
+                    orderBy: x => x.OrderByDescending(x => x.CreatedAt),
+                    include: x => x.Include(x => x.Center)
+                                   .Include(x => x.CourseArea)
+                                   .Include(x => x.CourseLanguage)
+                                   .Include(x => x.CourseCategory)
                 );
-
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
-        }*/
-
-        public async Task<Result<List<CourseViewModel>>> GetCourses(CourseFilter courseFilter)
-        {
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync();
-
-            if (courseFilter.AreaId != null)
-            {
-                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                        predicate: x => x.CourseArea.Id.Equals(courseFilter.AreaId),
-                        include: x => x.Include(x => x.CourseArea)
-                );
-            }
-
-            if (courseFilter.CategoryId != null)
-            {
-                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                        predicate: x => x.CourseCategory.Id.Equals(courseFilter.CategoryId),
-                        include: x => x.Include(x => x.CourseCategory)
-                );
-            }
-
-            if (courseFilter.LanguageId != null)
-            {
-                courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                        predicate: x => x.CourseLanguage.Id.Equals(courseFilter.LanguageId),
-                        include: x => x.Include(x => x.CourseLanguage)
-                );
-            }
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
 
-        public async Task<PagingResult<CourseViewModel>> GetPagination(Expression<Func<Course, bool>>? predicate, int page, int size)
+        private Expression<Func<Course, bool>> BuildGetSearchCoursesQuery(string? title, CourseFilter? filter, string? sort)
+        {
+            Expression<Func<Course, bool>> filterQuery = x => x.Status.Equals(CourseStatus.Active) && x.IsDeleted == false;
+            if (title != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Title.Trim().ToLower().Contains(title));
+            }
+            if (filter.AreaId != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CourseAreaId.Equals(filter.AreaId));
+            }
+            if (filter.CategoryId != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CourseCategoryId.Equals(filter.CategoryId));
+            }
+            if (filter.LanguageId != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CourseLanguageId.Equals(filter.LanguageId));
+            }
+
+            return filterQuery;
+        }
+
+        public async Task<PagingResult<CourseViewModel>> GetPagination(int page, int size, string? title, CourseStatus? status, Guid? centerId)
         {
             try
             {
                 IPaginate<Course> courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
+                    predicate: BuildGetCoursesQuery(title, status, centerId),
+                    orderBy: x => x.OrderByDescending(x => x.CreatedAt),
                     include: x => x.Include(x => x.CourseArea)
                                   .Include(x => x.CourseLanguage)
                                   .Include(x => x.CourseCategory)
@@ -228,6 +217,25 @@ namespace EduLingual.Infrastructure.Service
             return null!;
         }
 
+        private Expression<Func<Course, bool>> BuildGetCoursesQuery(string? title, CourseStatus? status, Guid? centerId)
+        {
+            Expression<Func<Course, bool>> filterQuery = x => x.IsDeleted == false;
+            if (title != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Title.Trim().ToLower().Contains(title));
+            }
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status));
+            }
+            if (centerId != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CenterId.Equals(centerId));
+            }
+
+            return filterQuery;
+        }
+
         public async Task<Result<List<UserCourseDto>>> GetStudentsByCourse(Guid id)
         {
             Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
@@ -237,7 +245,7 @@ namespace EduLingual.Infrastructure.Service
                 selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
                 predicate: x => x.CourseId.Equals(id),
                 include: x => x.Include(x => x.User)
-                ); 
+                );
 
             return Success(_mapper.Map<List<UserCourseDto>>(students));
         }

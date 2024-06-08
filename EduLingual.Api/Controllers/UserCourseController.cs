@@ -24,7 +24,7 @@ namespace EduLingual.Api.Controllers
         [HttpPost(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UserJoinCourse([FromQuery] CreatePaymentRequest request, [FromQuery] string status)
+        public async Task<IActionResult> UserJoinCourse([FromBody] CreatePaymentRequest request, [FromQuery] string status)
         {
             if (status == "CANCELLED")
             {
