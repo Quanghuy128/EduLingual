@@ -67,6 +67,15 @@
             public const string FeedbackEndpoint = FeedbacksEndpoint + ByIdRoute;
             public const string FeedbacksPaginationEndpoint = ApiEndpoint + "/binh-luan-paging";
         }
+        public static class Dashboard
+        {
+            public const string DashdoardEndpoint = ApiEndpoint + "/dashboard";
+            public const string DashboardFinance = DashdoardEndpoint + "/finance";
+            public const string DashboardTeacher = DashdoardEndpoint + "/teacher";
+            public const string DashboardUser = DashdoardEndpoint + "/user";
+            public const string DashboardExam = DashdoardEndpoint + "/exam";
+
+        }
         public static class UserCourse
         {
             public const string CourseUsersEndpoint = ApiEndpoint + "/UserCourse";
