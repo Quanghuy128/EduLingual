@@ -75,5 +75,13 @@ namespace EduLingual.Api.Controllers
             Result<List<UserCourseDto>> users = await _courseService.GetStudentsByCourse(id);
             return Ok(users);
         }
+
+        [HttpGet(ApiEndPointConstant.Course.HighlightedCoursesEndpoint)]
+        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHighlightedCourses()
+        {
+            Result<List<CourseViewModel>> courses = await _courseService.GetHighlightedCourses();
+            return Ok(courses);
+        }
     }
 }

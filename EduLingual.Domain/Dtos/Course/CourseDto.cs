@@ -15,6 +15,8 @@ namespace EduLingual.Domain.Dtos.Course
         public string? Duration { get; set; }
         public double Tuitionfee { get; set; }
         public CourseStatus Status { get; set; }
+        public bool IsHighlighted { get; set; }
+
         public CourseDto(string? title, string? description, string? duration, double tuitionFee)
         {
             Title = title;

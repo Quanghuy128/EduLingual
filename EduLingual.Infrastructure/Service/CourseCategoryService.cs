@@ -7,6 +7,7 @@ using EduLingual.Domain.Entities;
 using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,10 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+                CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(
+                        predicate: x => x.Id.Equals(id),
+                        include: x => x.Include(x => x.CourseLanguage)
+                    );
                 return Success(_mapper.Map<CourseCategoryViewModel>(courseCategory));
             }
             catch (Exception ex)
@@ -41,7 +45,9 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                ICollection<CourseCategory> courseCategories = await _unitOfWork.GetRepository<CourseCategory>().GetListAsync();
+                ICollection<CourseCategory> courseCategories = await _unitOfWork.GetRepository<CourseCategory>().GetListAsync(
+                        include: x => x.Include(x => x.CourseLanguage)
+                    );
                 return Success(_mapper.Map<List<CourseCategoryViewModel>>(courseCategories));
             }
             catch (Exception ex)
@@ -54,7 +60,9 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                IPaginate<CourseCategory> courseCategories = await _unitOfWork.GetRepository<CourseCategory>().GetPagingListAsync();
+                IPaginate<CourseCategory> courseCategories = await _unitOfWork.GetRepository<CourseCategory>().GetPagingListAsync(
+                        include: x => x.Include(x => x.CourseLanguage)
+                    );
 
                 return SuccessWithPaging<CourseCategoryViewModel>(
                         _mapper.Map<IPaginate<CourseCategoryViewModel>>(courseCategories),
