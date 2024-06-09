@@ -249,5 +249,21 @@ namespace EduLingual.Infrastructure.Service
 
             return Success(_mapper.Map<List<UserCourseDto>>(students));
         }
+
+        public async Task<Result<List<CourseViewModel>>> GetHighlightedCourses()
+        {
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
+                    predicate: x => x.IsHighlighted == true,
+                    orderBy: x => x.OrderByDescending(x => x.CreatedAt),
+                    include: x => x.Include(x => x.Center)
+                                   .Include(x => x.CourseArea)
+                                   .Include(x => x.CourseLanguage)
+                                   .Include(x => x.CourseCategory)
+                );
+
+            courses = courses.Take(6).ToList();
+
+            return Success(_mapper.Map<List<CourseViewModel>>(courses));
+        }
     }
 }

@@ -43,6 +43,7 @@
             public const string CoursesPaginationEndpoint = ApiEndpoint + "/khoa-hoc-paging";
             public const string CourseEndpoint = CoursesEndpoint + ByIdRoute;
             public const string UsersByCourseEnpoint = CoursesEndpoint + "/{id}/nguoi-hoc";
+            public const string HighlightedCoursesEndpoint = CoursesEndpoint + "-noi-bat";
         }
         public static class CourseArea
         {

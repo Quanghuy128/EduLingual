@@ -26,6 +26,9 @@ namespace EduLingual.Domain.Entities
         [Column("status")]
         public CourseStatus Status { get; set; } = CourseStatus.Pending;
 
+        [Column("is_highlighted")]
+        public bool IsHighlighted { get; set; } = false;
+
         [Column("area_id")]
         [ForeignKey(nameof(CourseArea))]
         public Guid CourseAreaId { get; set; }
