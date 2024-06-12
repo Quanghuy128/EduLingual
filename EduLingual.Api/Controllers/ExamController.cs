@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using EduLingual.Application.Service;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Common;
+using EduLingual.Domain.Dtos.Exam;
 
 namespace EduLingual.Api.Controllers
 {
@@ -37,6 +38,20 @@ namespace EduLingual.Api.Controllers
         public async Task<IActionResult> GetExamsByCourseId([FromRoute] Guid id, [FromQuery] int page, [FromQuery] int size)
         {
             var result = await _examService.GetAllExamByCourseId(id, page, size);
+            return Ok(result);
+        }
+        [HttpPost(ApiEndPointConstant.Exam.ExamCreateResult)]
+        [ProducesResponseType(typeof(PagingResult<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateExamResult(ResultExamDto resultExamDto)
+        {
+            var result = await _examService.GenerateScore(resultExamDto);
+            return Ok(result);
+        }
+        [HttpPost(ApiEndPointConstant.Exam.ExamResult)]
+        [ProducesResponseType(typeof(PagingResult<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetScore([FromQuery] int page, [FromQuery] int size, [FromBody] GetScoreDto getScoreDto)
+        {
+            var result = await _examService.GetScoreExam(getScoreDto, page, size);
             return Ok(result);
         }
     }

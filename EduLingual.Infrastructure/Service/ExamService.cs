@@ -1,22 +1,16 @@
 ﻿using EduLingual.Application.Repository;
 using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
-using EduLingual.Domain.Dtos.Dashboard;
+using EduLingual.Domain.Constants;
+using EduLingual.Domain.Dtos.Exam;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
+using EduLingual.Domain.Pagination;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EduLingual.Domain.Constants;
-using EduLingual.Domain.Dtos.Feedback;
+using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
-using EduLingual.Domain.Pagination;
 
 namespace EduLingual.Infrastructure.Service
 {
@@ -104,6 +98,66 @@ namespace EduLingual.Infrastructure.Service
             }
 
             return Success(isSuccessful);
+        }
+        public async Task<Result<bool>> GenerateScore(ResultExamDto resultExamDto)
+        {
+            var user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: u => u.Id.Equals(resultExamDto.UserId));
+            if (user == null) return BadRequest<bool>(MessageConstant.Vi.User.Fail.NotFoundUser);
+
+            var exam = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: e => e.Id.Equals(resultExamDto.ExamId), include: e => e.Include(e => e.Questions));
+            if (exam == null) return BadRequest<bool>(MessageConstant.Vi.Exam.Fail.NotFoundExam);
+
+            var userCourse = await _unitOfWork.GetRepository<UserCourse>().SingleOrDefaultAsync(predicate: uc => uc.UserId.Equals(user.Id) && uc.CourseId.Equals(exam.CourseId));
+            if (userCourse == null) return BadRequest<bool>(MessageConstant.Vi.UserCourse.Fail.UserNotInCourse);
+
+            var totalScore = exam.Questions.Sum(e => e.Point);
+            double score = 0;
+            foreach (var a in resultExamDto.Results)
+            {
+
+                var answer = await _unitOfWork.GetRepository<Answer>().SingleOrDefaultAsync(include: aw => aw.Include(a => a.Question), predicate: aw => aw.Id.Equals(a) && aw.IsCorrect);
+                if (answer != null && answer.IsCorrect == true)
+                {
+                    score += answer.Question.Point;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            var finalScore = score * 10 / totalScore;
+            UserExam userExam = new UserExam()
+            {
+                UserId = user.Id,
+                ExamId = exam.Id,
+                Score = (double)System.Math.Round(finalScore, 2)
+            };
+            await _unitOfWork.GetRepository<UserExam>().InsertAsync(userExam);
+            var isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful)
+            {
+                throw new Exception(MessageConstant.Vi.UserExam.Fail.CreateUserExam);
+            }
+
+            return Success(isSuccessful);
+        }
+
+        public async Task<PagingResult<UserExam>> GetScoreExam(GetScoreDto getScoreDto, int page, int size)
+        {
+            try
+            {
+                IPaginate<UserExam> userExams = await _unitOfWork.GetRepository<UserExam>().GetPagingListAsync(predicate: ue => ue.ExamId.Equals(getScoreDto.ExamId) && ue.UserId.Equals(getScoreDto.UserId));
+
+                return SuccessWithPaging<UserExam>(
+                        userExams,
+                        page,
+                        size,
+                        userExams.Total);
+            }
+            catch (Exception ex)
+            {
+            }
+            return null!;
         }
     }
 }
