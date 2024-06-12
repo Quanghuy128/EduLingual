@@ -51,7 +51,7 @@ namespace EduLingual.Api.Controllers
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Redirect("https://.app");
+                return Redirect("http://68.183.186.61:3000");
             }
         }
     }

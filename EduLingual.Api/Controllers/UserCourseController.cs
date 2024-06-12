@@ -1,7 +1,6 @@
 ﻿using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
-using EduLingual.Domain.Dtos.Payment;
 using EduLingual.Domain.Dtos.UserCourse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,10 +44,10 @@ namespace EduLingual.Api.Controllers
 
             if (!result.Data)
             {
-                return Redirect(".app/payment/failure");
+                return Redirect("http://68.183.186.61:3000");
             }
 
-            return Redirect(".app/payment/success");
+            return Redirect("http://68.183.186.61:3000");
         }
     }
 }
