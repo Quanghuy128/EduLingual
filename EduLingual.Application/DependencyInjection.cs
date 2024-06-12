@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using EduLingual.Domain.Common;
+using EduLingual.Domain.Dtos.Course;
+using EduLingual.Domain.Entities;
 using Mapster;
 using MapsterMapper;
 using System.Reflection;
@@ -28,6 +30,7 @@ namespace EduLingual.Application
         }
         private static TypeAdapterConfig ConfigCustomMapper(this TypeAdapterConfig config)
         {
+            TypeAdapterConfig<UpdateCourseRequest, Course>.NewConfig().IgnoreNullValues(true);
             return config;
         }
     }

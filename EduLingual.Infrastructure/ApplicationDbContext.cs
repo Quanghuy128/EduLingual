@@ -17,11 +17,14 @@ namespace EduLingual.Infrastructure
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseLanguage> CoursesLanguages { get; set;}
-        public DbSet<CourseCategory> CoursesCategories { get; set;}
+        public DbSet<CourseLanguage> CoursesLanguages { get; set; }
+        public DbSet<CourseCategory> CoursesCategories { get; set; }
         public DbSet<CourseArea> CourseAreas { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Exam> Exams { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -99,6 +102,25 @@ namespace EduLingual.Infrastructure
                 .HasOne(p => p.User)
                 .WithMany(d => d.Payments)
                 .HasForeignKey(p => p.UserId);
+            modelBuilder.Entity<Exam>()
+                .HasOne(p => p.User)
+                .WithMany(d => d.Exams)
+                .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<Exam>()
+               .HasOne(p => p.Course)
+               .WithMany(d => d.Exams)
+               .HasForeignKey(p => p.CourseId);
+
+            modelBuilder.Entity<Question>()
+               .HasOne(p => p.Exam)
+               .WithMany(d => d.Questions)
+               .HasForeignKey(p => p.ExamId);
+
+            modelBuilder.Entity<Answer>()
+               .HasOne(p => p.Question)
+               .WithMany(d => d.Answers)
+               .HasForeignKey(p => p.QuestionId);
             #endregion
         }
     }

@@ -7,6 +7,7 @@ using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using EduLingual.Domain.Pagination;
+using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -97,7 +98,7 @@ namespace EduLingual.Infrastructure.Service
             try
             {
                 Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-
+/*
                 User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.CenterId));
                 if (center == null) return BadRequest<bool>(MessageConstant.Vi.User.Fail.NotFoundCenter);
 
@@ -108,9 +109,9 @@ namespace EduLingual.Infrastructure.Service
                 if (courseLanguage == null) return BadRequest<bool>(MessageConstant.Vi.CourseLanguage.Fail.NotFoundCourseLanguage);
 
                 CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.CourseCategoryId));
-                if (courseCategory == null) return BadRequest<bool>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);
+                if (courseCategory == null) return BadRequest<bool>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);*/
 
-                Course newCourse = new Course()
+/*                Course newCourse = new Course()
                 {
                     Id = id,
                     Title = request.Title ?? course.Title,
@@ -123,9 +124,11 @@ namespace EduLingual.Infrastructure.Service
                     CourseCategory = courseCategory ?? course.CourseCategory,
                     Status = request.Status ?? course.Status,
                     CreatedAt = course.CreatedAt,
-                };
+                };*/
 
-                _unitOfWork.GetRepository<Course>().UpdateAsync(newCourse);
+                request.Adapt(course);
+
+                _unitOfWork.GetRepository<Course>().UpdateAsync(course);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
 
                 if (!isSuccessful)

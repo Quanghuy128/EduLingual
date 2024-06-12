@@ -205,6 +205,8 @@ namespace EduLingual.Infrastructure.Service
                 {
                     throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
                 }
+                user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(user.Id), include: x => x.Include(x => x.Role));
+
                 RoleEnum role = EnumHelper.ParseEnum<RoleEnum>(user.Role.RoleName);
                 Tuple<string, Guid> guidClaim = null!;
                 RegisterResponse registerResponse = null!;
