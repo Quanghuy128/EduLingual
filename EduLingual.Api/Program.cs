@@ -3,6 +3,8 @@ using EduLingual.Api.Middlewares;
 using EduLingual.Domain.Common;
 using Microsoft.Extensions.Configuration;
 using Net.payOS;
+using OfficeOpenXml;
+using System.Text.Json.Serialization;
 
 try
 {
@@ -13,6 +15,7 @@ try
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
@@ -36,7 +39,8 @@ try
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
     //builder.Services.AddResponseCompression();
-
+    builder.Services.AddMvc()
+                .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -59,7 +63,6 @@ try
     //app.UseRequestDecompression();
 
     app.MapControllers();
-
     app.Run();
 }
 catch (Exception ex)

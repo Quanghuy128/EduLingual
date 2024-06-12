@@ -76,6 +76,13 @@
             public const string DashboardExam = DashdoardEndpoint + "/exam";
 
         }
+        public static class Exam
+        {
+            public const string ExamEndpoint = ApiEndpoint + "/exam";
+            public const string ExamCreate = ExamEndpoint + "/upload";
+            public const string ExamId = ExamEndpoint + "/examId" + ByIdRoute;
+            public const string ExamsByCourseId = ExamEndpoint + "/courseId" + ByIdRoute;
+        }
         public static class UserCourse
         {
             public const string CourseUsersEndpoint = ApiEndpoint + "/UserCourse";

@@ -62,6 +62,15 @@ namespace EduLingual.Domain.Constants
                     public static string NotFoundUser = String.Format(NotFoundTemplate, UserMessage);
                 }
             }
+            public static class Exam
+            {
+                private const string ExamMessage = "bài kiểm tra";
+                public static class Fail
+                {
+                    public static string CreateExam = String.Format(CreateFailTemplate, ExamMessage);
+                    public static string NotFoundExam = String.Format(NotFoundTemplate, ExamMessage);
+                }
+            }
             public static class Course
             {
                 #region Course Field
