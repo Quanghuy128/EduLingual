@@ -76,7 +76,7 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
     {
         try
         {
-            string roleName = Enum.GetName(typeof(RoleEnum), RoleEnum.Candidate);
+            string roleName = Enum.GetName(typeof(RoleEnum), RoleEnum.User);
             var listUserCurrent = await _unitOfWork.GetRepository<User>().GetListAsync(include: u => u.Include(u => u.Role), predicate: t => t.CreatedAt.Month == ThisMonth && t.CreatedAt.Year == ThisYear && t.Role.RoleName == roleName);
             var numberUserCurrent = listUserCurrent.Count;
 

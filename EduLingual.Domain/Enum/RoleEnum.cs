@@ -3,7 +3,7 @@
     public enum RoleEnum
     {
         Admin,
-        Candidate,
+        User,
         Teacher
     }
 }
