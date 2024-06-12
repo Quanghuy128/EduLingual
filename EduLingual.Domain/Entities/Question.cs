@@ -14,6 +14,9 @@ namespace EduLingual.Domain.Entities
         [Column("content")]
         [Required]
         public string Content { get; set; } = string.Empty;
+        [Column("point")]
+        [Required]
+        public double Point { get; set; } = 0;
 
         [Column("exam_id")]
         [ForeignKey(nameof(Exam))]
