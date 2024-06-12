@@ -102,15 +102,19 @@ namespace EduLingual.Infrastructure
                 .HasOne(p => p.User)
                 .WithMany(d => d.Payments)
                 .HasForeignKey(p => p.UserId);
-            modelBuilder.Entity<Exam>()
-                .HasOne(p => p.User)
-                .WithMany(d => d.Exams)
-                .HasForeignKey(p => p.UserId);
 
             modelBuilder.Entity<Exam>()
-               .HasOne(p => p.Course)
+                .HasOne(p => p.Center)
+                .WithMany(d => d.OwnExams)
+                .HasForeignKey(p => p.CenterId);
+
+            modelBuilder.Entity<Exam>()
+               .HasMany(p => p.Users)
                .WithMany(d => d.Exams)
-               .HasForeignKey(p => p.CourseId);
+               .UsingEntity<UserExam>(
+                    l => l.HasOne<User>(e => e.User).WithMany(e => e.UserExams),
+                    r => r.HasOne<Exam>(e => e.Exam).WithMany(e => e.UserExams)
+                );
 
             modelBuilder.Entity<Question>()
                .HasOne(p => p.Exam)
