@@ -22,10 +22,26 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
     {
     }
 
-    public Task<Result<ReportDataDto>> GetExamInMonth()
+    public async Task<Result<ReportDataDto>> GetExamInMonth()
     {
-        // TODO: Get exam for this month
-        throw new NotImplementedException();
+        try
+        {
+            var listExamCurrent = await _unitOfWork.GetRepository<Exam>().GetListAsync(predicate: p => p.CreatedAt.Month == ThisMonth && p.CreatedAt.Year == ThisYear);
+            var totalExamCurrent = listExamCurrent.Count;
+
+            var listExamLast = await _unitOfWork.GetRepository<Exam>().GetListAsync(predicate: p => p.CreatedAt.Month == LastMonth && p.CreatedAt.Year == YearForLastMonth);
+            var totalExamLast = listExamLast.Count;
+
+            var reportData = new ReportDataDto()
+            {
+                DataThisMonth = totalExamCurrent,
+                DataLastMonth = totalExamLast,
+            };
+            return Success(reportData);
+        } catch (Exception ex)
+        {
+            return Fail<ReportDataDto>(ex.Message);
+        }
     }
 
     public async Task<Result<ReportDataDto>> GetFinanceInMonth()
