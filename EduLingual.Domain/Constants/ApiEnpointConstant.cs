@@ -82,6 +82,7 @@
             public const string ExamCreate = ExamEndpoint + "/upload";
             public const string ExamId = ExamEndpoint + "/examId" + ByIdRoute;
             public const string ExamsByCourseId = ExamEndpoint + "/courseId" + ByIdRoute;
+            public const string ExamCreateResult = ExamEndpoint + "/result";
         }
         public static class UserCourse
         {

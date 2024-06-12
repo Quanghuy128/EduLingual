@@ -71,6 +71,14 @@ namespace EduLingual.Domain.Constants
                     public static string NotFoundExam = String.Format(NotFoundTemplate, ExamMessage);
                 }
             }
+            public static class UserExam
+            {
+                private const string UserExamMessage = "kết quả kiểm tra";
+                public static class Fail
+                {
+                    public static string CreateUserExam = String.Format(CreateFailTemplate, CreateUserExam);
+                }
+            }
             public static class Course
             {
                 #region Course Field
@@ -238,6 +246,7 @@ namespace EduLingual.Domain.Constants
                 {
                     public static string UserNotStudentRole = String.Format(InvalidRoleTemplate, UserMessage, StudentRoleMessage);
                     public static string JoinCourseFail = $"{UserMessage} tham gia {CourseMessage} thất bại";
+                    public static string UserNotInCourse = "Học viên không tham gia vào khóa học";
                 }
             }
             public static class Payment
