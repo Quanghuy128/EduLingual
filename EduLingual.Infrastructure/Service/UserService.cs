@@ -57,8 +57,9 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));       
-                _unitOfWork.GetRepository<User>().DeleteAsync(user);
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));     
+                user.IsDeleted = true;
+                _unitOfWork.GetRepository<User>().UpdateAsync(user);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
                 {
@@ -89,7 +90,7 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync();
+                ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync(predicate: x => x.IsDeleted == false);
                 return Success(_mapper.Map<List<UserViewModel>>(users));
             }catch (Exception ex) {
                 return BadRequest<List<UserViewModel>>(ex.Message);
@@ -108,7 +109,7 @@ namespace EduLingual.Infrastructure.Service
 
                 IPaginate<User> users = 
                     await _unitOfWork.GetRepository<User>()
-                    .GetPagingListAsync(include: x => x.Include(x => x.Role));
+                    .GetPagingListAsync(include: x => x.Include(x => x.Role), predicate: x => x.IsDeleted == false);
                 return SuccessWithPaging<UserViewModel>(
                         _mapper.Map<IPaginate<UserViewModel>>(users), 
                         page, 
@@ -175,7 +176,7 @@ namespace EduLingual.Infrastructure.Service
             User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
             if (center == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
 
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id));
+            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id) && x.IsDeleted == false);
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
