@@ -9,6 +9,7 @@ using EduLingual.Domain.Common;
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("question")]
     public class Question : BaseEntity
     {
         [Column("content")]

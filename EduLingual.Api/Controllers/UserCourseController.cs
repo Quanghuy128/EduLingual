@@ -28,7 +28,7 @@ namespace EduLingual.Api.Controllers
         {
             if (status == "CANCELLED")
             {
-                return Redirect(".app/payment/cancel");
+                return Redirect("http://68.183.186.61:3000");
             }
 
             var request = new UserCourseRequest

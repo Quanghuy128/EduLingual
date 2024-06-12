@@ -6,19 +6,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduLingual.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class add_exam : Migration
+    public partial class adduserexamtable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Exams",
+                name: "exam",
                 schema: "edl",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    creator_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    exam_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    center_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    course_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     created_by = table.Column<string>(type: "text", nullable: true),
@@ -27,17 +28,17 @@ namespace EduLingual.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exams", x => x.id);
+                    table.PrimaryKey("PK_exam", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Exams_course_exam_id",
-                        column: x => x.exam_id,
+                        name: "FK_exam_course_course_id",
+                        column: x => x.course_id,
                         principalSchema: "edl",
                         principalTable: "course",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Exams_user_creator_id",
-                        column: x => x.creator_id,
+                        name: "FK_exam_user_center_id",
+                        column: x => x.center_id,
                         principalSchema: "edl",
                         principalTable: "user",
                         principalColumn: "id",
@@ -45,12 +46,13 @@ namespace EduLingual.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "question",
                 schema: "edl",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     content = table.Column<string>(type: "text", nullable: false),
+                    point = table.Column<double>(type: "double precision", nullable: false),
                     exam_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -60,18 +62,46 @@ namespace EduLingual.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.id);
+                    table.PrimaryKey("PK_question", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Questions_Exams_exam_id",
+                        name: "FK_question_exam_exam_id",
                         column: x => x.exam_id,
                         principalSchema: "edl",
-                        principalTable: "Exams",
+                        principalTable: "exam",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answers",
+                name: "user_exam",
+                schema: "edl",
+                columns: table => new
+                {
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    exam_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Score = table.Column<double>(type: "double precision", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user_exam", x => new { x.exam_id, x.user_id });
+                    table.ForeignKey(
+                        name: "FK_user_exam_exam_exam_id",
+                        column: x => x.exam_id,
+                        principalSchema: "edl",
+                        principalTable: "exam",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_user_exam_user_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "edl",
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "answer",
                 schema: "edl",
                 columns: table => new
                 {
@@ -87,55 +117,77 @@ namespace EduLingual.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answers", x => x.id);
+                    table.PrimaryKey("PK_answer", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Answers_Questions_question_id",
+                        name: "FK_answer_question_question_id",
                         column: x => x.question_id,
                         principalSchema: "edl",
-                        principalTable: "Questions",
+                        principalTable: "question",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_question_id",
+                name: "IX_user_username",
                 schema: "edl",
-                table: "Answers",
+                table: "user",
+                column: "username",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_answer_question_id",
+                schema: "edl",
+                table: "answer",
                 column: "question_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exams_creator_id",
+                name: "IX_exam_center_id",
                 schema: "edl",
-                table: "Exams",
-                column: "creator_id");
+                table: "exam",
+                column: "center_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exams_exam_id",
+                name: "IX_exam_course_id",
                 schema: "edl",
-                table: "Exams",
+                table: "exam",
+                column: "course_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_question_exam_id",
+                schema: "edl",
+                table: "question",
                 column: "exam_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_exam_id",
+                name: "IX_user_exam_user_id",
                 schema: "edl",
-                table: "Questions",
-                column: "exam_id");
+                table: "user_exam",
+                column: "user_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Answers",
+                name: "answer",
                 schema: "edl");
 
             migrationBuilder.DropTable(
-                name: "Questions",
+                name: "user_exam",
                 schema: "edl");
 
             migrationBuilder.DropTable(
-                name: "Exams",
+                name: "question",
                 schema: "edl");
+
+            migrationBuilder.DropTable(
+                name: "exam",
+                schema: "edl");
+
+            migrationBuilder.DropIndex(
+                name: "IX_user_username",
+                schema: "edl",
+                table: "user");
         }
     }
 }

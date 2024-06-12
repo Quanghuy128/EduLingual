@@ -67,7 +67,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers", "edl");
+                    b.ToTable("answer", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Course", b =>
@@ -286,7 +286,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Exams", "edl");
+                    b.ToTable("exam", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Feedback", b =>
@@ -447,7 +447,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("Questions", "edl");
+                    b.ToTable("question", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Role", b =>
