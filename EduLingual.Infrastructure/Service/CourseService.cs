@@ -7,6 +7,7 @@ using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using EduLingual.Domain.Pagination;
+using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -110,22 +111,9 @@ namespace EduLingual.Infrastructure.Service
                 CourseCategory courseCategory = await _unitOfWork.GetRepository<CourseCategory>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.CourseCategoryId));
                 if (courseCategory == null) return BadRequest<bool>(MessageConstant.Vi.CourseCategory.Fail.NotFoundCourseCategory);
 
-                Course newCourse = new Course()
-                {
-                    Id = id,
-                    Title = request.Title ?? course.Title,
-                    Description = request.Description ?? course.Description,
-                    Duration = request.Duration ?? course.Duration,
-                    Tuitionfee = request.Tuitionfee ?? course.Tuitionfee,
-                    Center = center ?? course.Center,
-                    CourseArea = courseArea ?? course.CourseArea,
-                    CourseLanguage = courseLanguage ?? course.CourseLanguage,
-                    CourseCategory = courseCategory ?? course.CourseCategory,
-                    Status = request.Status ?? course.Status,
-                    CreatedAt = course.CreatedAt,
-                };
+                request.Adapt(course);
 
-                _unitOfWork.GetRepository<Course>().UpdateAsync(newCourse);
+                _unitOfWork.GetRepository<Course>().UpdateAsync(course);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
 
                 if (!isSuccessful)
