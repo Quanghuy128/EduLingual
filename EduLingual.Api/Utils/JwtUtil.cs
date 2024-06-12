@@ -25,7 +25,7 @@ namespace EduLingual.Api.Utils
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
         };
             if (guidClaim != null) claims.Add(new Claim(guidClaim.Item1, guidClaim.Item2.ToString()));
-            var expires = user.Role.RoleName.Equals(RoleEnum.Candidate.GetDescriptionFromEnum())
+            var expires = user.Role.RoleName.Equals(RoleEnum.User.GetDescriptionFromEnum())
                 ? DateTime.Now.AddDays(1)
                 : DateTime.Now.AddDays(30);
             var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now, expires, credentials);

@@ -241,7 +241,7 @@ namespace EduLingual.Infrastructure.Service
         public async Task<Result<List<CourseViewModel>>> GetHighlightedCourses()
         {
             ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(
-                    predicate: x => x.IsHighlighted == true,
+                    predicate: x => x.Status.Equals(CourseStatus.Active) && x.IsHighlighted == true,
                     orderBy: x => x.OrderByDescending(x => x.CreatedAt),
                     include: x => x.Include(x => x.Center)
                                    .Include(x => x.CourseArea)

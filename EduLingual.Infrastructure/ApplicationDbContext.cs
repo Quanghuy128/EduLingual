@@ -41,11 +41,12 @@ namespace EduLingual.Infrastructure
 
             modelBuilder.HasDefaultSchema("edl");
 
+            modelBuilder.Entity<User>().HasIndex(p => p.UserName).IsUnique();
             #region Entity Relation
             modelBuilder.Entity<User>()
                 .HasOne(p => p.Role)
                 .WithMany(d => d.Users)
-                .HasForeignKey(p => p.RoleId);
+                .HasForeignKey(p => p.RoleId);               
 
             modelBuilder.Entity<Feedback>()
                 .HasOne(p => p.User)
