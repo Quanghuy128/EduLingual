@@ -60,6 +60,7 @@ namespace EduLingual.Domain.Constants
                     public static string DeleteUser = String.Format(DeleteFailTemplate, UserMessage);
                     public static string NotFoundCenter = String.Format(NotFoundTemplate, CenterMessage);
                     public static string NotFoundUser = String.Format(NotFoundTemplate, UserMessage);
+                    public static string UserNameExisted = UserName + " đã tồn tại !!!";
                 }
             }
             public static class Exam

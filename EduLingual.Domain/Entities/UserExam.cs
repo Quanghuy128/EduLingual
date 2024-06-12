@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,9 @@ namespace EduLingual.Domain.Entities
     [Table("user_exam")]
     public class UserExam
     {
+        [Key]
+        [Column("id")]
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Column("user_id")]
         public Guid UserId { get; set; }
         public virtual User User { get; set; } = null!;
@@ -19,5 +23,7 @@ namespace EduLingual.Domain.Entities
         public virtual Exam Exam { get; set; } = null!;
 
         public double Score { get; set; } = 0;
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
