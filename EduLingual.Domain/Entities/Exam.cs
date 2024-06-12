@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EduLingual.Domain.Entities
 {
+    [Table("exam")]
     public class Exam : BaseEntity
     {
         [Column("title")]
