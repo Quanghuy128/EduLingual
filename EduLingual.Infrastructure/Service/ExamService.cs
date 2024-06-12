@@ -141,5 +141,23 @@ namespace EduLingual.Infrastructure.Service
 
             return Success(isSuccessful);
         }
+
+        public async Task<PagingResult<UserExam>> GetScoreExam(GetScoreDto getScoreDto, int page, int size)
+        {
+            try
+            {
+                IPaginate<UserExam> userExams = await _unitOfWork.GetRepository<UserExam>().GetPagingListAsync(predicate: ue => ue.ExamId.Equals(getScoreDto.ExamId) && ue.UserId.Equals(getScoreDto.UserId));
+
+                return SuccessWithPaging<UserExam>(
+                        userExams,
+                        page,
+                        size,
+                        userExams.Total);
+            }
+            catch (Exception ex)
+            {
+            }
+            return null!;
+        }
     }
 }

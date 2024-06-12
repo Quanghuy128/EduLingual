@@ -47,5 +47,12 @@ namespace EduLingual.Api.Controllers
             var result = await _examService.GenerateScore(resultExamDto);
             return Ok(result);
         }
+        [HttpPost(ApiEndPointConstant.Exam.ExamResult)]
+        [ProducesResponseType(typeof(PagingResult<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetScore([FromQuery] int page, [FromQuery] int size, [FromBody] GetScoreDto getScoreDto)
+        {
+            var result = await _examService.GetScoreExam(getScoreDto, page, size);
+            return Ok(result);
+        }
     }
 }
