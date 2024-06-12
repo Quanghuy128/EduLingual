@@ -38,7 +38,7 @@ namespace EduLingual.Api.Controllers
 
                 var baseUrl = "https://localhost:44315";
                 var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?userId={userId}&courseId={courseId}&paymentMethod={paymentMethod}&fee={fee}&fullName={fullName}&phoneNumber={phoneNumber}";
-                var cancelUrl = "https://.app/payment/cancel";
+                var cancelUrl = "http://68.183.186.61:3000";
                 PaymentData paymentData = new PaymentData(orderCode, (int)totalFee, "Thanh toan hoc phi", items, cancelUrl, successUrl, buyerName: fullName, buyerPhone: phoneNumber);
                 CreatePaymentResult createPayment = await _payOs.createPaymentLink(paymentData);
 

@@ -183,6 +183,13 @@ namespace EduLingual.Infrastructure.Service
 
         public async Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request)
         {
+            var listUser = await _unitOfWork.GetRepository<User>().GetListAsync(predicate: x => x.UserName == request.UserName);
+
+            if (listUser.Any())
+            {
+                throw new Exception(MessageConstant.Vi.User.Fail.UserNameExisted);
+            }
+
             User newUser = new User()
             {
                 UserName = request.UserName,

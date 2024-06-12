@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EduLingual.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612062530_add_exam")]
-    partial class add_exam
+    [Migration("20240612133352_add-user-exam-table")]
+    partial class adduserexamtable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers", "edl");
+                    b.ToTable("answer", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Course", b =>
@@ -250,9 +250,13 @@ namespace EduLingual.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("CenterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("center_id");
+
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uuid")
-                        .HasColumnName("exam_id");
+                        .HasColumnName("course_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
@@ -266,6 +270,11 @@ namespace EduLingual.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("updated_at");
@@ -274,17 +283,13 @@ namespace EduLingual.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("updated_by");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("creator_id");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CenterId");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Exams", "edl");
+                    b.ToTable("exam", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Feedback", b =>
@@ -429,6 +434,10 @@ namespace EduLingual.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
+                    b.Property<double>("Point")
+                        .HasColumnType("double precision")
+                        .HasColumnName("point");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("updated_at");
@@ -441,7 +450,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("Questions", "edl");
+                    b.ToTable("question", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Role", b =>
@@ -531,7 +540,30 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("user", "edl");
+                });
+
+            modelBuilder.Entity("EduLingual.Domain.Entities.UserExam", b =>
+                {
+                    b.Property<Guid>("ExamId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("exam_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<double>("Score")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("ExamId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_exam", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Infrastructure.UserCourse", b =>
@@ -629,21 +661,21 @@ namespace EduLingual.Infrastructure.Migrations
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Exam", b =>
                 {
+                    b.HasOne("EduLingual.Domain.Entities.User", "Center")
+                        .WithMany("OwnExams")
+                        .HasForeignKey("CenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EduLingual.Domain.Entities.Course", "Course")
                         .WithMany("Exams")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduLingual.Domain.Entities.User", "User")
-                        .WithMany("Exams")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Center");
 
                     b.Navigation("Course");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Feedback", b =>
@@ -698,6 +730,25 @@ namespace EduLingual.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("EduLingual.Domain.Entities.UserExam", b =>
+                {
+                    b.HasOne("EduLingual.Domain.Entities.Exam", "Exam")
+                        .WithMany("UserExams")
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduLingual.Domain.Entities.User", "User")
+                        .WithMany("UserExams")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EduLingual.Infrastructure.UserCourse", b =>
                 {
                     b.HasOne("EduLingual.Domain.Entities.Course", "Course")
@@ -748,6 +799,8 @@ namespace EduLingual.Infrastructure.Migrations
             modelBuilder.Entity("EduLingual.Domain.Entities.Exam", b =>
                 {
                     b.Navigation("Questions");
+
+                    b.Navigation("UserExams");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Feedback", b =>
@@ -767,15 +820,17 @@ namespace EduLingual.Infrastructure.Migrations
 
             modelBuilder.Entity("EduLingual.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Exams");
-
                     b.Navigation("Feedbacks");
 
                     b.Navigation("OwnCourses");
 
+                    b.Navigation("OwnExams");
+
                     b.Navigation("Payments");
 
                     b.Navigation("UserCourses");
+
+                    b.Navigation("UserExams");
                 });
 #pragma warning restore 612, 618
         }

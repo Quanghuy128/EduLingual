@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EduLingual.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612072838_add_user_exam_table")]
-    partial class add_user_exam_table
+    [Migration("20240612140346_update_id_created_at_on_exam_table")]
+    partial class update_id_created_at_on_exam_table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers", "edl");
+                    b.ToTable("answer", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Course", b =>
@@ -289,7 +289,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Exams", "edl");
+                    b.ToTable("exam", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Feedback", b =>
@@ -450,7 +450,7 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("Questions", "edl");
+                    b.ToTable("question", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.Role", b =>
@@ -540,23 +540,37 @@ namespace EduLingual.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("user", "edl");
                 });
 
             modelBuilder.Entity("EduLingual.Domain.Entities.UserExam", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<Guid>("ExamId")
                         .HasColumnType("uuid")
                         .HasColumnName("exam_id");
+
+                    b.Property<double>("Score")
+                        .HasColumnType("double precision");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<double>("Score")
-                        .HasColumnType("double precision");
+                    b.HasKey("Id");
 
-                    b.HasKey("ExamId", "UserId");
+                    b.HasIndex("ExamId");
 
                     b.HasIndex("UserId");
 
