@@ -61,7 +61,9 @@ namespace EduLingual.Infrastructure.Service
             try
             {
                 IPaginate<CourseCategory> courseCategories = await _unitOfWork.GetRepository<CourseCategory>().GetPagingListAsync(
-                        include: x => x.Include(x => x.CourseLanguage)
+                        include: x => x.Include(x => x.CourseLanguage),
+                        page: page,
+                        size: size
                     );
 
                 return SuccessWithPaging<CourseCategoryViewModel>(

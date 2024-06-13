@@ -37,7 +37,7 @@ namespace EduLingual.Infrastructure.Service
                     FullName = request.FullName,
                     Description = request.Description ?? string.Empty,
                     Status = request.UserStatus,
-                    RoleId = request.RoleId,    
+                    RoleId = request.RoleId,
                     Email = request.Email,
                     ImageUrl = request.ImageUrl,
                 };
@@ -48,7 +48,9 @@ namespace EduLingual.Infrastructure.Service
                     throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
                 }
                 return Success(_mapper.Map<UserViewModel>(result));
-            }catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return Fail<UserViewModel>(ex.Message);
             }
         }
@@ -57,7 +59,7 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));     
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
                 user.IsDeleted = true;
                 _unitOfWork.GetRepository<User>().UpdateAsync(user);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -65,7 +67,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     throw new Exception(MessageConstant.Vi.User.Fail.DeleteUser);
                 }
-                return Success(isSuccessful);  
+                return Success(isSuccessful);
             }
             catch (Exception ex)
             {
@@ -92,7 +94,9 @@ namespace EduLingual.Infrastructure.Service
             {
                 ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync(predicate: x => x.IsDeleted == false);
                 return Success(_mapper.Map<List<UserViewModel>>(users));
-            }catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return BadRequest<List<UserViewModel>>(ex.Message);
             }
         }
@@ -107,20 +111,27 @@ namespace EduLingual.Infrastructure.Service
             try
             {
 
-                IPaginate<User> users = 
+                IPaginate<User> users =
                     await _unitOfWork.GetRepository<User>()
-                    .GetPagingListAsync(include: x => x.Include(x => x.Role), predicate: x => x.IsDeleted == false);
+                    .GetPagingListAsync(
+                            predicate: x => x.IsDeleted == false,
+                            include: x => x.Include(x => x.Role),
+                            page: page,
+                            size: size
+                        );
                 return SuccessWithPaging<UserViewModel>(
-                        _mapper.Map<IPaginate<UserViewModel>>(users), 
-                        page, 
-                        size, 
-                        users.Total);   
-            }catch (Exception ex) {
+                        _mapper.Map<IPaginate<UserViewModel>>(users),
+                        page,
+                        size,
+                        users.Total);
+            }
+            catch (Exception ex)
+            {
             }
             return null!;
         }
 
-        public async Task<(Tuple<string, Guid> , Result<LoginResponse>, User user)> Login(LoginRequest request)
+        public async Task<(Tuple<string, Guid>, Result<LoginResponse>, User user)> Login(LoginRequest request)
         {
             Expression<Func<User, bool>> searchFilter = p =>
                                                 p.UserName.Equals(request.Username) &&
@@ -155,7 +166,7 @@ namespace EduLingual.Infrastructure.Service
                     FullName = request.FullName ?? user.FullName,
                     Description = request.Description ?? user.Description,
                     Status = request.UserStatus ?? user.Status,
-                    RoleId = request.RoleId ?? user.RoleId  
+                    RoleId = request.RoleId ?? user.RoleId
                 };
                 _unitOfWork.GetRepository<User>().UpdateAsync(newUser);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -179,6 +190,31 @@ namespace EduLingual.Infrastructure.Service
             ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id) && x.IsDeleted == false);
 
             return Success(_mapper.Map<List<CourseViewModel>>(courses));
+        }
+
+        public async Task<PagingResult<CourseViewModel>> GetCoursesByCenterId(int page, int size, Guid id)
+        {
+            try
+            {
+                User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+                if (center == null) return NotFounds<CourseViewModel>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+
+                IPaginate<Course> courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
+                            predicate: x => x.CenterId.Equals(id) && x.IsDeleted == false,
+                            page: page,
+                            size: size
+                        );
+
+                return SuccessWithPaging<CourseViewModel>(
+                        _mapper.Map<IPaginate<CourseViewModel>>(courses),
+                        page,
+                        size,
+                        courses.Total);
+            }
+            catch (Exception ex)
+            {
+            }
+            return null!;
         }
 
         public async Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request)
@@ -237,12 +273,12 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                if(request.NewPassword != request.ConfirmPassword)
+                if (request.NewPassword != request.ConfirmPassword)
                 {
-                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);      
+                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);
                 }
                 User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
-                if(user == null)
+                if (user == null)
                 {
                     throw new ArgumentException(MessageConstant.Vi.User.Fail.NotFoundUser);
                 }
@@ -269,7 +305,8 @@ namespace EduLingual.Infrastructure.Service
                 }
                 return Success(true);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Fail<bool>(ex.Message);
             }
         }

@@ -21,8 +21,7 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Payment.PaymentsEndpoint)]
         [ProducesResponseType(typeof(Result<List<PaymentViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size, [FromQuery] DateTime? startDate,
-           [FromQuery] DateTime? endDate)
+        public async Task<IActionResult> GetAllPagination([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int page = 1, [FromQuery] int size = 100)
         {
             PagingResult<PaymentViewModel> result = await _paymentService.GetPagination(startDate, endDate, page, size);
             return StatusCode((int)result.StatusCode, result);

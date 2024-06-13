@@ -19,7 +19,7 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.CourseArea.CourseAreasEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseAreaViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetAllPagination([FromQuery] int page = 1, [FromQuery] int size = 100)
         {
             PagingResult<CourseAreaViewModel> result = await _courseAreaService.GetPagination(x => false, page, size);
             return StatusCode((int)result.StatusCode, result);

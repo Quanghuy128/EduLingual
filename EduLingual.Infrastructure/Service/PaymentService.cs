@@ -57,7 +57,9 @@ namespace EduLingual.Infrastructure.Service
                 IPaginate<Payment> payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
                         predicate: BuildGetPaymentsQuery(startDate, endDate),
                         include: x => x.Include(x => x.User)
-                                       .Include(x => x.Course)
+                                       .Include(x => x.Course),
+                        page: page,
+                        size: size
                     );
 
                 return SuccessWithPaging<PaymentViewModel>(
