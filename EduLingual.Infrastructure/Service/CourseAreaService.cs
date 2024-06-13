@@ -55,7 +55,8 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                IPaginate<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetPagingListAsync();
+                IPaginate<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetPagingListAsync(page: page,
+                            size: size);
 
                 return SuccessWithPaging<CourseAreaViewModel>(
                         _mapper.Map<IPaginate<CourseAreaViewModel>>(courseAreas),

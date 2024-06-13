@@ -12,12 +12,10 @@ namespace EduLingual.Api.Controllers
     public class UserCourseController : ControllerBase
     {
         private readonly IUserCourseService _userCourseService;
-        private readonly IPaymentService _paymentService;
 
         public UserCourseController(IUserCourseService userCourseService, IPaymentService paymentService)
         {
             _userCourseService = userCourseService;
-            _paymentService = paymentService;
         }
 
         [HttpGet(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
@@ -42,12 +40,7 @@ namespace EduLingual.Api.Controllers
 
             Result<bool> result = await _userCourseService.UserJoinCourseAsync(request);
 
-            if (!result.Data)
-            {
-                return Redirect("http://68.183.186.61:3000");
-            }
-
-            return Redirect("http://68.183.186.61:3000");
+            return StatusCode((int)result.StatusCode, result);
         }
     }
 }

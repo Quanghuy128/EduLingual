@@ -21,7 +21,7 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.User.UsersEndpoint)]
         [ProducesResponseType(typeof(Result<List<UserViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetAllPagination([FromQuery] int page = 1, [FromQuery] int size = 100)
         {
             PagingResult<UserViewModel> result = await _userService.GetPagination(x => false, page, size);
             return StatusCode((int)result.StatusCode, result);
@@ -61,17 +61,25 @@ namespace EduLingual.Api.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+/*        [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
+        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCoursesByCenter(Guid id, int page = 1, int size = 100)
+        {
+            Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(page, size, id);
+            return Ok(courses);
+        }*/
+
         [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCoursesByCenter(Guid id)
+        public async Task<IActionResult> GetCoursesByCenter(Guid id, int page = 1, int size = 100)
         {
-            Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(id);
+            PagingResult<CourseViewModel> courses = await _userService.GetCoursesByCenterId(page, size, id);
             return Ok(courses);
         }
 
         [HttpGet(ApiEndPointConstant.User.StudentsEnpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStudents(Guid centerId, Guid? courseId)
+        public async Task<IActionResult> GetStudentsByCenter(Guid centerId, Guid? courseId)
         {
             Result<List<UserCourseDto>> courses = await _userService.GetStudentsByCenterId(centerId, courseId);
             return Ok(courses);
