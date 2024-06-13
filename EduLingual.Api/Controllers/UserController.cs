@@ -61,21 +61,21 @@ namespace EduLingual.Api.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-/*        [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
-        [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCoursesByCenter(Guid id, int page = 1, int size = 100)
-        {
-            Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(page, size, id);
-            return Ok(courses);
-        }*/
-
         [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCoursesByCenter(Guid id, int page = 1, int size = 100)
+        public async Task<IActionResult> GetCoursesByCenter(Guid id)
         {
-            PagingResult<CourseViewModel> courses = await _userService.GetCoursesByCenterId(page, size, id);
+            Result<List<CourseViewModel>> courses = await _userService.GetCoursesByCenterId(id);
             return Ok(courses);
         }
+
+        /*        [HttpGet(ApiEndPointConstant.User.CoursesByCenterEndpoint)]
+                [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
+                public async Task<IActionResult> GetCoursesByCenter(Guid id, int page = 1, int size = 100)
+                {
+                    PagingResult<CourseViewModel> courses = await _userService.GetCoursesByCenterId(page, size, id);
+                    return Ok(courses);
+                }*/
 
         [HttpGet(ApiEndPointConstant.User.StudentsEnpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
