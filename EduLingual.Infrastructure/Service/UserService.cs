@@ -165,6 +165,8 @@ namespace EduLingual.Infrastructure.Service
                     Password = request.Password ?? user.Password,
                     FullName = request.FullName ?? user.FullName,
                     Description = request.Description ?? user.Description,
+                    ImageUrl = request.ImageUrl ?? user.ImageUrl,
+                    Email = request.Email ?? user.Email,
                     Status = request.UserStatus ?? user.Status,
                     RoleId = request.RoleId ?? user.RoleId
                 };
