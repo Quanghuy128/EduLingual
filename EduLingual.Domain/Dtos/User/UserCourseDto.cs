@@ -12,13 +12,15 @@ namespace EduLingual.Domain.Dtos.User
         public string UserName { get; set; }
         public string FullName { get; set; }
         public string Description { get; set; }
+        public DateTime JoinedAt { get; set; }
         public string Course { get; set; }
 
-        public UserCourseDto(string userName, string fullName, string description, string course)
+        public UserCourseDto(string userName, string fullName, string description, DateTime joinedAt, string course)
         {
             UserName = userName;
             FullName = fullName;
             Description = description;
+            JoinedAt = joinedAt;
             Course = course;
         }
 
