@@ -37,9 +37,12 @@ public class UserCourseService : BaseService<UserCourse>, IUserCourseService
             Course course = await _unitOfWork.GetRepository<Course>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(request.CourseId) && x.Status == CourseStatus.Active);
             if (course == null) return BadRequest<bool>(MessageConstant.Vi.Course.Fail.NotFoundCourse);
 
-            UserCourse newUserCourse = new UserCourse();
-            newUserCourse.CourseId = request.CourseId;
-            newUserCourse.UserId = request.UserId;
+            UserCourse newUserCourse = new UserCourse
+            {
+                CourseId = request.CourseId,
+                UserId = request.UserId,
+            };
+
             await _unitOfWork.GetRepository<UserCourse>().InsertAsync(newUserCourse);
 
             Payment payment = new Payment()

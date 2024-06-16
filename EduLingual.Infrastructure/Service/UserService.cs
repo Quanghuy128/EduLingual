@@ -294,7 +294,7 @@ namespace EduLingual.Infrastructure.Service
                 if (center == null) return NotFounds<UserCourseDto>(MessageConstant.Vi.User.Fail.NotFoundCenter);
 
                 IPaginate<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetPagingListAsync(
-                    selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description, x.Course.Title),
+                    selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description, x.JoinedAt, x.Course.Title),
                     predicate: courseId is null ? x => x.Course.CenterId.Equals(centerId) : x => x.Course.CenterId.Equals(centerId) && x.Course.Id.Equals(courseId),
                     include: x => x.Include(x => x.User).Include(x => x.Course)
                 );
