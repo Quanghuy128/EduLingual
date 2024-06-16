@@ -40,7 +40,12 @@ namespace EduLingual.Api.Controllers
 
             Result<bool> result = await _userCourseService.UserJoinCourseAsync(request);
 
-            return StatusCode((int)result.StatusCode, result);
+            if (!result.Data)
+            {
+                return Redirect("http://68.183.186.61:3000");
+            }
+
+            return Redirect("http://68.183.186.61:3000/payment/success");
         }
     }
 }
