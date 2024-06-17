@@ -10,6 +10,6 @@ namespace EduLingual.Domain.Dtos.CourseCategory
 {
     public class CourseCategoryViewModel : CourseCategoryDto
     {
-        public CourseLanguageDto? Language { get; set; }
+        public CourseLanguageDto? CourseLanguage { get; set; }
     }
 }
