@@ -78,10 +78,10 @@ namespace EduLingual.Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.User.CoursesByUserEndpoint)]
-        [ProducesResponseType(typeof(PagingResult<CourseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagingResult<CourseByUserDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCoursesByUser(Guid id, int page = 1, int size = 100)
         {
-            PagingResult<CourseDto> courses = await _userService.GetCoursesByUserId(page, size, id);
+            PagingResult<CourseByUserDto> courses = await _userService.GetCoursesByUserId(page, size, id);
             return Ok(courses);
         }
     }
