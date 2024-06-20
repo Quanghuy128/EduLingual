@@ -9,6 +9,8 @@ namespace EduLingual.Domain.Dtos.User
         public string? Password { get; set; }
         public string? FullName { get; set; }
         public string? Description { get; set; }
+        public string? Email { get; set; }
+        public string? ImageUrl { get; set; }
         public UserStatus Status { get; set; }
     }
 }

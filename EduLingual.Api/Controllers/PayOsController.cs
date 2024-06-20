@@ -1,7 +1,6 @@
-﻿using Autofac.Core;
-using EduLingual.Application.Service;
+﻿using EduLingual.Application.Service;
+using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
-using EduLingual.Domain.Dtos.Payment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
@@ -36,7 +35,9 @@ namespace EduLingual.Api.Controllers
                 items.Add(data);
                 totalFee += course.Result.Data.Tuitionfee;
 
-                var baseUrl = "https://localhost:44315";
+                var baseUrl = "http://35.198.226.22:10000";
+                //var baseUrl = "https://localhost:7021";
+
                 var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?userId={userId}&courseId={courseId}&paymentMethod={paymentMethod}&fee={fee}&fullName={fullName}&phoneNumber={phoneNumber}";
                 var cancelUrl = "http://68.183.186.61:3000";
                 PaymentData paymentData = new PaymentData(orderCode, (int)totalFee, "Thanh toan hoc phi", items, cancelUrl, successUrl, buyerName: fullName, buyerPhone: phoneNumber);
@@ -51,7 +52,7 @@ namespace EduLingual.Api.Controllers
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Redirect("https://.app");
+                return Redirect("http://68.183.186.61:3000");
             }
         }
     }

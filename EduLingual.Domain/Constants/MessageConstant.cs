@@ -68,6 +68,7 @@ namespace EduLingual.Domain.Constants
                 private const string ExamMessage = "bài kiểm tra";
                 public static class Fail
                 {
+                    public static string DeleteExam = String.Format(DeleteFailTemplate, ExamMessage);
                     public static string CreateExam = String.Format(CreateFailTemplate, ExamMessage);
                     public static string NotFoundExam = String.Format(NotFoundTemplate, ExamMessage);
                 }

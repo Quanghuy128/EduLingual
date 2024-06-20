@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using System.Net;
 using System.Security.Principal;
@@ -37,7 +38,7 @@ namespace EduLingual.Infrastructure.Service
                     FullName = request.FullName,
                     Description = request.Description ?? string.Empty,
                     Status = request.UserStatus,
-                    RoleId = request.RoleId,    
+                    RoleId = request.RoleId,
                     Email = request.Email,
                     ImageUrl = request.ImageUrl,
                 };
@@ -48,7 +49,9 @@ namespace EduLingual.Infrastructure.Service
                     throw new Exception(MessageConstant.Vi.User.Fail.CreateUser);
                 }
                 return Success(_mapper.Map<UserViewModel>(result));
-            }catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return Fail<UserViewModel>(ex.Message);
             }
         }
@@ -57,7 +60,7 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));     
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
                 user.IsDeleted = true;
                 _unitOfWork.GetRepository<User>().UpdateAsync(user);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -65,7 +68,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     throw new Exception(MessageConstant.Vi.User.Fail.DeleteUser);
                 }
-                return Success(isSuccessful);  
+                return Success(isSuccessful);
             }
             catch (Exception ex)
             {
@@ -86,41 +89,32 @@ namespace EduLingual.Infrastructure.Service
             }
         }
 
-        public async Task<Result<List<UserViewModel>>> GetAll(Expression<Func<User, bool>>? predicate)
-        {
-            try
-            {
-                ICollection<User> users = await _unitOfWork.GetRepository<User>().GetListAsync(predicate: x => x.IsDeleted == false);
-                return Success(_mapper.Map<List<UserViewModel>>(users));
-            }catch (Exception ex) {
-                return BadRequest<List<UserViewModel>>(ex.Message);
-            }
-        }
-
-        public Task<Result<UserViewModel>> GetByCondition(Expression<Func<User, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<PagingResult<UserViewModel>> GetPagination(Expression<Func<User, bool>>? predicate, int page, int size)
         {
             try
             {
 
-                IPaginate<User> users = 
+                IPaginate<User> users =
                     await _unitOfWork.GetRepository<User>()
-                    .GetPagingListAsync(include: x => x.Include(x => x.Role), predicate: x => x.IsDeleted == false);
+                    .GetPagingListAsync(
+                            predicate: x => x.IsDeleted == false,
+                            include: x => x.Include(x => x.Role),
+                            page: page,
+                            size: size
+                        );
                 return SuccessWithPaging<UserViewModel>(
-                        _mapper.Map<IPaginate<UserViewModel>>(users), 
-                        page, 
-                        size, 
-                        users.Total);   
-            }catch (Exception ex) {
+                        _mapper.Map<IPaginate<UserViewModel>>(users),
+                        page,
+                        size,
+                        users.Total);
+            }
+            catch (Exception ex)
+            {
             }
             return null!;
         }
 
-        public async Task<(Tuple<string, Guid> , Result<LoginResponse>, User user)> Login(LoginRequest request)
+        public async Task<(Tuple<string, Guid>, Result<LoginResponse>, User user)> Login(LoginRequest request)
         {
             Expression<Func<User, bool>> searchFilter = p =>
                                                 p.UserName.Equals(request.Username) &&
@@ -154,9 +148,15 @@ namespace EduLingual.Infrastructure.Service
                     Password = request.Password ?? user.Password,
                     FullName = request.FullName ?? user.FullName,
                     Description = request.Description ?? user.Description,
-                    Status = request.UserStatus ?? user.Status,
-                    RoleId = request.RoleId ?? user.RoleId  
+                    ImageUrl = request.ImageUrl ?? user.ImageUrl,
+                    Email = request.Email ?? user.Email,
+                    Status = request.Status ?? user.Status,
+                    RoleId = request.RoleId ?? user.RoleId
                 };
+
+                newUser.CreatedAt = user.CreatedAt;
+                newUser.UpdatedAt = DateTime.Now;
+
                 _unitOfWork.GetRepository<User>().UpdateAsync(newUser);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
@@ -169,16 +169,6 @@ namespace EduLingual.Infrastructure.Service
             {
                 return Fail<bool>(ex.Message);
             }
-        }
-
-        public async Task<Result<List<CourseViewModel>>> GetCoursesByCenterId(Guid id)
-        {
-            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (center == null) return BadRequest<List<CourseViewModel>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
-
-            ICollection<Course> courses = await _unitOfWork.GetRepository<Course>().GetListAsync(predicate: x => x.CenterId.Equals(id) && x.IsDeleted == false);
-
-            return Success(_mapper.Map<List<CourseViewModel>>(courses));
         }
 
         public async Task<(Tuple<string, Guid>, Result<RegisterResponse>, User user)> Register(RegisterRequest request)
@@ -199,8 +189,11 @@ namespace EduLingual.Infrastructure.Service
                 Status = request.UserStatus,
                 Description = request.Description!,
                 ImageUrl = request.ImageUrl,
-                RoleId = request.RoleId,
             };
+
+            newUser.RoleId = await _unitOfWork.GetRepository<Role>().SingleOrDefaultAsync(
+                selector: x => x.Id,
+                predicate: x => x.RoleName.Equals("User"));
             try
             {
                 User user = await _unitOfWork.GetRepository<User>().InsertAsync(newUser);
@@ -237,12 +230,12 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                if(request.NewPassword != request.ConfirmPassword)
+                if (request.NewPassword != request.ConfirmPassword)
                 {
-                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);      
+                    throw new Exception(MessageConstant.Vi.Auth.PasswordNotMatched);
                 }
                 User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
-                if(user == null)
+                if (user == null)
                 {
                     throw new ArgumentException(MessageConstant.Vi.User.Fail.NotFoundUser);
                 }
@@ -269,47 +262,90 @@ namespace EduLingual.Infrastructure.Service
                 }
                 return Success(true);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Fail<bool>(ex.Message);
             }
         }
 
-        public async Task<Result<List<UserCourseDto>>> GetStudentsByCenterId(Guid centerId, Guid? courseId)
+        public async Task<PagingResult<UserCourseDto>> GetStudentsByCenterId(int page, int size, Guid centerId, Guid? courseId)
         {
-            User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(centerId));
-            if (center == null) return BadRequest<List<UserCourseDto>>(MessageConstant.Vi.User.Fail.NotFoundCenter);
+            try
+            {
+                User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(centerId));
+                if (center == null) return NotFounds<UserCourseDto>(MessageConstant.Vi.User.Fail.NotFoundCenter);
 
-            ICollection<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
-                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
-                predicate: x => x.Course.CenterId.Equals(centerId),
-                include: x => x.Include(x => x.User)
+                IPaginate<UserCourseDto> students = await _unitOfWork.GetRepository<UserCourse>().GetPagingListAsync(
+                    selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description, x.JoinedAt, x.Course.Title),
+                    predicate: courseId is null ? x => x.Course.CenterId.Equals(centerId) : x => x.Course.CenterId.Equals(centerId) && x.Course.Id.Equals(courseId),
+                    include: x => x.Include(x => x.User).Include(x => x.Course)
                 );
 
-            if (courseId != null)
-            {
-                students = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
-
-                selector: x => new UserCourseDto(x.User.UserName, x.User.FullName, x.User.Description),
-                        predicate: x => x.Course.Id.Equals(courseId),
-                        include: x => x.Include(x => x.Course)
-                    );
+                return SuccessWithPaging<UserCourseDto>(
+                        _mapper.Map<IPaginate<UserCourseDto>>(students),
+                        page,
+                        size,
+                        students.Total);
             }
-
-            return Success(_mapper.Map<List<UserCourseDto>>(students));
+            catch (Exception ex)
+            {
+            }
+            return null!;
         }
 
-        public async Task<Result<List<CourseDto>>> GetCoursesByUserId(Guid userId)
+        public async Task<PagingResult<CourseViewModel>> GetCoursesByCenterId(int page, int size, Guid id)
         {
-            User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(userId));
-            if (user == null) return BadRequest<List<CourseDto>>(MessageConstant.Vi.User.Fail.NotFoundUser);
+            try
+            {
+                User center = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+                if (center == null) return NotFounds<CourseViewModel>(MessageConstant.Vi.User.Fail.NotFoundCenter);
 
-            ICollection<CourseDto> courses = await _unitOfWork.GetRepository<UserCourse>().GetListAsync(
-                selector: x => new CourseDto(x.Course.Title, x.Course.Description, x.Course.Duration, x.Course.Tuitionfee),
-                predicate: x => x.UserId.Equals(userId),
-                include: x => x.Include(x => x.Course)
+                IPaginate<Course> courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
+                            predicate: x => x.CenterId.Equals(id) && x.IsDeleted == false,
+                            include: x => x.Include(x => x.Center)
+                                           .Include(x => x.CourseArea)
+                                           .Include(x => x.CourseLanguage)
+                                           .Include(x => x.CourseCategory),
+                            page: page,
+                            size: size
+                        );
+
+                return SuccessWithPaging<CourseViewModel>(
+                        _mapper.Map<IPaginate<CourseViewModel>>(courses),
+                        page,
+                        size,
+                        courses.Total);
+            }
+            catch (Exception ex)
+            {
+            }
+            return null!;
+        }
+
+        public async Task<PagingResult<CourseByUserDto>> GetCoursesByUserId(int page, int size, Guid userId)
+        {
+            try
+            {
+                User user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(userId));
+                if (user == null) return NotFounds<CourseByUserDto>(MessageConstant.Vi.User.Fail.NotFoundUser);
+
+                IPaginate<CourseByUserDto> courses = await _unitOfWork.GetRepository<UserCourse>().GetPagingListAsync(
+                    selector: x => new CourseByUserDto(x.Course.Id, x.Course.Title, x.Course.Description, x.Course.Duration, x.Course.Tuitionfee, x.Course.Center.FullName),
+                    predicate: x => x.UserId.Equals(userId),
+                    include: x => x.Include(x => x.User)
+                                   .Include(x => x.Course).ThenInclude(x => x.Center)
                 );
 
-            return Success(courses.ToList());
+                return SuccessWithPaging<CourseByUserDto>(
+                        _mapper.Map<IPaginate<CourseByUserDto>>(courses),
+                        page,
+                        size,
+                        courses.Total);
+            }
+            catch (Exception ex)
+            {
+            }
+            return null!;
         }
     }
 }

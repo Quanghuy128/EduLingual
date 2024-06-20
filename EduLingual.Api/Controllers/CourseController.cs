@@ -5,6 +5,7 @@ using EduLingual.Domain.Dtos.Course;
 using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace EduLingual.Api.Controllers
 {
@@ -19,7 +20,7 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Course.CoursesPaginationEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] int page, [FromQuery] int size, [FromQuery] string? title, [FromQuery] CourseStatus? status, [FromQuery] Guid? centerId)
+        public async Task<IActionResult> GetAllPagination([FromQuery] string? title, [FromQuery] CourseStatus? status, [FromQuery] Guid? centerId, [FromQuery] int page = 1, [FromQuery] int size = 100)
         {
             PagingResult<CourseViewModel> result = await _courseService.GetPagination(page, size, title, status, centerId);
 
@@ -28,10 +29,11 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Course.CoursesEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCourses([FromQuery] string? title, [FromQuery] CourseFilter? courseFilter, string? sort)
+        public async Task<IActionResult> GetCourses([FromQuery] string? title, [FromQuery] CourseFilter? courseFilter, string? sort, [FromQuery] int page = 1, [FromQuery] int size = 100)
         {
-            Result<List<CourseViewModel>> courses = await _courseService.GetCourses(title, courseFilter, sort);
-            return Ok(courses);
+            PagingResult<CourseViewModel> result = await _courseService.GetCourses(page, size, title, courseFilter, sort);
+
+            return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpGet(ApiEndPointConstant.Course.CourseEndpoint)]
@@ -66,14 +68,6 @@ namespace EduLingual.Api.Controllers
         {
             Result<bool> result = await _courseService.Delete(id);
             return StatusCode((int)result.StatusCode, result);
-        }
-
-        [HttpGet(ApiEndPointConstant.Course.UsersByCourseEnpoint)]
-        [ProducesResponseType(typeof(Result<List<UserCourseDto>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUsersByCourse([FromRoute] Guid id)
-        {
-            Result<List<UserCourseDto>> users = await _courseService.GetStudentsByCourse(id);
-            return Ok(users);
         }
 
         [HttpGet(ApiEndPointConstant.Course.HighlightedCoursesEndpoint)]

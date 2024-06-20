@@ -1,7 +1,6 @@
 ﻿using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
-using EduLingual.Domain.Dtos.Payment;
 using EduLingual.Domain.Dtos.UserCourse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,10 @@ namespace EduLingual.Api.Controllers
     public class UserCourseController : ControllerBase
     {
         private readonly IUserCourseService _userCourseService;
-        private readonly IPaymentService _paymentService;
 
         public UserCourseController(IUserCourseService userCourseService, IPaymentService paymentService)
         {
             _userCourseService = userCourseService;
-            _paymentService = paymentService;
         }
 
         [HttpGet(ApiEndPointConstant.UserCourse.CourseUserEndpointJoin)]
@@ -45,10 +42,10 @@ namespace EduLingual.Api.Controllers
 
             if (!result.Data)
             {
-                return Redirect(".app/payment/failure");
+                return Redirect("http://68.183.186.61:3000");
             }
 
-            return Redirect(".app/payment/success");
+            return Redirect("http://68.183.186.61:3000/payment/success");
         }
     }
 }

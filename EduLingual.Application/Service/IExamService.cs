@@ -17,4 +17,5 @@ public interface IExamService
     Task<PagingResult<Exam>> GetAllExamByCourseId(Guid courseId, int page, int size);
     Task<Result<bool>> GenerateScore(ResultExamDto resultExamDto);
     Task<PagingResult<UserExam>> GetScoreExam(GetScoreDto getScoreDto, int page, int size);
+    Task<Result<bool>> Delete(Guid id);
 }
