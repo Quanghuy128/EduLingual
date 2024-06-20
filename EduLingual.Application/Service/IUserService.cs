@@ -14,7 +14,7 @@ namespace EduLingual.Application.Service
         Task<Result<bool>> ForgetPassword(ForgetPasswordRequest request);
         Task<PagingResult<CourseViewModel>> GetCoursesByCenterId(int page, int size, Guid id);
         Task<PagingResult<UserCourseDto>> GetStudentsByCenterId(int page, int size, Guid centerId, Guid? courseId);
-        Task<PagingResult<CourseDto>> GetCoursesByUserId(int page, int size, Guid userId);
+        Task<PagingResult<CourseByUserDto>> GetCoursesByUserId(int page, int size, Guid userId);
         Task<PagingResult<UserViewModel>> GetPagination(Expression<Func<User, bool>>? predicate, int page, int size);
         Task<Result<UserViewModel>> Get(Guid id);
         Task<Result<UserViewModel>> Create(CreateUserRequest request);
