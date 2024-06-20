@@ -42,7 +42,9 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                ICollection<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetListAsync();
+                ICollection<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetListAsync(
+                        orderBy: x => x.OrderByDescending(x => x.Status)
+                    );
                 return Success(_mapper.Map<List<CourseAreaViewModel>>(courseAreas));
             }
             catch (Exception ex)
@@ -55,8 +57,11 @@ namespace EduLingual.Infrastructure.Service
         {
             try
             {
-                IPaginate<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetPagingListAsync(page: page,
-                            size: size);
+                IPaginate<CourseArea> courseAreas = await _unitOfWork.GetRepository<CourseArea>().GetPagingListAsync(
+                                orderBy: x => x.OrderByDescending(x => x.Status),
+                                page: page,
+                                size: size
+                            );
 
                 return SuccessWithPaging<CourseAreaViewModel>(
                         _mapper.Map<IPaginate<CourseAreaViewModel>>(courseAreas),

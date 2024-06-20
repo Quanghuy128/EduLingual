@@ -99,6 +99,7 @@ namespace EduLingual.Infrastructure.Service
                     .GetPagingListAsync(
                             predicate: x => x.IsDeleted == false,
                             include: x => x.Include(x => x.Role),
+                            orderBy: x => x.OrderByDescending(x => x.Status).ThenByDescending(x => x.CreatedAt),
                             page: page,
                             size: size
                         );

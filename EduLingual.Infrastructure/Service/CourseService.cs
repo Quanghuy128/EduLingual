@@ -202,7 +202,7 @@ namespace EduLingual.Infrastructure.Service
             {
                 IPaginate<Course> courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
                     predicate: BuildGetCoursesQuery(title, status, centerId),
-                    orderBy: x => x.OrderByDescending(x => x.CreatedAt),
+                    orderBy: x => x.OrderByDescending(x => x.Status).ThenByDescending(x => x.CreatedAt),
                     include: x => x.Include(x => x.CourseArea)
                                   .Include(x => x.CourseLanguage)
                                   .Include(x => x.CourseCategory)

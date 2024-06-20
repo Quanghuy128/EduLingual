@@ -40,7 +40,9 @@ namespace EduLingual.Infrastructure.Service
 
         public async Task<Result<Exam>> GetExamById(Guid examId)
         {
-            var exam = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(include: e => e.Include(e => e.Questions).ThenInclude(e => e.Answers));
+            var exam = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(examId),
+                include: e => e.Include(e => e.Questions).ThenInclude(e => e.Answers));
             if (exam == null) return BadRequest<Exam>(MessageConstant.Vi.Exam.Fail.NotFoundExam);
 
             return Success(exam);
@@ -125,12 +127,12 @@ namespace EduLingual.Infrastructure.Service
                     continue;
                 }
             }
-            var finalScore = score * 10 / totalScore;
+            //var finalScore = score * 10 / totalScore;
             UserExam userExam = new UserExam()
             {
                 UserId = user.Id,
                 ExamId = exam.Id,
-                Score = (double)System.Math.Round(finalScore, 2)
+                Score = score
             };
             await _unitOfWork.GetRepository<UserExam>().InsertAsync(userExam);
             var isSuccessful = await _unitOfWork.CommitAsync() > 0;
