@@ -159,5 +159,29 @@ namespace EduLingual.Infrastructure.Service
             }
             return null!;
         }
+
+        public async Task<Result<bool>> Delete(Guid id)
+        {
+            try
+            {
+                Exam exam = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+
+                exam.IsDeleted = true;
+
+                _unitOfWork.GetRepository<Exam>().UpdateAsync(exam);
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+
+                if (!isSuccessful)
+                {
+                    throw new Exception(MessageConstant.Vi.Exam.Fail.DeleteExam);
+                }
+
+                return Success(isSuccessful);
+            }
+            catch (Exception ex)
+            {
+                return Fail<bool>(ex.Message);
+            }
+        }
     }
 }

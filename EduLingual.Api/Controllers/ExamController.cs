@@ -6,6 +6,7 @@ using EduLingual.Application.Service;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Dtos.Exam;
+using EduLingual.Infrastructure.Service;
 
 namespace EduLingual.Api.Controllers
 {
@@ -53,6 +54,14 @@ namespace EduLingual.Api.Controllers
         {
             var result = await _examService.GetScoreExam(getScoreDto, page, size);
             return Ok(result);
+        }
+
+        [HttpDelete(ApiEndPointConstant.Exam.ExamEndpoint)]
+        [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            Result<bool> result = await _examService.Delete(id);
+            return StatusCode((int)result.StatusCode, result);
         }
     }
 }
