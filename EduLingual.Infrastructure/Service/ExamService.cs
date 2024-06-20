@@ -67,7 +67,7 @@ namespace EduLingual.Infrastructure.Service
                 {
                     var worksheet = package.Workbook.Worksheets[0]; // Get the first worksheet
                     var rowCount = worksheet.Dimension.Rows;
-                    var colCount = worksheet.Dimension.Columns;
+                    var colCount = 6;
 
                     // Read the content of the Excel file (Example: read the first cell)
                     for (int i = 2; i <= rowCount; i++)
