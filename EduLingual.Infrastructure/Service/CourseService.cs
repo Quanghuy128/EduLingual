@@ -113,6 +113,9 @@ namespace EduLingual.Infrastructure.Service
 
                 request.Adapt(course);
 
+                course.CreatedAt = course.CreatedAt;
+                course.UpdatedAt = DateTime.Now;
+
                 _unitOfWork.GetRepository<Course>().UpdateAsync(course);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
 

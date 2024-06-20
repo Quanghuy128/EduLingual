@@ -153,6 +153,10 @@ namespace EduLingual.Infrastructure.Service
                     Status = request.UserStatus ?? user.Status,
                     RoleId = request.RoleId ?? user.RoleId
                 };
+
+                newUser.CreatedAt = user.CreatedAt;
+                newUser.UpdatedAt = DateTime.Now;
+
                 _unitOfWork.GetRepository<User>().UpdateAsync(newUser);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
