@@ -10,7 +10,7 @@ namespace EduLingual.Domain.Dtos.User
         public string? Description { get; set; }
         public string? Email { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;
-        public UserStatus? UserStatus { get; set; }
+        public UserStatus? Status { get; set; }
         public Guid? RoleId { get; set; }
     }
 }

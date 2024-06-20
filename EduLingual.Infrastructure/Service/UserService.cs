@@ -150,7 +150,7 @@ namespace EduLingual.Infrastructure.Service
                     Description = request.Description ?? user.Description,
                     ImageUrl = request.ImageUrl ?? user.ImageUrl,
                     Email = request.Email ?? user.Email,
-                    Status = request.UserStatus ?? user.Status,
+                    Status = request.Status ?? user.Status,
                     RoleId = request.RoleId ?? user.RoleId
                 };
 
