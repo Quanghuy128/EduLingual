@@ -35,7 +35,7 @@ namespace EduLingual.Api.Controllers
                 items.Add(data);
                 totalFee += course.Result.Data.Tuitionfee;
 
-                var baseUrl = "http://34.16.153.203";
+                var baseUrl = "http://35.198.226.22:10000";
                 //var baseUrl = "https://localhost:7021";
 
                 var successUrl = $"{baseUrl}{ApiEndPointConstant.UserCourse.CourseUserEndpointJoin}?userId={userId}&courseId={courseId}&paymentMethod={paymentMethod}&fee={fee}&fullName={fullName}&phoneNumber={phoneNumber}";
