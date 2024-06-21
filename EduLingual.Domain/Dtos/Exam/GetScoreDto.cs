@@ -9,5 +9,5 @@ namespace EduLingual.Domain.Dtos.Exam;
 public class GetScoreDto
 {
     public Guid UserId { get; set; }
-    public Guid ExamId { get; set; }
+    public Guid CourseId { get; set; }
 }

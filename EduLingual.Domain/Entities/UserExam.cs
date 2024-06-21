@@ -23,6 +23,10 @@ namespace EduLingual.Domain.Entities
         public virtual Exam Exam { get; set; } = null!;
 
         public double Score { get; set; } = 0;
+        [Column("total_question_right")]
+        public int TotalQuestionRight { get; set; } = 0;
+        [Column("total_question_wrong")]
+        public int TotalQuestionWrong { get; set; } = 0;
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

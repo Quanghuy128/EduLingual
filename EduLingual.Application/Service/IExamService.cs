@@ -14,8 +14,8 @@ public interface IExamService
 {
     Task<Result<bool>> ImportExamExcel(Guid teacherId, Guid courseId, IFormFile file);
     Task<Result<Exam>> GetExamById(Guid examId);
-    Task<PagingResult<Exam>> GetAllExamByCourseId(Guid courseId, int page, int size);
+    Task<PagingResult<ExamDto>> GetAllExamByCourseId(Guid courseId, int page, int size);
     Task<Result<bool>> GenerateScore(ResultExamDto resultExamDto);
-    Task<PagingResult<UserExam>> GetScoreExam(GetScoreDto getScoreDto, int page, int size);
+    Task<PagingResult<GetScoreResponse>> GetScoreExam(GetScoreDto getScoreDto, int page, int size);
     Task<Result<bool>> Delete(Guid id);
 }

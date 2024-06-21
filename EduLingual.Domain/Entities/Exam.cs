@@ -19,7 +19,8 @@ namespace EduLingual.Domain.Entities
         [ForeignKey("Center")]
         public Guid CenterId { get; set; }
         public virtual User Center { get; set; } = null!;
-
+        [Column("total_question")]
+        public int TotalQuestion { get; set; } = 0;
 
         [Column("course_id")]
         [ForeignKey(nameof(Course))]
