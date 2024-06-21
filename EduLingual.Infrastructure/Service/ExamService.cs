@@ -3,6 +3,7 @@ using EduLingual.Application.Service;
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Exam;
+using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using EduLingual.Domain.Pagination;
@@ -20,13 +21,17 @@ namespace EduLingual.Infrastructure.Service
         {
         }
 
-        public async Task<PagingResult<Exam>> GetAllExamByCourseId(Guid courseId, int page, int size)
+        public async Task<PagingResult<ExamDto>> GetAllExamByCourseId(Guid courseId, int page, int size)
         {
             try
             {
-                IPaginate<Exam> exams = await _unitOfWork.GetRepository<Exam>().GetPagingListAsync(predicate: e => e.CourseId.Equals(courseId));
+                IPaginate<ExamDto> exams = await _unitOfWork.GetRepository<Exam>().GetPagingListAsync(
+                        selector: x => new ExamDto(x.Id, x.CreatedAt, x.IsDeleted, x.Title, x.TotalQuestion, _mapper.Map<UserDto>(x.Center)),
+                        predicate: e => e.CourseId.Equals(courseId),
+                        include: x => x.Include(x => x.Center)
+                    ); 
 
-                return SuccessWithPaging<Exam>(
+                return SuccessWithPaging<ExamDto>(
                         exams,
                         page,
                         size,
@@ -70,10 +75,9 @@ namespace EduLingual.Infrastructure.Service
                     var worksheet = package.Workbook.Worksheets[0]; // Get the first worksheet
                     var rowCount = worksheet.Dimension.Rows;
                     var colCount = 6;
-
                     // Read the content of the Excel file (Example: read the first cell)
                     for (int i = 2; i <= rowCount; i++)
-                    {
+                    {                  
                         var question = new Question();
                         question.ExamId = exam.Id;
                         question.Content = worksheet.Cells[i, 1].Text;
@@ -92,6 +96,9 @@ namespace EduLingual.Infrastructure.Service
                     }
                 }
             }
+
+            exam.TotalQuestion = exam.Questions.Count();
+
             await _unitOfWork.GetRepository<Exam>().InsertAsync(exam);
             var isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful)
@@ -101,6 +108,7 @@ namespace EduLingual.Infrastructure.Service
 
             return Success(isSuccessful);
         }
+
         public async Task<Result<bool>> GenerateScore(ResultExamDto resultExamDto)
         {
             var user = await _unitOfWork.GetRepository<User>().SingleOrDefaultAsync(predicate: u => u.Id.Equals(resultExamDto.UserId));
@@ -114,26 +122,35 @@ namespace EduLingual.Infrastructure.Service
 
             var totalScore = exam.Questions.Sum(e => e.Point);
             double score = 0;
+
+            UserExam userExam = new UserExam()
+            {
+                UserId = user.Id,
+                ExamId = exam.Id,         
+            };
+
+            var totalQuestionRight = 0;
+            var totalQuestionWrong = 0;
             foreach (var a in resultExamDto.Results)
             {
 
                 var answer = await _unitOfWork.GetRepository<Answer>().SingleOrDefaultAsync(include: aw => aw.Include(a => a.Question), predicate: aw => aw.Id.Equals(a) && aw.IsCorrect);
                 if (answer != null && answer.IsCorrect == true)
                 {
+                    totalQuestionRight++;
                     score += answer.Question.Point;
                 }
                 else
                 {
+                    totalQuestionWrong++;
                     continue;
                 }
             }
             //var finalScore = score * 10 / totalScore;
-            UserExam userExam = new UserExam()
-            {
-                UserId = user.Id,
-                ExamId = exam.Id,
-                Score = score
-            };
+            userExam.TotalQuestionRight = totalQuestionRight;
+            userExam.TotalQuestionWrong = totalQuestionWrong;
+            userExam.Score = score;
+
             await _unitOfWork.GetRepository<UserExam>().InsertAsync(userExam);
             var isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful)
@@ -144,13 +161,17 @@ namespace EduLingual.Infrastructure.Service
             return Success(isSuccessful);
         }
 
-        public async Task<PagingResult<UserExam>> GetScoreExam(GetScoreDto getScoreDto, int page, int size)
+        public async Task<PagingResult<GetScoreResponse>> GetScoreExam(GetScoreDto getScoreDto, int page, int size)
         {
             try
             {
-                IPaginate<UserExam> userExams = await _unitOfWork.GetRepository<UserExam>().GetPagingListAsync(predicate: ue => ue.ExamId.Equals(getScoreDto.ExamId) && ue.UserId.Equals(getScoreDto.UserId));
+                IPaginate<GetScoreResponse> userExams = await _unitOfWork.GetRepository<UserExam>().GetPagingListAsync(
+                        selector: x => new GetScoreResponse(x.Id, x.CreatedAt, x.Score, _mapper.Map<ExamDto>(x.Exam)),
+                        predicate: ue => ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId),
+                        include: x => x.Include(x => x.Exam)
+                    );
 
-                return SuccessWithPaging<UserExam>(
+                return SuccessWithPaging<GetScoreResponse>(
                         userExams,
                         page,
                         size,
