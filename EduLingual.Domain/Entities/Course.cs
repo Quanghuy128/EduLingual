@@ -14,7 +14,7 @@ namespace EduLingual.Domain.Entities
         public string Title { get; set; } = string.Empty;
 
         [Column("description")]
-        [StringLength(1000)]
+        [Required]
         public string Description { get; set; } = string.Empty;
 
         [Column("duration")]
