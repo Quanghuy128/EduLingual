@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
+using System.Linq;
 
 namespace EduLingual.Infrastructure.Service
 {
@@ -21,15 +22,15 @@ namespace EduLingual.Infrastructure.Service
         {
         }
 
-        public async Task<PagingResult<ExamDto>> GetAllExamByCourseId(Guid courseId, int page, int size)
+        public async Task<PagingResult<ExamDto>> GetAllExamByCourseId(Guid courseId, string? examName, int page, int size)
         {
             try
             {
                 IPaginate<ExamDto> exams = await _unitOfWork.GetRepository<Exam>().GetPagingListAsync(
                         selector: x => new ExamDto(x.Id, x.CreatedAt, x.IsDeleted, x.Title, x.TotalQuestion, _mapper.Map<UserDto>(x.Center)),
-                        predicate: e => e.CourseId.Equals(courseId),
+                        predicate: e => String.IsNullOrEmpty(examName) ? e.CourseId.Equals(courseId) : e.CourseId.Equals(courseId) && e.Title.ToLower().Contains(examName),
                         include: x => x.Include(x => x.Center)
-                    ); 
+                    );
 
                 return SuccessWithPaging<ExamDto>(
                         exams,
@@ -65,7 +66,12 @@ namespace EduLingual.Infrastructure.Service
             if (file == null || file.Length == 0) return BadRequest<bool>("No file uploaded!");
             Exam exam = new Exam();
             exam.CenterId = teacherId;
-            exam.Title = file.FileName.Split(".")[0];
+
+            var title = file.FileName.Split(".")[0];
+            var examFromDb = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.Title.Equals(title));
+            if (examFromDb != null) return BadRequest<bool>("Tên bài kiểm tra đã tồn tại !!!");
+
+            exam.Title = title;
             exam.CourseId = courseId;
             using (var stream = new MemoryStream())
             {
@@ -134,7 +140,10 @@ namespace EduLingual.Infrastructure.Service
             foreach (var a in resultExamDto.Results)
             {
 
-                var answer = await _unitOfWork.GetRepository<Answer>().SingleOrDefaultAsync(include: aw => aw.Include(a => a.Question), predicate: aw => aw.Id.Equals(a) && aw.IsCorrect);
+                var answer = await _unitOfWork.GetRepository<Answer>().SingleOrDefaultAsync(
+                        include: aw => aw.Include(a => a.Question), 
+                        predicate: aw => aw.Id.Equals(a) && aw.IsCorrect
+                    );
                 if (answer != null && answer.IsCorrect == true)
                 {
                     totalQuestionRight++;
@@ -166,9 +175,12 @@ namespace EduLingual.Infrastructure.Service
             try
             {
                 IPaginate<GetScoreResponse> userExams = await _unitOfWork.GetRepository<UserExam>().GetPagingListAsync(
-                        selector: x => new GetScoreResponse(x.Id, x.CreatedAt, x.Score, _mapper.Map<ExamDto>(x.Exam)),
-                        predicate: ue => ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId),
-                        include: x => x.Include(x => x.Exam)
+                        selector: x => new GetScoreResponse(x.Id, x.CreatedAt, x.Score, x.TotalQuestionRight, x.TotalQuestionWrong, _mapper.Map<ExamDto>(x.Exam), _mapper.Map<UserDto>(x.Exam.Course.Center)),
+                        predicate: ue => String.IsNullOrEmpty(getScoreDto.ExamName) 
+                                         ? ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId)
+                                         : ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId) && ue.Exam.Title.ToLower().Trim().Contains(getScoreDto.ExamName),
+                        include: x => x.Include(x => x.Exam).ThenInclude(x => x.Course).ThenInclude(x => x.Center),
+                        orderBy: x => x.OrderByDescending(x => x.CreatedAt)
                     );
 
                 return SuccessWithPaging<GetScoreResponse>(

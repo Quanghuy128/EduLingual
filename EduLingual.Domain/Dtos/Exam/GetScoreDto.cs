@@ -10,4 +10,5 @@ public class GetScoreDto
 {
     public Guid UserId { get; set; }
     public Guid CourseId { get; set; }
+    public string? ExamName { get; set; }
 }

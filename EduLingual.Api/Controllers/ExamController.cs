@@ -36,9 +36,9 @@ namespace EduLingual.Api.Controllers
         }
         [HttpGet(ApiEndPointConstant.Exam.ExamsByCourseId)]
         [ProducesResponseType(typeof(PagingResult<bool>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetExamsByCourseId([FromRoute] Guid id, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetExamsByCourseId([FromRoute] Guid id, [FromQuery] string? examName, [FromQuery] int page, [FromQuery] int size)
         {
-            var result = await _examService.GetAllExamByCourseId(id, page, size);
+            var result = await _examService.GetAllExamByCourseId(id, examName, page, size);
             return Ok(result);
         }
         [HttpPost(ApiEndPointConstant.Exam.ExamCreateResult)]

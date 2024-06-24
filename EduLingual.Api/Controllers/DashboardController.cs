@@ -21,15 +21,7 @@ namespace EduLingual.Api.Controllers
         [ProducesResponseType(typeof(Result<ReportDataDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDashboardFinance()
         {
-            var result = await _dashboardSerivce.GetFinanceInMonth();
-            return Ok(result);
-        }
-        [HttpGet(ApiEndPointConstant.Dashboard.DashboardExam)]
-        [ProducesResponseType(typeof(Result<ReportDataDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Result<ReportDataDto>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDashboardExam()
-        {
-            var result = await _dashboardSerivce.GetExamInMonth();
+            var result = await _dashboardSerivce.GetRevenueInWeek();
             return Ok(result);
         }
         [HttpGet(ApiEndPointConstant.Dashboard.DashboardTeacher)]
@@ -37,7 +29,7 @@ namespace EduLingual.Api.Controllers
         [ProducesResponseType(typeof(Result<ReportDataDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDashboardTeacher()
         {
-            var result = await _dashboardSerivce.GetTeacherInMonth();
+            var result = await _dashboardSerivce.GetTeacherInWeek();
             return Ok(result);
         }
         [HttpGet(ApiEndPointConstant.Dashboard.DashboardUser)]
@@ -45,7 +37,7 @@ namespace EduLingual.Api.Controllers
         [ProducesResponseType(typeof(Result<ReportDataDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDashboardUser()
         {
-            var result = await _dashboardSerivce.GetUserInMonth();
+            var result = await _dashboardSerivce.GetUserInWeek();
             return Ok(result);
         }
     }

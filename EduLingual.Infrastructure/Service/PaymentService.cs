@@ -50,17 +50,28 @@ namespace EduLingual.Infrastructure.Service
             }
         }
 
-        public async Task<PagingResult<PaymentViewModel>> GetPagination(DateTime? startDate, DateTime? endDate, int page, int size)
+        public async Task<PagingResult<PaymentViewModel>> GetPagination(DateTime? startDate, DateTime? endDate, string? centerName, int page, int size)
         {
             try
             {
                 IPaginate<Payment> payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
                         predicate: BuildGetPaymentsQuery(startDate, endDate),
                         include: x => x.Include(x => x.User)
-                                       .Include(x => x.Course),
+                                       .Include(x => x.Course).ThenInclude(x => x.Center),
+                        orderBy: x => x.OrderByDescending(x => x.CreatedAt),
                         page: page,
                         size: size
                     );
+
+                if (!String.IsNullOrEmpty(centerName))
+                {
+                    payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
+                        predicate: x => x.Course.Center.FullName.ToLower().Contains(centerName),
+                        include: x => x.Include(x => x.Course).ThenInclude(x => x.Center),
+                        page: page,
+                        size: size
+                    );
+                }
 
                 return SuccessWithPaging<PaymentViewModel>(
                         _mapper.Map<IPaginate<PaymentViewModel>>(payments),

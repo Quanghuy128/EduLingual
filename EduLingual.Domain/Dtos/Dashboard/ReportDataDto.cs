@@ -8,6 +8,11 @@ namespace EduLingual.Domain.Dtos.Dashboard;
 
 public class ReportDataDto
 {
-    public double DataThisMonth { get; set; }
-    public double DataLastMonth { get; set; }
+    public double DataInMonday { get; set; }
+    public double DataInTuesday { get; set; }
+    public double DataInWednesday { get; set; }
+    public double DataInThursday { get; set; }
+    public double DataInFriday { get; set; }
+    public double DataInSaturday { get; set; }
+    public double DataInSunday { get; set; }
 }

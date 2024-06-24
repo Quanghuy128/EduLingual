@@ -11,7 +11,7 @@ namespace EduLingual.Application.Service
     {
         Task<PagingResult<CourseViewModel>> GetCourses(int page, int size, string? title, CourseFilter? courseFilter, string? sort);
         Task<Result<List<CourseViewModel>>> GetHighlightedCourses();
-        Task<PagingResult<CourseViewModel>> GetPagination(int page, int size, string? title, CourseStatus? status, Guid? centerId);
+        Task<PagingResult<CourseViewModel>> GetPagination(int page, int size, string? title, CourseStatus? status, string? centerName);
         Task<Result<CourseViewModel>> GetCourseById(Guid id);
         Task<Result<CourseViewModel>> Create(CreateCourseRequest request);
         Task<Result<bool>> Update(Guid id, UpdateCourseRequest request);

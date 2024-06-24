@@ -196,13 +196,13 @@ namespace EduLingual.Infrastructure.Service
             return filterQuery;
         }
 
-        public async Task<PagingResult<CourseViewModel>> GetPagination(int page, int size, string? title, CourseStatus? status, Guid? centerId)
+        public async Task<PagingResult<CourseViewModel>> GetPagination(int page, int size, string? title, CourseStatus? status, string? centerName)
         {
             try
             {
                 IPaginate<Course> courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
-                    predicate: BuildGetCoursesQuery(title, status, centerId),
-                    orderBy: x => x.OrderByDescending(x => x.Status).ThenByDescending(x => x.CreatedAt),
+                    predicate: BuildGetCoursesQuery(title, status),
+                    orderBy: x => x.OrderBy(x => x.Status).ThenByDescending(x => x.CreatedAt),
                     include: x => x.Include(x => x.CourseArea)
                                   .Include(x => x.CourseLanguage)
                                   .Include(x => x.CourseCategory)
@@ -210,6 +210,16 @@ namespace EduLingual.Infrastructure.Service
                                   page,
                                   size
                     );
+
+                if (!String.IsNullOrEmpty(centerName))
+                {
+                    courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
+                        predicate: x => x.Center.FullName.ToLower().Contains(centerName),
+                        include: x => x.Include(x => x.Center),
+                        page: page,
+                        size: size
+                    );
+                }
 
                 return SuccessWithPaging<CourseViewModel>(
                         _mapper.Map<IPaginate<CourseViewModel>>(courses),
@@ -223,7 +233,7 @@ namespace EduLingual.Infrastructure.Service
             return null!;
         }
 
-        private Expression<Func<Course, bool>> BuildGetCoursesQuery(string? title, CourseStatus? status, Guid? centerId)
+        private Expression<Func<Course, bool>> BuildGetCoursesQuery(string? title, CourseStatus? status)
         {
             Expression<Func<Course, bool>> filterQuery = x => x.IsDeleted == false;
             if (title != null)
@@ -233,10 +243,6 @@ namespace EduLingual.Infrastructure.Service
             if (status != null)
             {
                 filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status));
-            }
-            if (centerId != null)
-            {
-                filterQuery = filterQuery.AndAlso(x => x.CenterId.Equals(centerId));
             }
 
             return filterQuery;

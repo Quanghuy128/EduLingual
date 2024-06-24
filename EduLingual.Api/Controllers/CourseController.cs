@@ -2,7 +2,6 @@
 using EduLingual.Domain.Common;
 using EduLingual.Domain.Constants;
 using EduLingual.Domain.Dtos.Course;
-using EduLingual.Domain.Dtos.User;
 using EduLingual.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -20,9 +19,9 @@ namespace EduLingual.Api.Controllers
 
         [HttpGet(ApiEndPointConstant.Course.CoursesPaginationEndpoint)]
         [ProducesResponseType(typeof(Result<List<CourseViewModel>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllPagination([FromQuery] string? title, [FromQuery] CourseStatus? status, [FromQuery] Guid? centerId, [FromQuery] int page = 1, [FromQuery] int size = 100)
+        public async Task<IActionResult> GetAllPagination([FromQuery] string? title, [FromQuery] CourseStatus? status, [FromQuery] string? centerName, [FromQuery] int page = 1, [FromQuery] int size = 100)
         {
-            PagingResult<CourseViewModel> result = await _courseService.GetPagination(page, size, title, status, centerId);
+            PagingResult<CourseViewModel> result = await _courseService.GetPagination(page, size, title, status, centerName);
 
             return StatusCode((int)result.StatusCode, result);
         }
