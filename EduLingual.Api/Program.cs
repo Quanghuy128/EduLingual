@@ -38,6 +38,7 @@ try
 
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
+    builder.Services.RegisterStorageService();
     //builder.Services.AddResponseCompression();
     builder.Services.AddMvc()
                 .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
