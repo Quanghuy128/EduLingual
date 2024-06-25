@@ -28,7 +28,7 @@ namespace EduLingual.Api.Utils
             var expires = user.Role.RoleName.Equals(RoleEnum.User.GetDescriptionFromEnum())
                 ? DateTime.Now.AddDays(1)
                 : DateTime.Now.AddDays(30);
-            var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now, expires, credentials);
+            var token = new JwtSecurityToken(issuer, null, claims, notBefore: DateTime.Now.AddHours(7), expires, credentials);
             return jwtHandler.WriteToken(token);
         }
     }

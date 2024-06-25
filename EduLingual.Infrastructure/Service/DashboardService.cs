@@ -13,7 +13,7 @@ namespace EduLingual.Infrastructure.Service;
 
 public class DashboardService : BaseService<ReportDataDto>, IDashboardService
 {
-    private static DateTime Monday = GetStartOfWeek(DateTime.Now, DayOfWeek.Monday);
+    private static DateTime Monday = GetStartOfWeek(DateTime.Now.AddHours(7), DayOfWeek.Monday);
     private static DateTime Tuesday = Monday.AddDays(1);
     private static DateTime Wednesday = Tuesday.AddDays(1);
     private static DateTime Thursday = Wednesday.AddDays(1);
