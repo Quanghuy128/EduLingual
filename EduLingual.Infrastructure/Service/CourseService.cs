@@ -161,8 +161,9 @@ namespace EduLingual.Infrastructure.Service
                                   size
                     );
 
+
                 return SuccessWithPaging<CourseViewModel>(
-                        _mapper.Map<IPaginate<CourseViewModel>>(courses),
+                        courses.Adapt<Paginate<CourseViewModel>>(),
                         page,
                         size,
                         courses.Total);
@@ -214,7 +215,7 @@ namespace EduLingual.Infrastructure.Service
                 if (!String.IsNullOrEmpty(centerName))
                 {
                     courses = await _unitOfWork.GetRepository<Course>().GetPagingListAsync(
-                        predicate: x => x.Center.FullName.ToLower().Contains(centerName),
+                        predicate: x => x.Center.FullName.ToLower().Contains(centerName.ToLower().Trim()),
                         include: x => x.Include(x => x.Center),
                         page: page,
                         size: size

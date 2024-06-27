@@ -28,7 +28,7 @@ namespace EduLingual.Infrastructure.Service
             {
                 IPaginate<ExamDto> exams = await _unitOfWork.GetRepository<Exam>().GetPagingListAsync(
                         selector: x => new ExamDto(x.Id, x.CreatedAt, x.IsDeleted, x.Title, x.TotalQuestion, _mapper.Map<UserDto>(x.Center)),
-                        predicate: e => String.IsNullOrEmpty(examName) ? e.CourseId.Equals(courseId) : e.CourseId.Equals(courseId) && e.Title.ToLower().Contains(examName),
+                        predicate: e => String.IsNullOrEmpty(examName) ? e.CourseId.Equals(courseId) && e.IsDeleted == false : e.CourseId.Equals(courseId) && e.Title.ToLower().Contains(examName.ToLower().Trim()) && e.IsDeleted == false,
                         include: x => x.Include(x => x.Center)
                     );
 
@@ -178,7 +178,7 @@ namespace EduLingual.Infrastructure.Service
                         selector: x => new GetScoreResponse(x.Id, x.CreatedAt, x.Score, x.TotalQuestionRight, x.TotalQuestionWrong, _mapper.Map<ExamDto>(x.Exam), _mapper.Map<UserDto>(x.Exam.Course.Center)),
                         predicate: ue => String.IsNullOrEmpty(getScoreDto.ExamName) 
                                          ? ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId)
-                                         : ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId) && ue.Exam.Title.ToLower().Trim().Contains(getScoreDto.ExamName),
+                                         : ue.UserId.Equals(getScoreDto.UserId) && ue.Exam.CourseId.Equals(getScoreDto.CourseId) && ue.Exam.Title.ToLower().Trim().Contains(getScoreDto.ExamName.ToLower().Trim()),
                         include: x => x.Include(x => x.Exam).ThenInclude(x => x.Course).ThenInclude(x => x.Center),
                         orderBy: x => x.OrderByDescending(x => x.CreatedAt)
                     );
@@ -200,6 +200,11 @@ namespace EduLingual.Infrastructure.Service
             try
             {
                 Exam exam = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+
+                if (exam == null)
+                {
+                    throw new Exception(MessageConstant.Vi.Exam.Fail.DeleteExam);
+                }
 
                 exam.IsDeleted = true;
 

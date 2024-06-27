@@ -36,6 +36,7 @@
             public const string UserEndpoint = UsersEndpoint + ByIdRoute;
             public const string CoursesByCenterEndpoint = CentersEndpoint + "/{id}/khoa-hoc";
             public const string CoursesByUserEndpoint = StudentsEnpoint + "/{id}/khoa-hoc";
+            public const string StudentsByCenterEndpoint = CentersEndpoint + ByIdRoute + "/nguoi-hoc";
         }
         public static class Course
         {
@@ -81,6 +82,7 @@
             public const string ExamsByCourseId = ExamEndpoint + "/courseId" + ByIdRoute;
             public const string ExamCreateResult = ExamEndpoint + "/result";
             public const string ExamResult = ExamEndpoint + "/get-score";
+            public const string ExamByIdEndpoint = ExamEndpoint + ByIdRoute;
         }
         public static class UserCourse
         {

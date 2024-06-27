@@ -66,7 +66,7 @@ namespace EduLingual.Infrastructure.Service
                 if (!String.IsNullOrEmpty(centerName))
                 {
                     payments = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
-                        predicate: x => x.Course.Center.FullName.ToLower().Contains(centerName),
+                        predicate: x => x.Course.Center.FullName.ToLower().Contains(centerName.ToLower().Trim()),
                         include: x => x.Include(x => x.Course).ThenInclude(x => x.Center),
                         page: page,
                         size: size

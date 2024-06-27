@@ -56,7 +56,7 @@ namespace EduLingual.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete(ApiEndPointConstant.Exam.ExamEndpoint)]
+        [HttpDelete(ApiEndPointConstant.Exam.ExamByIdEndpoint)]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {

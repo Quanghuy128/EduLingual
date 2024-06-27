@@ -9,7 +9,6 @@ using System.Text.Json.Serialization;
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    var configuration = builder.Configuration.Get<AppConfig>() ?? new AppConfig();
 
     // Add services to the container.
 
@@ -18,13 +17,6 @@ try
     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
-    //PayOs
-    PayOS payos = new PayOS(AppConfig.PayOSSetting.PAYOS_CLIENT_ID,
-                AppConfig.PayOSSetting.PAYOS_API_KEY,
-                AppConfig.PayOSSetting.PAYOS_CHECKSUM_KEY);
-    builder.Services.AddSingleton(payos);
-    builder.Services.AddSingleton(configuration);
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
@@ -39,6 +31,7 @@ try
     builder.Services.AddSwaggerGenOption();
     builder.Services.AddDbContext();
     builder.Services.RegisterStorageService();
+    builder.Services.AddPayOs();
     //builder.Services.AddResponseCompression();
     builder.Services.AddMvc()
                 .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

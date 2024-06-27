@@ -30,7 +30,6 @@ namespace EduLingual.Application
         }
         private static TypeAdapterConfig ConfigCustomMapper(this TypeAdapterConfig config)
         {
-            TypeAdapterConfig<UpdateCourseRequest, Course>.NewConfig().IgnoreNullValues(true);
             return config;
         }
     }
