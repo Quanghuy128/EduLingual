@@ -69,7 +69,7 @@ namespace EduLingual.Infrastructure.Service
 
             var title = file.FileName.Split(".")[0];
             var examFromDb = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.Title.Equals(title));
-            if (examFromDb != null) return BadRequest<bool>("Tên bài kiểm tra đã tồn tại !!!");
+            if (examFromDb != null) throw new Exception("Tên bài kiểm tra đã tồn tại !!!");
 
             exam.Title = title;
             exam.CourseId = courseId;

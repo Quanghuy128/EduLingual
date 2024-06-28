@@ -139,6 +139,39 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
         }
     }
 
+    public async Task<Result<AllReportDataDto>> GetTotalDashboard()
+    {
+        try
+        {
+            var payments = await _unitOfWork.GetRepository<Payment>().GetListAsync();
+            var revenue = payments.Sum(x => x.Fee);
+
+            var users = await _unitOfWork.GetRepository<User>().GetListAsync(
+                   include: u => u.Include(u => u.Role),
+                   predicate: t => t.Role.RoleName == Enum.GetName(typeof(RoleEnum), RoleEnum.User)
+               );
+            var totalUser = users.Count;
+
+            var teachers = await _unitOfWork.GetRepository<User>().GetListAsync(
+                   include: u => u.Include(u => u.Role),
+                   predicate: t => t.Role.RoleName == Enum.GetName(typeof(RoleEnum), RoleEnum.Teacher)
+               );
+            var totalTeachers = teachers.Count;
+
+            var reportData = new AllReportDataDto()
+            {
+                TotalRevenue = revenue,
+                TotalTeacher = totalTeachers,
+                TotalUser = totalUser,
+            };
+            return Success(reportData);
+        }
+        catch (Exception ex)
+        {
+            return Fail<AllReportDataDto>(ex.Message);
+        }
+    }
+
     public async Task<Result<ReportDataDto>> GetUserInWeek()
     {
         try

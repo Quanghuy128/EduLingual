@@ -13,4 +13,5 @@ public interface IDashboardService
     Task<Result<ReportDataDto>> GetRevenueInWeek();
     Task<Result<ReportDataDto>> GetTeacherInWeek();
     Task<Result<ReportDataDto>> GetUserInWeek();
+    Task<Result<AllReportDataDto>> GetTotalDashboard();
 }
