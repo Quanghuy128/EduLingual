@@ -156,7 +156,7 @@ namespace EduLingual.Infrastructure.Service
                 };
 
                 newUser.CreatedAt = user.CreatedAt;
-                newUser.UpdatedAt = DateTime.Now.AddHours(7);
+                newUser.UpdatedAt = DateTime.Now;
 
                 _unitOfWork.GetRepository<User>().UpdateAsync(newUser);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

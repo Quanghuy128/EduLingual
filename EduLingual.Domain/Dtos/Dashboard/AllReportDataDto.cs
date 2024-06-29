@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace EduLingual.Domain.Dtos.Dashboard
 {
-    public class AllReportDataDto
+    public class ReportDataTodayDto
     {
-        public int TotalUser {  get; set; }
-        public int TotalTeacher { get; set; }
-        public double TotalRevenue { get; set; }
+        public double Revenue { get; set; }
+        public int TotalPayments {  get; set; }
+        public double Profit { get; set; }
     }
 }

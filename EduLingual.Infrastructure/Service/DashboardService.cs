@@ -13,13 +13,16 @@ namespace EduLingual.Infrastructure.Service;
 
 public class DashboardService : BaseService<ReportDataDto>, IDashboardService
 {
-    private static DateTime Monday = GetStartOfWeek(DateTime.Now.AddHours(7), DayOfWeek.Monday);
+    #region Day of the week
+    private static DateTime Monday = GetStartOfWeek(DateTime.Now, DayOfWeek.Monday);
     private static DateTime Tuesday = Monday.AddDays(1);
     private static DateTime Wednesday = Tuesday.AddDays(1);
     private static DateTime Thursday = Wednesday.AddDays(1);
     private static DateTime Friday = Thursday.AddDays(1);
     private static DateTime Saturday = Friday.AddDays(1);
     private static DateTime Sunday = Saturday.AddDays(1);
+    #endregion
+    private int ThisYear = DateTime.Now.Year;
 
     public DashboardService(IUnitOfWork.IUnitOfWork<ApplicationDbContext> unitOfWork, ILogger<ReportDataDto> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
     {
@@ -139,36 +142,35 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
         }
     }
 
-    public async Task<Result<AllReportDataDto>> GetTotalDashboard()
+    public async Task<Result<ReportDataTodayDto>> GetReportDataToday()
     {
         try
         {
-            var payments = await _unitOfWork.GetRepository<Payment>().GetListAsync();
-            var revenue = payments.Sum(x => x.Fee);
+            var paymentsToday = await _unitOfWork.GetRepository<Payment>().GetListAsync(
+                    predicate: p => p.CreatedAt >= DateTime.Now && p.CreatedAt < DateTime.Now.AddDays(1)
+                );
+            
+            var revenueToday = paymentsToday.Sum(x => x.Fee);
+            var totalPaymentsToday = paymentsToday.Count();
 
-            var users = await _unitOfWork.GetRepository<User>().GetListAsync(
-                   include: u => u.Include(u => u.Role),
-                   predicate: t => t.Role.RoleName == Enum.GetName(typeof(RoleEnum), RoleEnum.User)
+            var profitsToday = await _unitOfWork.GetRepository<Payment>().GetListAsync(
+                    selector: x => (double) x.Fee * (10 / 100),
+                   predicate: p => p.CreatedAt >= DateTime.Now && p.CreatedAt < DateTime.Now.AddDays(1)
                );
-            var totalUser = users.Count;
 
-            var teachers = await _unitOfWork.GetRepository<User>().GetListAsync(
-                   include: u => u.Include(u => u.Role),
-                   predicate: t => t.Role.RoleName == Enum.GetName(typeof(RoleEnum), RoleEnum.Teacher)
-               );
-            var totalTeachers = teachers.Count;
+            var sumProfitToday = profitsToday.Sum();
 
-            var reportData = new AllReportDataDto()
+            var reportData = new ReportDataTodayDto()
             {
-                TotalRevenue = revenue,
-                TotalTeacher = totalTeachers,
-                TotalUser = totalUser,
+                Revenue = revenueToday,
+                TotalPayments = totalPaymentsToday,
+                Profit = sumProfitToday,
             };
             return Success(reportData);
         }
         catch (Exception ex)
         {
-            return Fail<AllReportDataDto>(ex.Message);
+            return Fail<ReportDataTodayDto>(ex.Message);
         }
     }
 
@@ -178,7 +180,7 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
         {
             string roleName = Enum.GetName(typeof(RoleEnum), RoleEnum.User);
             var usersMonday = await _unitOfWork.GetRepository<User>().GetListAsync(
-                    include: u => u.Include(u => u.Role), 
+                    include: u => u.Include(u => u.Role),
                     predicate: t => t.CreatedAt >= Monday && t.CreatedAt < Tuesday && t.Role.RoleName == roleName
                 );
             var totalUsersMonday = usersMonday.Count;
@@ -234,6 +236,70 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
         catch (Exception ex)
         {
             return Fail<ReportDataDto>(ex.Message);
+        }
+    }
+
+    public async Task<Result<ReportByMonthDto>> GetRevenueByMonth()
+    {
+        try
+        {
+            var paymentsJanuary = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 1 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueJanuary = paymentsJanuary.Sum(p => p.Fee);
+
+            var paymentsFebruary = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 2 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueFebruary = paymentsFebruary.Sum(p => p.Fee);
+
+            var paymentsMarch= await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 3 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueMarch = paymentsMarch.Sum(p => p.Fee);
+
+            var paymentsApril = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 4 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueApril = paymentsApril.Sum(p => p.Fee);
+
+            var paymentsMay = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 5 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueMay = paymentsMay.Sum(p => p.Fee);
+
+            var paymentsJune = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 6 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueJune = paymentsJune.Sum(p => p.Fee);
+
+            var paymentsJuly = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 7 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueJuly = paymentsJuly.Sum(p => p.Fee);
+
+            var paymentsAugust = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 8 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueAugust = paymentsAugust.Sum(p => p.Fee);
+
+            var paymentsSeptember = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 9 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueSeptember = paymentsSeptember.Sum(p => p.Fee);
+
+            var paymentsOctober = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 10 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueOctober = paymentsOctober.Sum(p => p.Fee);
+
+            var paymentsNovember = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 11 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueNovember = paymentsNovember.Sum(p => p.Fee);
+
+            var paymentsDecember = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 12 && p.CreatedAt.Year == ThisYear);
+            var totalRevenueDecember = paymentsDecember.Sum(p => p.Fee);
+
+            var reportData = new ReportByMonthDto()
+            {
+                DataInJanuary = totalRevenueJanuary,
+                DataInFebruary = totalRevenueFebruary,
+                DataInMarch = totalRevenueMarch,
+                DataInApril = totalRevenueApril,
+                DataInMay = totalRevenueMay,
+                DataInJune = totalRevenueJune,
+                DataInJuly = totalRevenueJuly,
+                DataInAugust = totalRevenueAugust,
+                DataInSeptember = totalRevenueSeptember,
+                DataInOctober = totalRevenueOctober,
+                DataInNovember = totalRevenueNovember,
+                DataInDecember = totalRevenueDecember,
+
+            };
+            return Success(reportData);
+        }
+        catch (Exception ex)
+        {
+            return Fail<ReportByMonthDto>(ex.Message);
         }
     }
 }

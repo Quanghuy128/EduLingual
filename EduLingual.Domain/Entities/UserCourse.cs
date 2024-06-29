@@ -20,7 +20,7 @@ namespace EduLingual.Infrastructure
         public virtual Course Course { get; set; } = null!;
 
         [Column("joined_at")]
-        public DateTime JoinedAt { get; set; } = DateTime.Now.AddHours(7);
+        public DateTime JoinedAt { get; set; } = DateTime.Now;
         [Column("finished_at")]
         public DateTime FinishedAt { get; set; }
 

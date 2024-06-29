@@ -28,6 +28,6 @@ namespace EduLingual.Domain.Entities
         [Column("total_question_wrong")]
         public int TotalQuestionWrong { get; set; } = 0;
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now.AddHours(7);
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

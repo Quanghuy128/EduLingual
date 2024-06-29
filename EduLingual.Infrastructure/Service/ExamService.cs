@@ -29,7 +29,8 @@ namespace EduLingual.Infrastructure.Service
                 IPaginate<ExamDto> exams = await _unitOfWork.GetRepository<Exam>().GetPagingListAsync(
                         selector: x => new ExamDto(x.Id, x.CreatedAt, x.IsDeleted, x.Title, x.TotalQuestion, _mapper.Map<UserDto>(x.Center)),
                         predicate: e => String.IsNullOrEmpty(examName) ? e.CourseId.Equals(courseId) && e.IsDeleted == false : e.CourseId.Equals(courseId) && e.Title.ToLower().Contains(examName.ToLower().Trim()) && e.IsDeleted == false,
-                        include: x => x.Include(x => x.Center)
+                        include: x => x.Include(x => x.Center),
+                        orderBy: x => x.OrderByDescending( x => x.CreatedAt)
                     );
 
                 return SuccessWithPaging<ExamDto>(
@@ -68,7 +69,7 @@ namespace EduLingual.Infrastructure.Service
             exam.CenterId = teacherId;
 
             var title = file.FileName.Split(".")[0];
-            var examFromDb = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.Title.Equals(title));
+            var examFromDb = await _unitOfWork.GetRepository<Exam>().SingleOrDefaultAsync(predicate: x => x.CourseId.Equals(courseId) && x.Title.Equals(title));
             if (examFromDb != null) throw new Exception("Tên bài kiểm tra đã tồn tại !!!");
 
             exam.Title = title;

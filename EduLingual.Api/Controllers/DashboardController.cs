@@ -42,11 +42,20 @@ namespace EduLingual.Api.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Dashboard.DashdoardEndpoint)]
-        [ProducesResponseType(typeof(Result<AllReportDataDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Result<AllReportDataDto>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Result<ReportDataTodayDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<ReportDataTodayDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetTotalDashboard()
         {
-            var result = await _dashboardSerivce.GetTotalDashboard();
+            var result = await _dashboardSerivce.GetReportDataToday();
+            return Ok(result);
+        }
+
+        [HttpGet(ApiEndPointConstant.Dashboard.DashboardFinanceByMonth)]
+        [ProducesResponseType(typeof(Result<ReportDataTodayDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<ReportDataTodayDto>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetRevenueByMonth()
+        {
+            var result = await _dashboardSerivce.GetRevenueByMonth();
             return Ok(result);
         }
     }

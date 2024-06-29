@@ -11,7 +11,8 @@ namespace EduLingual.Application.Service;
 public interface IDashboardService
 {
     Task<Result<ReportDataDto>> GetRevenueInWeek();
+    Task<Result<ReportByMonthDto>> GetRevenueByMonth();
     Task<Result<ReportDataDto>> GetTeacherInWeek();
     Task<Result<ReportDataDto>> GetUserInWeek();
-    Task<Result<AllReportDataDto>> GetTotalDashboard();
+    Task<Result<ReportDataTodayDto>> GetReportDataToday();
 }

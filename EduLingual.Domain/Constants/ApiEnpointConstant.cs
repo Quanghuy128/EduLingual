@@ -73,6 +73,7 @@
             public const string DashboardFinance = DashdoardEndpoint + "/finance";
             public const string DashboardTeacher = DashdoardEndpoint + "/teacher";
             public const string DashboardUser = DashdoardEndpoint + "/user";
+            public const string DashboardFinanceByMonth = DashdoardEndpoint + "/finance-by-month";
         }
         public static class Exam
         {
