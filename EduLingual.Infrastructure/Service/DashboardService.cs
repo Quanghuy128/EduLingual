@@ -15,18 +15,25 @@ namespace EduLingual.Infrastructure.Service;
 public class DashboardService : BaseService<ReportDataDto>, IDashboardService
 {
     #region Day of the week
-    private static DateTime Monday = GetStartOfWeek(DateTime.Now, DayOfWeek.Monday);
-    private static DateTime Tuesday = Monday.AddDays(1);
-    private static DateTime Wednesday = Tuesday.AddDays(1);
-    private static DateTime Thursday = Wednesday.AddDays(1);
-    private static DateTime Friday = Thursday.AddDays(1);
-    private static DateTime Saturday = Friday.AddDays(1);
-    private static DateTime Sunday = Saturday.AddDays(1);
+    private static DateTime Monday = new DateTime();
+    private static DateTime Tuesday = new DateTime();
+    private static DateTime Wednesday = new DateTime();
+    private static DateTime Thursday = new DateTime();
+    private static DateTime Friday = new DateTime();
+    private static DateTime Saturday = new DateTime();
+    private static DateTime Sunday = new DateTime();
     #endregion
     private int ThisYear = DateTime.Now.Year;
 
     public DashboardService(IUnitOfWork.IUnitOfWork<ApplicationDbContext> unitOfWork, ILogger<ReportDataDto> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
     {
+        Monday = GetStartOfWeek(DateTime.Now, DayOfWeek.Monday);
+        Tuesday = Monday.AddDays(1);
+        Wednesday = Tuesday.AddDays(1);
+        Thursday = Wednesday.AddDays(1);
+        Friday = Thursday.AddDays(1);
+        Saturday = Friday.AddDays(1);
+        Sunday = Saturday.AddDays(1);
     }
 
     private static DateTime GetStartOfWeek(DateTime date, DayOfWeek startOfWeek)
@@ -150,11 +157,8 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
             var paymentsToday = await _unitOfWork.GetRepository<Payment>().GetListAsync(
                     predicate: p => p.CreatedAt >= DateTime.Now && p.CreatedAt < DateTime.Now.AddDays(1)
                 );
-            
             var revenueToday = paymentsToday.Sum(x => x.Fee);
             var totalPaymentsToday = paymentsToday.Count();
-
-            var num = (double)10 / 100;
 
             var profitsToday = await _unitOfWork.GetRepository<Payment>().GetListAsync(
                     selector: x => x.Fee * (double)10 / 100,
@@ -252,7 +256,7 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
             var paymentsFebruary = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 2 && p.CreatedAt.Year == ThisYear);
             var totalRevenueFebruary = paymentsFebruary.Sum(p => p.Fee);
 
-            var paymentsMarch= await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 3 && p.CreatedAt.Year == ThisYear);
+            var paymentsMarch = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 3 && p.CreatedAt.Year == ThisYear);
             var totalRevenueMarch = paymentsMarch.Sum(p => p.Fee);
 
             var paymentsApril = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt.Month == 4 && p.CreatedAt.Year == ThisYear);
