@@ -5,6 +5,7 @@ using EduLingual.Domain.Dtos.Dashboard;
 using EduLingual.Domain.Entities;
 using EduLingual.Domain.Enum;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -57,7 +58,7 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
             var totalRevenueSaturday = paymentsSaturday.Sum(p => p.Fee);
 
             var paymentsSunday = await _unitOfWork.GetRepository<Payment>().GetListAsync(predicate: p => p.CreatedAt >= Sunday && p.CreatedAt < Sunday.AddDays(1));
-            var totalRevenueSunday = paymentsTuesday.Sum(p => p.Fee);
+            var totalRevenueSunday = paymentsSunday.Sum(p => p.Fee);
 
             var reportData = new ReportDataDto()
             {
@@ -153,8 +154,10 @@ public class DashboardService : BaseService<ReportDataDto>, IDashboardService
             var revenueToday = paymentsToday.Sum(x => x.Fee);
             var totalPaymentsToday = paymentsToday.Count();
 
+            var num = (double)10 / 100;
+
             var profitsToday = await _unitOfWork.GetRepository<Payment>().GetListAsync(
-                    selector: x => (double) x.Fee * (10 / 100),
+                    selector: x => x.Fee * (double)10 / 100,
                    predicate: p => p.CreatedAt >= DateTime.Now && p.CreatedAt < DateTime.Now.AddDays(1)
                );
 
